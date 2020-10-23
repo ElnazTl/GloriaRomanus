@@ -52,9 +52,8 @@ import org.geojson.LngLatAlt;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import unsw.gloriaromanus.Backend.*;
 
-public class GloriaRomanusController {
+public class GloriaRomanusController{
 
   @FXML
   private MapView mapView;
@@ -91,13 +90,7 @@ public class GloriaRomanusController {
 
     // TODO = load this from a configuration file you create (user should be able to
     // select in loading screen)
-
-    // making a player
-    Player x = new Player("human");
-
-    x.chooseFaction("Rome");
-
-    humanFaction = x.getFaction();
+    humanFaction = "Rome";
 
     currentlySelectedHumanProvince = null;
     currentlySelectedEnemyProvince = null;
@@ -107,31 +100,31 @@ public class GloriaRomanusController {
 
   @FXML
   public void clickedInvadeButton(ActionEvent e) throws IOException {
-    if (currentlySelectedHumanProvince != null && currentlySelectedEnemyProvince != null) {
-      String humanProvince = (String) currentlySelectedHumanProvince.getAttributes().get("name");
-      String enemyProvince = (String) currentlySelectedEnemyProvince.getAttributes().get("name");
-      if (confirmIfProvincesConnected(humanProvince, enemyProvince)) {
+    if (currentlySelectedHumanProvince != null && currentlySelectedEnemyProvince != null){
+      String humanProvince = (String)currentlySelectedHumanProvince.getAttributes().get("name");
+      String enemyProvince = (String)currentlySelectedEnemyProvince.getAttributes().get("name");
+      if (confirmIfProvincesConnected(humanProvince, enemyProvince)){
         // TODO = have better battle resolution than 50% chance of winning
         Random r = new Random();
         int choice = r.nextInt(2);
-        if (choice == 0) {
-          // human won. Transfer 40% of troops of human over. No casualties by human, but
-          // enemy loses all troops
-          int numTroopsToTransfer = provinceToNumberTroopsMap.get(humanProvince) * 2 / 5;
+        if (choice == 0){
+          // human won. Transfer 40% of troops of human over. No casualties by human, but enemy loses all troops
+          int numTroopsToTransfer = provinceToNumberTroopsMap.get(humanProvince)*2/5;
           provinceToNumberTroopsMap.put(enemyProvince, numTroopsToTransfer);
-          provinceToNumberTroopsMap.put(humanProvince,
-              provinceToNumberTroopsMap.get(humanProvince) - numTroopsToTransfer);
+          provinceToNumberTroopsMap.put(humanProvince, provinceToNumberTroopsMap.get(humanProvince)-numTroopsToTransfer);
           provinceToOwningFactionMap.put(enemyProvince, humanFaction);
           printMessageToTerminal("Won battle!");
-        } else {
+        }
+        else{
           // enemy won. Human loses 60% of soldiers in the province
-          int numTroopsLost = provinceToNumberTroopsMap.get(humanProvince) * 3 / 5;
-          provinceToNumberTroopsMap.put(humanProvince, provinceToNumberTroopsMap.get(humanProvince) - numTroopsLost);
+          int numTroopsLost = provinceToNumberTroopsMap.get(humanProvince)*3/5;
+          provinceToNumberTroopsMap.put(humanProvince, provinceToNumberTroopsMap.get(humanProvince)-numTroopsLost);
           printMessageToTerminal("Lost battle!");
         }
-        resetSelections(); // reset selections in UI
+        resetSelections();  // reset selections in UI
         addAllPointGraphics(); // reset graphics
-      } else {
+      }
+      else{
         printMessageToTerminal("Provinces not adjacent, cannot invade!");
       }
 
@@ -188,24 +181,22 @@ public class GloriaRomanusController {
         String province = (String) f.getProperty("name");
         String faction = provinceToOwningFactionMap.get(province);
 
-        TextSymbol t = new TextSymbol(10, faction + "\n" + province + "\n" + provinceToNumberTroopsMap.get(province),
-            0xFFFF0000, HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM);
+        TextSymbol t = new TextSymbol(10,
+            faction + "\n" + province + "\n" + provinceToNumberTroopsMap.get(province), 0xFFFF0000,
+            HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM);
 
         switch (faction) {
           case "Gaul":
-            // note can instantiate a PictureMarkerSymbol using the JavaFX Image class - so
-            // could
+            // note can instantiate a PictureMarkerSymbol using the JavaFX Image class - so could
             // construct it with custom-produced BufferedImages stored in Ram
             // http://jens-na.github.io/2013/11/06/java-how-to-concat-buffered-images/
-            // then you could convert it to JavaFX image
-            // https://stackoverflow.com/a/30970114
+            // then you could convert it to JavaFX image https://stackoverflow.com/a/30970114
 
             // you can pass in a filename to create a PictureMarkerSymbol...
             s = new PictureMarkerSymbol(new Image((new File("images/Celtic_Druid.png")).toURI().toString()));
             break;
           case "Rome":
-            // you can also pass in a javafx Image to create a PictureMarkerSymbol
-            // (different to BufferedImage)
+            // you can also pass in a javafx Image to create a PictureMarkerSymbol (different to BufferedImage)
             s = new PictureMarkerSymbol("images/legionary.png");
             break;
           // TODO = handle all faction names, and find a better structure...
@@ -251,8 +242,8 @@ public class GloriaRomanusController {
         // maximum results
         // note - if select right on border, even with 0 tolerance, can select multiple
         // features - so have to check length of result when handling it
-        final ListenableFuture<IdentifyLayerResult> identifyFuture = mapView.identifyLayerAsync(flp, screenPoint, 0,
-            false, 25);
+        final ListenableFuture<IdentifyLayerResult> identifyFuture = mapView.identifyLayerAsync(flp,
+            screenPoint, 0, false, 25);
 
         // add a listener to the future
         identifyFuture.addDoneListener(() -> {
@@ -265,34 +256,36 @@ public class GloriaRomanusController {
             if (identifyLayerResult.getLayerContent() instanceof FeatureLayer) {
               FeatureLayer featureLayer = (FeatureLayer) identifyLayerResult.getLayerContent();
               // select all features that were identified
-              List<Feature> features = identifyLayerResult.getElements().stream().map(f -> (Feature) f)
-                  .collect(Collectors.toList());
+              List<Feature> features = identifyLayerResult.getElements().stream().map(f -> (Feature) f).collect(Collectors.toList());
 
-              if (features.size() > 1) {
+              if (features.size() > 1){
                 printMessageToTerminal("Have more than 1 element - you might have clicked on boundary!");
-              } else if (features.size() == 1) {
+              }
+              else if (features.size() == 1){
                 // note maybe best to track whether selected...
                 Feature f = features.get(0);
-                String province = (String) f.getAttributes().get("name");
+                String province = (String)f.getAttributes().get("name");
 
-                if (provinceToOwningFactionMap.get(province).equals(humanFaction)) {
+                if (provinceToOwningFactionMap.get(province).equals(humanFaction)){
                   // province owned by human
-                  if (currentlySelectedHumanProvince != null) {
+                  if (currentlySelectedHumanProvince != null){
                     featureLayer.unselectFeature(currentlySelectedHumanProvince);
                   }
                   currentlySelectedHumanProvince = f;
                   invading_province.setText(province);
-                } else {
-                  if (currentlySelectedEnemyProvince != null) {
+                }
+                else{
+                  if (currentlySelectedEnemyProvince != null){
                     featureLayer.unselectFeature(currentlySelectedEnemyProvince);
                   }
                   currentlySelectedEnemyProvince = f;
                   opponent_province.setText(province);
                 }
 
-                featureLayer.selectFeature(f);
+                featureLayer.selectFeature(f);                
               }
 
+              
             }
           } catch (InterruptedException | ExecutionException ex) {
             // ... must deal with checked exceptions thrown from the async identify
@@ -343,23 +336,21 @@ public class GloriaRomanusController {
   }
 
   private boolean confirmIfProvincesConnected(String province1, String province2) throws IOException {
-    String content = Files
-        .readString(Paths.get("src/unsw/gloriaromanus/province_adjacency_matrix_fully_connected.json"));
+    String content = Files.readString(Paths.get("src/unsw/gloriaromanus/province_adjacency_matrix_fully_connected.json"));
     JSONObject provinceAdjacencyMatrix = new JSONObject(content);
     return provinceAdjacencyMatrix.getJSONObject(province1).getBoolean(province2);
   }
 
-  private void resetSelections() {
-    featureLayer_provinces
-        .unselectFeatures(Arrays.asList(currentlySelectedEnemyProvince, currentlySelectedHumanProvince));
+  private void resetSelections(){
+    featureLayer_provinces.unselectFeatures(Arrays.asList(currentlySelectedEnemyProvince, currentlySelectedHumanProvince));
     currentlySelectedEnemyProvince = null;
     currentlySelectedHumanProvince = null;
     invading_province.setText("");
     opponent_province.setText("");
   }
 
-  private void printMessageToTerminal(String message) {
-    output_terminal.appendText(message + "\n");
+  private void printMessageToTerminal(String message){
+    output_terminal.appendText(message+"\n");
   }
 
   /**
