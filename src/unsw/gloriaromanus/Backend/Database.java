@@ -13,17 +13,21 @@ import java.util.Optional;
 import java.util.Map;
 import java.util.HashMap;
 
+import java.util.ArrayList;
 
 public class Database {
 
-    public Map<Province,Unit> provinceUnit;
-    public Map<Province,Faction> provinceList;
+    
+
+    private HashMap<Province,ArrayList<Unit>> provinceUnit;
+
+    private HashMap<Province,Faction> provinceList;
     public String address;
 
     // assign default unit to each province 
     public Database() throws IOException {
 
-        provinceUnit = new HashMap<Province,Unit>();
+        provinceUnit = new HashMap<Province,ArrayList<Unit>>();
         provinceList = new HashMap<Province,Faction>();
 
         address = "src/unsw/gloriaromanus/initial_province_ownership.json";
@@ -32,10 +36,15 @@ public class Database {
 
         for (Province provinceName : provinceList.keySet()) {
             Unit unit = new Unit();
-            provinceUnit.put(provinceName, unit);
+            ArrayList<Unit> u = provinceUnit.get(provinceName);
+            u.add(unit);
           }
     }
    
+    public HashMap<Province,ArrayList<Unit>> getProvinceUnit() {
+
+        return provinceUnit;
+    }
 
     public void addFaction(String faction) throws IOException {
         addtoFile(faction, "F", " ");
