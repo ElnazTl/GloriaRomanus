@@ -35,16 +35,21 @@ public class Database {
         setProvinceToOwningFactionMap();
 
         for (Province provinceName : provinceList.keySet()) {
-            Unit unit = new Unit();
-            ArrayList<Unit> u = provinceUnit.get(provinceName);
-            u.add(unit);
+            ArrayList<Unit> u = new ArrayList<Unit> ();
+            provinceUnit.put(provinceName, u);
           }
     }
    
-    public HashMap<Province,ArrayList<Unit>> getProvinceUnit() {
+    public Map<Province,ArrayList<Unit>> getProvinceUnit() {
 
         return provinceUnit;
     }
+
+    public Map<Province,Faction > getFactionProvince() {
+
+        return provinceList;
+    }
+
 
     public void addFaction(String faction) throws IOException {
         addtoFile(faction, "F", " ");
@@ -89,22 +94,21 @@ public class Database {
      * @throws IOException
      */
 
-    private Map<Province, Faction> setProvinceToOwningFactionMap() throws IOException {
+    private void setProvinceToOwningFactionMap() throws IOException {
         String content = Files.readString(Paths.get(address));
         JSONObject ownership = new JSONObject(content);
-        Map<Province, Faction> m = new HashMap<Province, Faction>();
         for (String key : ownership.keySet()) {
           // key will be the faction name
           JSONArray ja = ownership.getJSONArray(key);
           // value is province name
           for (int i = 0; i < ja.length(); i++) {
             String value = ja.getString(i);
-            Province p = new Province(value);
+            Province p = new Province(value, this);
             Faction f = new Faction(key);
-            m.put(p, f);
+            provinceList.put(p, f);
           }
         }
-        return m;
+        
       }
 
     

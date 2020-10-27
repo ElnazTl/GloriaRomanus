@@ -53,8 +53,10 @@ public class Player {
      */
     public String invade(String human, String enemy ) throws IOException {
         if (turn) {
-            Province h = new Province(human);
-            Province e = new Province(enemy);
+
+           
+            Province h = new Province(human, database);
+            Province e = new Province(enemy, database);
 
             return h.battle(e, database);
         }
@@ -73,7 +75,7 @@ public class Player {
     public String getUnit(String name, String category, String province) {
         if (turn) {
             Unit u = new Unit (category, name);
-            Province p = new Province(province);
+            Province p = new Province(province, database);
 
             p.addUnit(database, u);
 
@@ -85,7 +87,21 @@ public class Player {
 
         return "It's not your turn";       
     }
-
     
+    /**
+     * given the unit and from and to if the provinces are adjacent the unit will be moved
+     * @param u
+     * @param from
+     * @param to
+     * @return
+     */
 
+    public String moveTroop(Unit u, String from, String to ) {
+
+        Province f  = new Province(from,database);
+        Province t  = new Province(to,database);
+        
+
+        return f.moveTroopTo(t, u);
+    }
 }
