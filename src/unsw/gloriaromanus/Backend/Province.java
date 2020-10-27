@@ -14,9 +14,17 @@ public class Province {
     String name;
     Faction faction;
     ArrayList<Unit> unitList;
+    Database database;
 
-    public Province(String name) {
+    public Province(String name, Database database) {
         this.name = name;
+        this.database = database;
+        setFaciton();
+        
+    }
+
+    private void setFaciton() {
+        faction = database.getFactionProvince().get(this);
     }
 
     // choose a random unit to invade
@@ -55,6 +63,21 @@ public class Province {
      */
     public void addUnit(Database d, Unit u) {
         d.getProvinceUnit().get(this).add(u);
+    }
+
+    public String moveTroopTo(Province to, Unit u) {
+
+        
+            
+            // move from the shortest path
+            // movement point
+            database.getProvinceUnit().get(this).remove(u);
+            database.getProvinceUnit().get(to).remove(u);
+
+            return "Successfully moved the unit";
+
+
+       
     }
     
 
