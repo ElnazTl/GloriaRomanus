@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class Database {
 
     
-
+    private String loadAddress;
     public Map<String,ArrayList<Unit>> provinceUnit;
 
     public Map<String,Faction> provinceList;
@@ -36,10 +36,8 @@ public class Database {
         provinceUnit = setOwningUnit();
 
         factionList = setOwningProvince();
+        loadAddress = "hello";
 
-        
-        //   System.out.println(provinceList);
-        Province x  = new Province("Achaia",this);
 
     }
  
@@ -50,7 +48,6 @@ public class Database {
     }
 
     public Map<String,Faction > getFactionProvince() {
-        // System.out.println(provinceList);
         return provinceList;
     }
 
@@ -173,11 +170,11 @@ public class Database {
         }
       
     } 
-
+    
     public void saveProvince(String f, Province p) throws IOException {
 
         //TODO: save other features of the province in the file 
-        var saveAdress = "/Users/eli/Desktop/t13a-oop/src/unsw/gloriaromanus/Backend/check.json";
+        var saveAdress = "/Users/eli/Desktop/t13a-oop/src/unsw/gloriaromanus/Backend/configs/load.json";
         String content = Files.readString(Paths.get(saveAdress));
         JSONObject ownership = new JSONObject(content);
         JSONObject faction = ownership.getJSONObject(f);
@@ -196,7 +193,9 @@ public class Database {
 
     public void loadProvince(String f, Province p) throws IOException {
 
-        var saveAdress = "/Users/eli/Desktop/t13a-oop/src/unsw/gloriaromanus/Backend/check.json";
+
+        var saveAdress = "/Users/eli/Desktop/t13a-oop/src/unsw/gloriaromanus/Backend/configs/load.json";
+
         String content = Files.readString(Paths.get(saveAdress));
         JSONObject ownership = new JSONObject(content);
         JSONObject faction = ownership.getJSONObject(f);
@@ -208,9 +207,17 @@ public class Database {
             provinceUnit.get(p.name).add(u);
         }
 
+        resetFile();
+
 
     }
+    private void resetFile() throws IOException {
+        var saveAdress = "/Users/eli/Desktop/t13a-oop/src/unsw/gloriaromanus/Backend/configs/layout_load.json";
+        String content = Files.readString(Paths.get(saveAdress));
+        JSONObject ownership = new JSONObject(content);
+        Files.writeString(Paths.get("/Users/eli/Desktop/t13a-oop/src/unsw/gloriaromanus/Backend/configs/load.json"), ownership.toString());
 
+    }
     
 }
 
