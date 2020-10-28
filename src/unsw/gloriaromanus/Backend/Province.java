@@ -4,19 +4,23 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
+import unsw.gloriaromanus.Backend.tax.*;
+
 public class Province {
     
     String name;
     int wealth;
     List<Unit> units;
-    //TaxFactory taxFactory;
-    //TaxRate taxRate;
+    TaxFactory taxFactory;
+    TaxRate taxRate;
     List<Unit> unitsTraining;
 
     public Province(String name) {
         this.name = name;
         this.units = new ArrayList<Unit>();
         this.unitsTraining = new ArrayList<Unit>(2);
+        this.taxFactory = new TaxFactory();
+        changeTaxRate("low");
     }
 
     public String getName() {
@@ -81,9 +85,9 @@ public class Province {
     }
 
 
-    // public void changeTaxRate(String name) {
-    //     this.taxRate = this.taxFactory.newTaxRate(name);
-    // }
+    public void changeTaxRate(String name) {
+        taxRate = taxFactory.newTaxRate(name);
+    }
 
 
     // private boolean confirmIfProvincesConnected(String province1, String province2) throws IOException {
