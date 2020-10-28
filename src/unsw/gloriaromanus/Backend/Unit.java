@@ -107,6 +107,33 @@ public class Unit {
         return trainTime == 0;
     }
 
+
+    /**
+     * Inflicts given number of casualties on unit,
+     * minimum of 0 troops remaining
+     * 
+     * @param num Number of troops to 'kill'
+     */
+    public void inflictCasualties(int num) {
+        if (numTroops - num < 0) {
+            numTroops = 0;
+        } else {
+            numTroops = numTroops - num;
+        }
+    }
+
+
+    /**
+     * Returns True if unit has troops remaining,
+     * otherwise False
+     * 
+     * @return True if unit is alive, otherwise False
+     */
+    public boolean isAlive() {
+        return numTroops != 0;
+    }
+
+
     /**
      * Called at start of a new turn
      * Changes anything that needs to be changed at start of a turn
@@ -117,7 +144,7 @@ public class Unit {
         }
     }
 
-
+    
     /**
      * Loads the base config values for the specified unit
      * from the configs/unit_config.json file
@@ -172,9 +199,6 @@ public class Unit {
 
     @Override
     public String toString() {
-        return "Unit: " + this.name + " (" + this.type + ") {\n\tmelee: " 
-                + isMelee() + "\n\tnumTroops: " + this.numTroops + "\n\tcost: "
-                + this.cost + "\n\ttime to train: " + this.trainTime
-                + "\n\tability: " + this.ability + " }";
+        return name + " unit (" + numTroops + ", " + ability + ")";
     }
 }
