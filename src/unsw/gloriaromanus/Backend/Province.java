@@ -89,7 +89,7 @@ public class Province {
     public String addUnit(Database d, Unit u) {
 
         // TODO: complete the operation of buying/trining and troop availibility
-        d.getProvinceUnit().get(this).add(u);
+        d.getProvinceUnit().get(name).add(u);
         setUnit();
 
         return "Successfully added the unit";

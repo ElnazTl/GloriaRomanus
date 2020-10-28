@@ -158,14 +158,25 @@ public class Database {
 
         for (String f: factionList.keySet()) {
             for (Province p: factionList.get(f)) {
-                saveUnit(f,p);
+                saveProvince(f,p);
             }
         }
-
-        // saveUnit(new Faction("Gaul"),new Province("Achaia", this));
-        
+      
     }
-    public void saveUnit(String f, Province p) throws IOException {
+
+    public void loadGame() throws IOException {
+
+        for (String f: factionList.keySet()) {
+            for (Province p: factionList.get(f)) {
+                loadProvince(f,p);
+            }
+        }
+      
+    } 
+
+    public void saveProvince(String f, Province p) throws IOException {
+
+        //TODO: save other features of the province in the file 
         var saveAdress = "/Users/eli/Desktop/t13a-oop/src/unsw/gloriaromanus/Backend/check.json";
         String content = Files.readString(Paths.get(saveAdress));
         JSONObject ownership = new JSONObject(content);
@@ -173,48 +184,40 @@ public class Database {
         JSONObject province = faction.getJSONObject(p.name);
 
         province.put("unit", p.ListOfUnitString());
+        Files.writeString(Paths.get(saveAdress), ownership.toString());
+
+
     } 
+
+    // creating the database --> set up the ownership again
+    // laod the information of the player
+    //load the units for each province
+    //load wealth, taxfactory, texrate
+
+    public void loadProvince(String f, Province p) throws IOException {
+
+        var saveAdress = "/Users/eli/Desktop/t13a-oop/src/unsw/gloriaromanus/Backend/check.json";
+        String content = Files.readString(Paths.get(saveAdress));
+        JSONObject ownership = new JSONObject(content);
+        JSONObject faction = ownership.getJSONObject(f);
+        JSONObject province = faction.getJSONObject(p.name);
+        JSONArray ul = province.getJSONArray("unit");
+        
+        for (int i = 0; i < ul.length();i++) {
+            Unit u = new Unit(ul.getString(i));
+            provinceUnit.get(p.name).add(u);
+        }
+
+
+    }
 
     
 }
 
 
-/*abstract
-// if we write the config inot a json file --> would have to create all of the classes
-// would have assign everything
-
-// player can only save one version of the game 
-Database.loadgame()
-Json format
-save_json file already has the template 
-
-{
-    Player {
-        name
-        faction
-    },
-
-    Faction {
-        {
-            // army:
-            Province {
-                x: {
-                    tax
-                    unit :{
-
-                    }
-                }
-
-            }
-        }
-
-    }
-
-
-}
 
 
 
 
 
-*/
+

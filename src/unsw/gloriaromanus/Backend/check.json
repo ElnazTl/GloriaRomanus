@@ -1,14 +1,16 @@
 {
-    "Rome": {
-      "Lugdunensis":{
-        "unit":[]
-      }
-     
-    },
     "Gaul": {
-      "Achaia": {
-        "unit":[]
-      }
-      
+        "Achaia": {
+            "wealth": 0,
+            "unit": [
+                "soldier"
+            ]
+        }
+    },
+    "Rome": {
+        "Lugdunensis": {
+            "wealth": 0,
+            "unit": []
+        }
     }
-  }
+}
