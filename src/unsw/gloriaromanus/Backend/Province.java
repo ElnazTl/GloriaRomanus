@@ -6,8 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.io.IOException;
-import java.util.List;
-import java.util.Random;
 
 public class Province {
     
@@ -20,10 +18,14 @@ public class Province {
         this.name = name;
         this.database = database;
         setFaciton();
+        setUnit();
        
         
     }
-   
+
+    private void setUnit() {
+        unitList = database.getProvinceUnit().get(this);
+    }
     private void setFaciton() {
         faction = database.getFactionProvince().get(this);
     }
@@ -37,13 +39,13 @@ public class Province {
      */
     public String battle(Province enemy, Database d) throws IOException {
 
-         // TODO: implement battleresolve to return the result of the battle
+         
         
         if(!confirmIfProvincesConnected(name, enemy.name)) return ("Provinces not adjacent, cannot invade!");
         unitList = d.getProvinceUnit().get(this.name);
 
-        Unit humanUnit = chooseUnit(unitList);
-        Unit EnemyUnit = chooseUnit(d.getProvinceUnit().get(enemy.name));
+        //TODO: return the result of Battle resolver
+        Battleresolver br = new Battleresolver(this, enemy,database);
 
 
         return "true";
@@ -65,17 +67,7 @@ public class Province {
         return provinceAdjacencyMatrix.getJSONObject(province1).getBoolean(province2);
     }
    
-    /**
-     * randomly chooses a unit in the province for battle
-     * @param u
-     */
-
-    public Unit chooseUnit(List<Unit> u) {
-
-        Random r = new Random();
-        return u.get(r.nextInt(u.size()));
-        
-    }
+   
 
     /**
      * given the game database adds the unit to the list of units present in the province
@@ -86,6 +78,7 @@ public class Province {
 
         // TODO: complete the operation of buying/trining and troop availibility
         d.getProvinceUnit().get(this).add(u);
+        setUnit();
 
         return "Successfully added the unit";
     }
