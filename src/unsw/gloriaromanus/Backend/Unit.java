@@ -26,9 +26,9 @@ public class Unit {
     private JSONObject modifiers;
 
     
-    public Unit(String name) throws IOException {
+    public Unit(String name, JSONObject config) throws IOException {
         this.name = name;
-        loadUnitFromConfig(name);
+        loadUnitFromConfig(name, config);
     }
 
 
@@ -123,9 +123,7 @@ public class Unit {
      * @param name of unit to train
      * @throws IOException
      */
-    private void loadUnitFromConfig(String name) throws IOException {
-        String configString = Files.readString(Paths.get("src/unsw/gloriaromanus/Backend/configs/units_config.json"));
-        JSONObject unitsConfig = new JSONObject(configString);
+    private void loadUnitFromConfig(String name, JSONObject unitsConfig) throws IOException {
         JSONObject config = new JSONObject(unitsConfig.getJSONObject(this.name));
         
         this.type = config.optString("type", "infantry");
