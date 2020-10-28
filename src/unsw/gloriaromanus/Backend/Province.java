@@ -50,7 +50,7 @@ public class Province {
         for (Unit u : this.unitsTraining) {
             u.newTurn();
         }
-        //wealth += taxRate.getWealth();
+        wealth += taxRate.getWealth();
     }
 
     
