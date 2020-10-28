@@ -1,23 +1,21 @@
 package test;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import unsw.gloriaromanus.*;
+import unsw.gloriaromanus.Backend.*;
 
-public class UnitTest{
+public class UnitTest {
     @Test
-    public void blahTest(){
-        assertEquals("a", "a");
+    public void loadsConfigTest() throws IOException {
+        Unit u = new Unit("soldier");
+        //assertEquals(10, u.getNumTroops());
     }
-    
-    @Test
-    public void blahTest2(){
-        Unit u = new Unit();
-        assertEquals(u.getNumTroops(), 50);
-    }
+
 }
 
