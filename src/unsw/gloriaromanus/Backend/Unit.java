@@ -154,4 +154,5 @@ public class Unit {
                 + this.cost + "\n\ttrain time: " + this.trainTime
                 + "\n\tability: " + this.ability + "}";
     }
+    
 }

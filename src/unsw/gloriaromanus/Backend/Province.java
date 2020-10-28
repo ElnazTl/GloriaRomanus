@@ -1,6 +1,8 @@
 package unsw.gloriaromanus.Backend;
 
 import org.json.*;
+
+import javafx.scene.control.ListCell;
 import unsw.gloriaromanus.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -18,16 +20,20 @@ public class Province {
         this.name = name;
         this.database = database;
         setFaciton();
+        database.getProvinceUnit();
         setUnit();
 
     }
 
     private void setUnit() {
-        unitList = database.getProvinceUnit().get(this);
+        
+        unitList = database.provinceUnit.get(name);
+        System.out.println(unitList);
     }
 
     private void setFaciton() {
-        faction = database.getFactionProvince().get(this);
+        faction = database.getFactionProvince().get(name);
+
     }
 
     public ArrayList<Unit> getUnits() {
@@ -109,5 +115,19 @@ public class Province {
         return "Successfully moved the unit";
 
     }
+    /**
+     * function return a list of the name of the units 
+     * @return
+     */
+
+    public ArrayList<String> ListOfUnitString() {
+        ArrayList<String> result = new ArrayList<String> ();
+        for (Unit u: getUnits()) {
+            result.add(u.getName());
+        }
+        return result;
+    }
+    
+
 
 }
