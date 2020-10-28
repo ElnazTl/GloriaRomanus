@@ -69,13 +69,14 @@ public class Province {
         return "Successfully added the unit";
     }
 
-    public String moveTroopTo(Province to, Unit u) {
+    public String moveTroopTo(Province to, Unit u) throws IOException {
 
         
-            // TODO: find the shortes path + movement points to move to
+            // TODO: find the shortes path + movement points to move to for DN
 
-            //TODO: ensure the troops can move to the location, update movement point
-            
+
+            // units can only move between adjacent provinces for pass mark need to update
+            if(!confirmIfProvincesConnected(to.name, this.name)) return "Provinces are not adjacent";
             database.getProvinceUnit().get(this).remove(u);
             database.getProvinceUnit().get(to).remove(u);
 
