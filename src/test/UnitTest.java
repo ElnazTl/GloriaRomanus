@@ -37,7 +37,7 @@ public class UnitTest {
         assertEquals(6, u.getDefence());
         assertEquals(0, u.getCharge());
         assertEquals(10, u.getSpeed());
-        assertEquals(abilityJSON.getJSONObject("noAbility"), u.getModifiers());
+        assertEquals(abilityJSON.getJSONObject("noAbility"), u.getAbility());
     }
 
 
