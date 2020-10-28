@@ -16,12 +16,12 @@ public class Unit {
     private int numTroops;
     private int cost;
     private int trainTime;
-    private float attack;
-    private float speed;
-    private float morale;
-    private float shield;
-    private float defence;  // Melee units only
-    private float charge;   // Cavalry units only
+    private double attack;
+    private double speed;
+    private double morale;
+    private double shield;
+    private double defence;  // Melee units only
+    private double charge;   // Cavalry units only
     private String ability;
     private JSONObject modifiers;
 
@@ -52,37 +52,32 @@ public class Unit {
     }
 
 
-    public int getTrainTime() {
-        return trainTime;
-    }
-
-
-    public float getAttack() {
+    public double getAttack() {
         return attack;
     }
 
 
-    public float getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 
 
-    public float getMorale() {
+    public double getMorale() {
         return morale;
     }
 
 
-    public float getShield() {
+    public double getShield() {
         return shield;
     }
 
 
-    public float getDefence() {
+    public double getDefence() {
         return defence;
     }
 
 
-    public float getCharge() {
+    public double getCharge() {
         return charge;
     }
 
@@ -106,24 +101,45 @@ public class Unit {
         return !isMelee();
     }
 
+    public boolean isTrained() {
+        return trainTime == 0;
+    }
 
+    /**
+     * Called at start of a new turn
+     * Changes anything that needs to be changed at start of a turn
+     */
+    public void newTurn() {
+        if (trainTime != 0) {
+            trainTime = trainTime - 1;
+        }
+    }
+
+
+    /**
+     * Loads the base config values for the specified unit
+     * from the configs/unit_config.json file
+     * 
+     * @param name of unit to train
+     * @throws IOException
+     */
     private void loadUnitFromConfig(String name) throws IOException {
         String configString = Files.readString(Paths.get("src/unsw/gloriaromanus/Backend/configs/units_config.json"));
         JSONObject unitsConfig = new JSONObject(configString);
-        JSONObject config = new JSONObject(unitsConfig.getString(this.name));
-
+        JSONObject config = new JSONObject(unitsConfig.getJSONObject(this.name));
+        
         this.type = config.optString("type", "infantry");
         this.melee = "melee".equals(config.optString("attackType", "melee")) ? true : false;
         this.numTroops = config.optInt("numTroops", 1);
         this.cost = config.optInt("cost", 1);
         this.trainTime = config.optInt("trainTime", 1);
-        this.attack = config.optFloat("attack", 1);
-        this.morale = config.optFloat("morale", 1);
-        this.shield = config.optFloat("shield", 1);
+        this.attack = config.optDouble("attack", 1);
+        this.morale = config.optDouble("morale", 1);
+        this.shield = config.optDouble("shield", 1);
         this.ability = config.optString("ability", "noAbility");
         this.modifiers = getAbilityJSON(this.ability);
-        this.charge = "cavalry".equals(this.type) ? config.optFloat("charge", 1) : 0;
-        this.defence = isMelee() ? config.optFloat("defence", 1) : 0;
+        this.charge = "cavalry".equals(this.type) ? config.optDouble("charge", 1) : 0;
+        this.defence = isMelee() ? config.optDouble("defence", 1) : 0;
         switch (this.type) {
             case "cavalry":
                 this.speed = 15;
@@ -139,10 +155,19 @@ public class Unit {
         }
     }
 
+
+    /**
+     * Loads the modifiers JSONObject
+     * for the specified ability
+     * 
+     * @param ability
+     * @return JSONObject of specified ability
+     * @throws IOException
+     */
     private JSONObject getAbilityJSON(String ability) throws IOException {
         String abilityString = Files.readString(Paths.get("src/unsw/gloriaromanus/Backend/configs/ability_config.json"));
         JSONObject abilityConfig = new JSONObject(abilityString);
-        JSONObject config = new JSONObject(abilityConfig.getString(this.name));
+        JSONObject config = new JSONObject(abilityConfig.getJSONObject(this.ability));
         return config;
     }
 

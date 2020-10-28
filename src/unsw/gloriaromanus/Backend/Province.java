@@ -1,84 +1,139 @@
 package unsw.gloriaromanus.Backend;
 
-import org.json.*;
-import unsw.gloriaromanus.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
+import java.util.ArrayList;
 
 public class Province {
     
     String name;
-    Faction faction;
-    ArrayList<Unit> unitList;
-    Database database;
+    int wealth;
+    List<Unit> units;
+    //TaxFactory taxFactory;
+    //TaxRate taxRate;
+    List<Unit> unitsTraining;
 
-    public Province(String name, Database database) {
+    public Province(String name) {
         this.name = name;
-        this.database = database;
-        setFaciton();
-        
+        this.units = new ArrayList<Unit>();
+        this.unitsTraining = new ArrayList<Unit>(2);
     }
 
-    private void setFaciton() {
-        faction = database.getFactionProvince().get(this);
+    public String getName() {
+        return name;
     }
 
-    // choose a random unit to invade
-    public String battle(Province enemy, Database d) throws IOException {
-        
-        if(!confirmIfProvincesConnected(name, enemy.name)) return ("Provinces not adjacent, cannot invade!");
-        unitList = d.getProvinceUnit().get(this.name);
-
-        Unit humanUnit = chooseUnit(unitList);
-        Unit EnemyUnit = chooseUnit(d.getProvinceUnit().get(enemy.name));
-
-
-        return "true";
-
+    public int getWealth() {
+        return wealth;
     }
 
-    private boolean confirmIfProvincesConnected(String province1, String province2) throws IOException {
-        String content = Files
-            .readString(Paths.get("src/unsw/gloriaromanus/province_adjacency_matrix_fully_connected.json"));
-        JSONObject provinceAdjacencyMatrix = new JSONObject(content);
-        return provinceAdjacencyMatrix.getJSONObject(province1).getBoolean(province2);
+    public List<Unit> getUnits() {
+        return units;
     }
-   
 
-    public Unit chooseUnit(List<Unit> u) {
-
-        Random r = new Random();
-        return u.get(r.nextInt(u.size()));
-        
+    public List<Unit> getUnitsTraining() {
+        return unitsTraining;
     }
 
     /**
-     * given the game database adds the unit to the list of units present in the province
-     * @param d
-     * @param u
+     * Called at start of a new turn
+     * Changes anything that needs to be changed at start of a turn
      */
-    public void addUnit(Database d, Unit u) {
-        d.getProvinceUnit().get(this).add(u);
+    public void newTurn() {
+        for (Unit u : this.units) {
+            u.newTurn();
+        }
+        for (Unit u : this.unitsTraining) {
+            u.newTurn();
+        }
+        //wealth += taxRate.getWealth();
     }
 
-    public String moveTroopTo(Province to, Unit u) {
+    
+    /**
+     * Returns the first unit with specified name
+     *
+     * @param name 
+     * @return
+     */
+    public Unit findUnit(String name) {
+        for (Unit u : units) {
+            if (name.equals(u.getName())) {
+                return u;
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * Removes specified unit and returns it
+     * 
+     * @param name
+     * @return
+     */
+    public Unit popUnit(Unit u) {
+        if (u != null) {
+            units.remove(u);
+            return u;
+        }
+        return null;
+    }
+
+
+    // public void changeTaxRate(String name) {
+    //     this.taxRate = this.taxFactory.newTaxRate(name);
+    // }
+
+
+    // private boolean confirmIfProvincesConnected(String province1, String province2) throws IOException {
+    //     String content = Files
+    //         .readString(Paths.get("src/unsw/gloriaromanus/province_adjacency_matrix_fully_connected.json"));
+    //     JSONObject provinceAdjacencyMatrix = new JSONObject(content);
+    //     return provinceAdjacencyMatrix.getJSONObject(province1).getBoolean(province2);
+    // }
+   
+
+    // public Unit chooseUnit(List<Unit> u) {
+
+    //     Random r = new Random();
+    //     return u.get(r.nextInt(u.size()));
+        
+    // }
+
+
+    /**
+     * Attempts to train a unit
+     * Returns true if training,
+     * otherwise returns false
+     * 
+     * @param name Name of unit to train
+     * @return True if training unit, otherwise False
+     * @throws IOException
+     */
+    public boolean trainUnit(String name) throws IOException {
+        if (unitsTraining.size() == 2) return false;
+        else {
+            unitsTraining.add(new Unit(name));
+            return true;
+        }
+    }
+
+
+    // public String moveTroopTo(Province to, Unit u) {
 
         
             
-            // move from the shortest path
-            // movement point
-            database.getProvinceUnit().get(this).remove(u);
-            database.getProvinceUnit().get(to).remove(u);
+    //         // move from the shortest path
+    //         // movement point
+    //         database.getProvinceUnit().get(this).remove(u);
+    //         database.getProvinceUnit().get(to).remove(u);
 
-            return "Successfully moved the unit";
+    //         return "Successfully moved the unit";
 
 
        
-    }
+    // }
     
 
 }
