@@ -83,7 +83,6 @@ public class Unit {
     }
 
 
-    
     @Override
     public String toString() {
         return "Unit: " + this.name + "(" + this.type + ") {\n\tmelee: " 
