@@ -23,4 +23,9 @@ public class LowTax implements TaxRate {
     public JSONObject getMoraleModifier() {
         return new JSONObject();
     }
+
+    @Override
+    public String toString() {
+        return "Low tax";
+    }
 }
