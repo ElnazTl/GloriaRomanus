@@ -23,7 +23,7 @@ public class Unit {
     private JSONObject modifiers;
 
     
-    public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) throws IOException {
+    public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
         this.name = name;
         loadUnitFromConfig(name, unitConfig, abilityConfig);
     }
@@ -152,7 +152,7 @@ public class Unit {
      * @param name of unit to train
      * @throws IOException
      */
-    private void loadUnitFromConfig(String name, JSONObject unitsConfig, JSONObject abilityConfig) throws IOException {
+    private void loadUnitFromConfig(String name, JSONObject unitsConfig, JSONObject abilityConfig) {
         JSONObject config = unitsConfig.getJSONObject(this.name);
         
         this.type = config.optString("type", "infantry");
@@ -191,7 +191,7 @@ public class Unit {
      * @return JSONObject of specified ability
      * @throws IOException
      */
-    private JSONObject getAbilityJSON(String ability, JSONObject abilityConfig) throws IOException {
+    private JSONObject getAbilityJSON(String ability, JSONObject abilityConfig) {
         JSONObject config = abilityConfig.getJSONObject(this.ability);
         return config;
     }
