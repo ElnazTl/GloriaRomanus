@@ -1,11 +1,8 @@
 package unsw.gloriaromanus.Backend;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import org.json.JSONObject;
-
 
 
 public class Unit {
@@ -26,7 +23,7 @@ public class Unit {
     private JSONObject modifiers;
 
     
-    public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) throws IOException {
+    public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
         this.name = name;
         loadUnitFromConfig(name, unitConfig, abilityConfig);
     }
@@ -110,6 +107,33 @@ public class Unit {
         return trainTime == 0;
     }
 
+
+    /**
+     * Inflicts given number of casualties on unit,
+     * minimum of 0 troops remaining
+     * 
+     * @param num Number of troops to 'kill'
+     */
+    public void inflictCasualties(int num) {
+        if (numTroops - num < 0) {
+            numTroops = 0;
+        } else {
+            numTroops = numTroops - num;
+        }
+    }
+
+
+    /**
+     * Returns True if unit has troops remaining,
+     * otherwise False
+     * 
+     * @return True if unit is alive, otherwise False
+     */
+    public boolean isAlive() {
+        return numTroops != 0;
+    }
+
+
     /**
      * Called at start of a new turn
      * Changes anything that needs to be changed at start of a turn
@@ -120,7 +144,7 @@ public class Unit {
         }
     }
 
-
+    
     /**
      * Loads the base config values for the specified unit
      * from the configs/unit_config.json file
@@ -128,7 +152,7 @@ public class Unit {
      * @param name of unit to train
      * @throws IOException
      */
-    private void loadUnitFromConfig(String name, JSONObject unitsConfig, JSONObject abilityConfig) throws IOException {
+    private void loadUnitFromConfig(String name, JSONObject unitsConfig, JSONObject abilityConfig) {
         JSONObject config = unitsConfig.getJSONObject(this.name);
         
         this.type = config.optString("type", "infantry");
@@ -167,7 +191,7 @@ public class Unit {
      * @return JSONObject of specified ability
      * @throws IOException
      */
-    private JSONObject getAbilityJSON(String ability, JSONObject abilityConfig) throws IOException {
+    private JSONObject getAbilityJSON(String ability, JSONObject abilityConfig) {
         JSONObject config = abilityConfig.getJSONObject(this.ability);
         return config;
     }
@@ -175,9 +199,6 @@ public class Unit {
 
     @Override
     public String toString() {
-        return "Unit: " + this.name + " (" + this.type + ") {\n\tmelee: " 
-                + isMelee() + "\n\tnumTroops: " + this.numTroops + "\n\tcost: "
-                + this.cost + "\n\ttime to train: " + this.trainTime
-                + "\n\tability: " + this.ability + " }";
+        return name + " unit (" + numTroops + ", " + ability + ")";
     }
 }
