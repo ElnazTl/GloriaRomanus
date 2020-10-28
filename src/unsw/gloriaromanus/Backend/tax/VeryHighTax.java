@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 public class VeryHighTax implements TaxRate {
         
+    final public static String TYPE = "VeryHigh";
     private int wealth;
     private double taxRate;
 

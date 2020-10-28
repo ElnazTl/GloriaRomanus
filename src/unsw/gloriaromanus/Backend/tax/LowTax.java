@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 public class LowTax implements TaxRate {
     
+    final public static String TYPE = "Low";
     private int wealth;
     private double taxRate;
 
