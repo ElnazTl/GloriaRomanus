@@ -30,4 +30,9 @@ public class VeryHighTax implements TaxRate {
         modifier.put("friendly", new JSONArray(json));
         return modifier;
     }
+
+    @Override
+    public String toString() {
+        return "Very High tax";
+    }
 }
