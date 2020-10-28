@@ -73,9 +73,9 @@ public class Player {
      */
 
     //  implementing turn ?
-    public String getUnit(String name, String category, String province) {
+    public String getUnit(String name, String province) throws IOException {
         if (turn) {
-            Unit u = new Unit (category, name);
+            Unit u = new Unit(name);
             Province p = new Province(province, database);
 
             return p.addUnit(database, u);
@@ -93,7 +93,7 @@ public class Player {
      * @return
      */
 
-    public String moveTroop(Unit u, String from, String to ) {
+    public String moveTroop(Unit u, String from, String to ) throws IOException {
 
         Province f  = new Province(from,database);
         Province t  = new Province(to,database);
