@@ -2,6 +2,9 @@ package unsw.gloriaromanus.Backend;
 
 import java.io.IOException;
 import java.util.List;
+
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import unsw.gloriaromanus.Backend.tax.*;
@@ -11,7 +14,6 @@ public class Province {
     String name;
     int wealth;
     List<Unit> units;
-    TaxFactory taxFactory;
     TaxRate taxRate;
     List<Unit> unitsTraining;
 
@@ -19,8 +21,7 @@ public class Province {
         this.name = name;
         this.units = new ArrayList<Unit>();
         this.unitsTraining = new ArrayList<Unit>(2);
-        this.taxFactory = new TaxFactory();
-        changeTaxRate("low");
+        changeTaxRate("Low");
     }
 
     public String getName() {
@@ -85,8 +86,30 @@ public class Province {
     }
 
 
-    public void changeTaxRate(String name) {
-        taxRate = taxFactory.newTaxRate(name);
+    /**
+     * Changes the tax rate of the province
+     * 
+     * @param tax Name of Tax Rate
+     */
+    public void changeTaxRate(String tax) {
+        taxRate = TaxFactory.newTaxRate(tax);
+    }
+
+
+    /**
+     * Attempts to train a unit
+     * Returns true if training,
+     * otherwise returns false
+     * 
+     * @param name Name of unit to train
+     * @return True if training unit, otherwise False
+     */
+    public boolean trainUnit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
+        if (unitsTraining.size() == 2) return false;
+        else {
+            unitsTraining.add(new Unit(name, unitConfig, abilityConfig));
+            return true;
+        }
     }
 
 
@@ -106,22 +129,7 @@ public class Province {
     // }
 
 
-    /**
-     * Attempts to train a unit
-     * Returns true if training,
-     * otherwise returns false
-     * 
-     * @param name Name of unit to train
-     * @return True if training unit, otherwise False
-     * @throws IOException
-     */
-    public boolean trainUnit(String name) throws IOException {
-        if (unitsTraining.size() == 2) return false;
-        else {
-            unitsTraining.add(new Unit(name));
-            return true;
-        }
-    }
+
 
 
     // public String moveTroopTo(Province to, Unit u) {
