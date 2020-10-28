@@ -72,16 +72,13 @@ public class Player {
      * @return
      */
 
+    //  implementing turn ?
     public String getUnit(String name, String category, String province) {
         if (turn) {
             Unit u = new Unit (category, name);
             Province p = new Province(province, database);
 
-            p.addUnit(database, u);
-
-            // if successful returning message otherwise returning the fail message
-            return "Added unit";
-
+            return p.addUnit(database, u);
 
         }
 
