@@ -61,16 +61,21 @@ public class Province {
      * @param d
      * @param u
      */
-    public void addUnit(Database d, Unit u) {
+    public String addUnit(Database d, Unit u) {
+
+        // TODO: complete the operation of buying/trining and troop availibility
         d.getProvinceUnit().get(this).add(u);
+
+        return "Successfully added the unit";
     }
 
     public String moveTroopTo(Province to, Unit u) {
 
         
+            // TODO: find the shortes path + movement points to move to
+
+            //TODO: ensure the troops can move to the location, update movement point
             
-            // move from the shortest path
-            // movement point
             database.getProvinceUnit().get(this).remove(u);
             database.getProvinceUnit().get(to).remove(u);
 
