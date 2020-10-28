@@ -1,0 +1,221 @@
+{
+    "Gaul": {
+        "Cyprus": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Bithynia et Pontus": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Cilicia": {
+            "wealth": 0,
+            "unit": []
+        },
+        "I": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Africa Proconsularis": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Alpes Maritimae": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Galatia et Cappadocia": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Iudaea": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Arabia": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Dacia": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Achaia": {
+            "wealth": 0,
+            "unit": [
+                "soldier",
+                "horseArcher"
+            ]
+        },
+        "Baetica": {
+            "wealth": 0,
+            "unit": []
+        },
+        "II": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Germania Superior": {
+            "wealth": 0,
+            "unit": []
+        },
+        "III": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Armenia Mesopotamia": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Britannia": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Dalmatia": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Creta et Cyrene": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Germania Inferior": {
+            "wealth": 0,
+            "unit": []
+        },
+        "IV": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Aquitania": {
+            "wealth": 0,
+            "unit": []
+        },
+        "IX": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Alpes Cottiae": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Alpes Graiae et Poeninae": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Asia": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Aegyptus": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Belgica": {
+            "wealth": 0,
+            "unit": []
+        }
+    },
+    "Rome": {
+        "Narbonensis": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Pannonia Superior": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Pannonia Inferior": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Syria": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Sardinia et Corsica": {
+            "wealth": 0,
+            "unit": []
+        },
+        "V": {
+            "wealth": 0,
+            "unit": []
+        },
+        "X": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Moesia Superior": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Sicilia": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Mauretania Caesariensis": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Tarraconensis": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Noricum": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Raetia": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Numidia": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Mauretania Tingitana": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Thracia": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Lugdunensis": {
+            "wealth": 0,
+            "unit": []
+        },
+        "XI": {
+            "wealth": 0,
+            "unit": []
+        },
+        "VI": {
+            "wealth": 0,
+            "unit": []
+        },
+        "VII": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Macedonia": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Moesia Inferior": {
+            "wealth": 0,
+            "unit": []
+        },
+        "VIII": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Lycia et Pamphylia": {
+            "wealth": 0,
+            "unit": []
+        },
+        "Lusitania": {
+            "wealth": 0,
+            "unit": []
+        }
+    }
+}

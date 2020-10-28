@@ -28,7 +28,6 @@ public class Province {
     private void setUnit() {
         
         unitList = database.provinceUnit.get(name);
-        System.out.println(unitList);
     }
 
     private void setFaciton() {
