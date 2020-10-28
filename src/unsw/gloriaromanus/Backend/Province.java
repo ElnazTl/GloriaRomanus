@@ -20,15 +20,24 @@ public class Province {
         this.name = name;
         this.database = database;
         setFaciton();
+       
         
     }
-
+   
     private void setFaciton() {
         faction = database.getFactionProvince().get(this);
     }
 
-    // choose a random unit to invade
+    /**
+     * checks if tow provinces are adjacent for invasion and chooses random units to battle
+     * @param enemy
+     * @param d
+     * @return
+     * @throws IOException
+     */
     public String battle(Province enemy, Database d) throws IOException {
+
+         // TODO: implement battleresolve to return the result of the battle
         
         if(!confirmIfProvincesConnected(name, enemy.name)) return ("Provinces not adjacent, cannot invade!");
         unitList = d.getProvinceUnit().get(this.name);
@@ -41,6 +50,14 @@ public class Province {
 
     }
 
+    /**
+     * Function will check if two provinces are adjacent, implementation taken from controller
+     * @param province1
+     * @param province2
+     * @return
+     * @throws IOException
+     */
+
     private boolean confirmIfProvincesConnected(String province1, String province2) throws IOException {
         String content = Files
             .readString(Paths.get("src/unsw/gloriaromanus/province_adjacency_matrix_fully_connected.json"));
@@ -48,6 +65,10 @@ public class Province {
         return provinceAdjacencyMatrix.getJSONObject(province1).getBoolean(province2);
     }
    
+    /**
+     * randomly chooses a unit in the province for battle
+     * @param u
+     */
 
     public Unit chooseUnit(List<Unit> u) {
 
@@ -68,6 +89,13 @@ public class Province {
 
         return "Successfully added the unit";
     }
+
+    /**
+     * moves troops between provinces, will fail if can't move the troop
+     * @param to
+     * @param u
+     */
+    
 
     public String moveTroopTo(Province to, Unit u) throws IOException {
 
