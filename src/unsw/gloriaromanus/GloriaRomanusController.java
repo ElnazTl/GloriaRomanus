@@ -93,11 +93,8 @@ public class GloriaRomanusController {
     // select in loading screen)
 
     // making a player
-    Player x = new Player("human");
 
-    x.chooseFaction("Rome");
 
-    humanFaction = x.getFaction();
 
     currentlySelectedHumanProvince = null;
     currentlySelectedEnemyProvince = null;
@@ -223,6 +220,7 @@ public class GloriaRomanusController {
     }
 
     inputStream.close();
+
     mapView.getGraphicsOverlays().add(graphicsOverlay);
   }
 
