@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 
@@ -32,6 +31,71 @@ public class Unit {
         loadUnitFromConfig(name);
     }
 
+
+    public String getName() {
+        return name;
+    }
+
+
+    public String getType() {
+        return type;
+    }
+
+
+    public int getNumTroops() {
+        return numTroops;
+    }
+
+
+    public int getCost() {
+        return cost;
+    }
+
+
+    public int getTrainTime() {
+        return trainTime;
+    }
+
+
+    public float getAttack() {
+        return attack;
+    }
+
+
+    public float getSpeed() {
+        return speed;
+    }
+
+
+    public float getMorale() {
+        return morale;
+    }
+
+
+    public float getShield() {
+        return shield;
+    }
+
+
+    public float getDefence() {
+        return defence;
+    }
+
+
+    public float getCharge() {
+        return charge;
+    }
+
+
+    public String getAbility() {
+        return ability;
+    }
+
+
+    public JSONObject getModifiers() {
+        return modifiers;
+    }
+    
 
     public boolean isMelee() {
         return melee;
