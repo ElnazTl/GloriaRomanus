@@ -1,11 +1,8 @@
 package unsw.gloriaromanus.Backend;
 
-import java.io.IOException;
 import java.util.List;
-
-import org.json.JSONObject;
-
 import java.util.ArrayList;
+import org.json.JSONObject;
 
 import unsw.gloriaromanus.Backend.tax.*;
 
@@ -14,14 +11,15 @@ public class Province {
     String name;
     int wealth;
     List<Unit> units;
-    TaxRate taxRate;
     List<Unit> unitsTraining;
+    TaxRate taxRate;
+
 
     public Province(String name) {
         this.name = name;
         this.units = new ArrayList<Unit>();
         this.unitsTraining = new ArrayList<Unit>(2);
-        changeTaxRate("Low");
+        changeTaxRate(LowTax.TYPE);
     }
 
     public String getName() {
@@ -40,6 +38,10 @@ public class Province {
         return unitsTraining;
     }
 
+    public TaxRate getTaxRate() {
+        return taxRate;
+    }
+
     /**
      * Called at start of a new turn
      * Changes anything that needs to be changed at start of a turn
@@ -51,7 +53,7 @@ public class Province {
         for (Unit u : this.unitsTraining) {
             u.newTurn();
         }
-        //wealth += taxRate.getWealth();
+        wealth = wealth + taxRate.getWealth();
     }
 
     
@@ -92,8 +94,23 @@ public class Province {
      * @param tax Name of Tax Rate
      */
     public void changeTaxRate(String tax) {
+        //removeTaxMorale();
         taxRate = TaxFactory.newTaxRate(tax);
+        //applyTaxMorale();
     }
+
+
+    // TODO 
+    // public void applyTaxMorale() {
+    //     // Change morale of units
+    //     // Change morale of training units?
+    // }
+
+    //TODO
+    // public void removeTaxMorale() {
+    //     // Remove morale effect of units/training units
+    // }
+
 
 
     /**
@@ -107,9 +124,26 @@ public class Province {
     public boolean trainUnit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
         if (unitsTraining.size() == 2) return false;
         else {
-            unitsTraining.add(new Unit(name, unitConfig, abilityConfig));
+            Unit u = new Unit(name, unitConfig, abilityConfig);
+            unitsTraining.add(u);
+            // u.applyModifier(taxRate.getMoraleModifier());
+
             return true;
         }
+    }
+
+
+    /**
+     * Resets the province's units and tax rate,
+     * does not modify the wealth
+     * 
+     * @return Conquered Province
+     */
+    public Province conquerProvince() {
+        units.removeAll(units);
+        unitsTraining.removeAll(unitsTraining);
+        changeTaxRate(LowTax.TYPE);
+        return this;
     }
 
 

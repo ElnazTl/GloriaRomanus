@@ -2,6 +2,7 @@ package unsw.gloriaromanus.Backend;
 
 import java.io.IOException;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 
@@ -19,8 +20,9 @@ public class Unit {
     private double shield;
     private double defence;  // Melee units only
     private double charge;   // Cavalry units only
-    private String ability;
-    private JSONObject modifiers;
+    private String abilityType;
+    private JSONObject ability;
+    private JSONArray modifiers;
 
     
     public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
@@ -84,12 +86,17 @@ public class Unit {
     }
 
 
-    public String getAbility() {
+    public String getAbilityType() {
+        return abilityType;
+    }
+
+
+    public JSONObject getAbility() {
         return ability;
     }
 
 
-    public JSONObject getModifiers() {
+    public JSONArray getModifiers() {
         return modifiers;
     }
     
@@ -145,6 +152,11 @@ public class Unit {
     }
 
     
+    public void applyModifier(JSONObject modifier) {
+        
+    }
+
+    
     /**
      * Loads the base config values for the specified unit
      * from the configs/unit_config.json file
@@ -163,8 +175,8 @@ public class Unit {
         this.attack = config.optDouble("attack", 1);
         this.morale = config.optDouble("morale", 1);
         this.shield = config.optDouble("shield", 1);
-        this.ability = config.optString("ability", "noAbility");
-        this.modifiers = getAbilityJSON(this.ability, abilityConfig);
+        this.abilityType = config.optString("ability", "noAbility");
+        this.ability = getAbilityJSON(this.abilityType, abilityConfig);
         this.charge = "cavalry".equals(this.type) ? config.optDouble("charge", 1) : 0;
         this.defence = isMelee() ? config.optDouble("defence", 1) : 0;
         switch (this.type) {
@@ -180,6 +192,7 @@ public class Unit {
             default:
                 this.speed = 1;
         }
+        this.modifiers = config.getJSONArray("modifiers")
     }
 
 
@@ -192,13 +205,13 @@ public class Unit {
      * @throws IOException
      */
     private JSONObject getAbilityJSON(String ability, JSONObject abilityConfig) {
-        JSONObject config = abilityConfig.getJSONObject(this.ability);
+        JSONObject config = abilityConfig.getJSONObject(this.abilityType);
         return config;
     }
 
 
     @Override
     public String toString() {
-        return name + " unit (" + numTroops + ", " + ability + ")";
+        return name + " unit (" + numTroops + ", " + abilityType + ")";
     }
 }
