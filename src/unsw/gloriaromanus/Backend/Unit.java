@@ -26,9 +26,9 @@ public class Unit {
     private JSONObject modifiers;
 
     
-    public Unit(String name, JSONObject config) throws IOException {
+    public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) throws IOException {
         this.name = name;
-        loadUnitFromConfig(name, config);
+        loadUnitFromConfig(name, unitConfig, abilityConfig);
     }
 
 
@@ -49,6 +49,11 @@ public class Unit {
 
     public int getCost() {
         return cost;
+    }
+
+
+    public int getTrainTime() {
+        return trainTime;
     }
 
 
@@ -123,8 +128,8 @@ public class Unit {
      * @param name of unit to train
      * @throws IOException
      */
-    private void loadUnitFromConfig(String name, JSONObject unitsConfig) throws IOException {
-        JSONObject config = new JSONObject(unitsConfig.getJSONObject(this.name));
+    private void loadUnitFromConfig(String name, JSONObject unitsConfig, JSONObject abilityConfig) throws IOException {
+        JSONObject config = unitsConfig.getJSONObject(this.name);
         
         this.type = config.optString("type", "infantry");
         this.melee = "melee".equals(config.optString("attackType", "melee")) ? true : false;
@@ -135,7 +140,7 @@ public class Unit {
         this.morale = config.optDouble("morale", 1);
         this.shield = config.optDouble("shield", 1);
         this.ability = config.optString("ability", "noAbility");
-        this.modifiers = getAbilityJSON(this.ability);
+        this.modifiers = getAbilityJSON(this.ability, abilityConfig);
         this.charge = "cavalry".equals(this.type) ? config.optDouble("charge", 1) : 0;
         this.defence = isMelee() ? config.optDouble("defence", 1) : 0;
         switch (this.type) {
@@ -162,19 +167,17 @@ public class Unit {
      * @return JSONObject of specified ability
      * @throws IOException
      */
-    private JSONObject getAbilityJSON(String ability) throws IOException {
-        String abilityString = Files.readString(Paths.get("src/unsw/gloriaromanus/Backend/configs/ability_config.json"));
-        JSONObject abilityConfig = new JSONObject(abilityString);
-        JSONObject config = new JSONObject(abilityConfig.getJSONObject(this.ability));
+    private JSONObject getAbilityJSON(String ability, JSONObject abilityConfig) throws IOException {
+        JSONObject config = abilityConfig.getJSONObject(this.ability);
         return config;
     }
 
 
     @Override
     public String toString() {
-        return "Unit: " + this.name + "(" + this.type + ") {\n\tmelee: " 
-                + isMelee() + "\n\tnum: " + this.numTroops + "\n\tcost: "
-                + this.cost + "\n\ttrain time: " + this.trainTime
-                + "\n\tability: " + this.ability + "}";
+        return "Unit: " + this.name + " (" + this.type + ") {\n\tmelee: " 
+                + isMelee() + "\n\tnumTroops: " + this.numTroops + "\n\tcost: "
+                + this.cost + "\n\ttime to train: " + this.trainTime
+                + "\n\tability: " + this.ability + " }";
     }
 }

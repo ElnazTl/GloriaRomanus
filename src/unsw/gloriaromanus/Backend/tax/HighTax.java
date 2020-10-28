@@ -8,8 +8,8 @@ public class HighTax implements TaxRate {
     private double taxRate;
 
     public HighTax() {
-        wealth = 10;
-        taxRate = 0.1;
+        wealth = 0;
+        taxRate = 0.15;
     }
 
     public int getWealth() {
