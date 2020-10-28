@@ -110,7 +110,7 @@ public class Unit {
     private void loadUnitFromConfig(String name) throws IOException {
         String configString = Files.readString(Paths.get("src/unsw/gloriaromanus/Backend/configs/units_config.json"));
         JSONObject unitsConfig = new JSONObject(configString);
-        JSONObject config = new JSONObject(unitsConfig.getString(this.name));
+        JSONObject config = new JSONObject(unitsConfig.getJSONObject(this.name));
 
         this.type = config.optString("type", "infantry");
         this.melee = "melee".equals(config.optString("attackType", "melee")) ? true : false;
@@ -121,7 +121,7 @@ public class Unit {
         this.morale = config.optFloat("morale", 1);
         this.shield = config.optFloat("shield", 1);
         this.ability = config.optString("ability", "noAbility");
-        this.modifiers = getAbilityJSON(this.ability);
+        // this.modifiers = getAbilityJSON(this.ability);
         this.charge = "cavalry".equals(this.type) ? config.optFloat("charge", 1) : 0;
         this.defence = isMelee() ? config.optFloat("defence", 1) : 0;
         switch (this.type) {
