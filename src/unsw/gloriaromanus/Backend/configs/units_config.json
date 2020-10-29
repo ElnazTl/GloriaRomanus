@@ -23,5 +23,17 @@
         "shield" : 2,
         "charge" : 5,
         "ability" : "noAbility"
+    },
+    "hoplite": {
+        "type" : "infantry",
+        "attackType" : "melee",
+        "numTroops" : 8,
+        "cost" : 5,
+        "trainTime" : 2,
+        "attack" : 8,
+        "morale" : 4,
+        "shield" : 4,
+        "defence" : 6,
+        "ability" : "phalanx"
     }
 }
