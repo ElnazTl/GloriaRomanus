@@ -1,6 +1,7 @@
 package unsw.gloriaromanus.Backend;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,7 +23,8 @@ public class Unit {
     private double charge;   // Cavalry units only
     private String abilityType;
     private JSONObject ability;
-    private JSONArray modifiers;
+    private JSONObject modifiers;
+    private JSONObject baseValues;
 
     
     public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
@@ -96,7 +98,7 @@ public class Unit {
     }
 
 
-    public JSONArray getModifiers() {
+    public JSONObject getModifiers() {
         return modifiers;
     }
     
@@ -152,8 +154,20 @@ public class Unit {
     }
 
     
-    public void applyModifier(JSONObject modifier) {
-        
+    public double getModifiedValue(JSONObject modifier, String type, String who) {
+        Iterator<Object> json = modifiers.getJSONArray(who).iterator();
+        double val = baseValues.optDouble(type, 0);
+        while (json.hasNext()) {
+            JSONObject mod = (JSONObject)json.next();
+            if (type.equals(mod.getString(type))) {
+                if ("add".equals(mod.getString("strategy"))) {
+                    val = val + mod.optDouble("value", 0);
+                } else if ("multiply".equals(mod.getString("strategy"))) {
+                    val = val * mod.optDouble("value", 1);
+                }
+            }
+        }
+        return val;
     }
 
     
@@ -192,7 +206,11 @@ public class Unit {
             default:
                 this.speed = 1;
         }
-        this.modifiers = config.getJSONArray("modifiers")
+        this.modifiers = new JSONObject();
+        modifiers.put("friendly", new JSONArray());
+        modifiers.put("enemy", new JSONArray());
+
+        this.baseValues = config;
     }
 
 
