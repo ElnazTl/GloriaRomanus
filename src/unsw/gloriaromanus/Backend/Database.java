@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Database {
 
@@ -39,8 +40,6 @@ public class Database {
 
     
     
-    
-    private ArrayList<Player> players;
     private Map<String, Faction> factions;
     private Map<Player, Faction> playerFactions;
 
@@ -58,10 +57,20 @@ public class Database {
         factionList = setOwningProvince();
 
 
-        players = new ArrayList<Player>();
-        factions = new ArrayList<Faction>();
-        playerFactions = new ArrayList<Faction>();
+        factions = new HashMap<String, Faction>();
+        playerFactions = new HashMap<Player, Faction>();
         
+    }
+
+    
+    public List<String> availableFactions() {
+        List<String> list = new ArrayList<String>();
+        for (Faction f : factions.values()) {
+            if (!playerFactions.containsValue(f)) {
+                list.add(f.getName());
+            }
+        }
+        return list;
     }
 
     public void addPlayer(Player p) {
