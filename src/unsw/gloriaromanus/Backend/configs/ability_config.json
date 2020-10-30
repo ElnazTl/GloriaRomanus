@@ -1,22 +1,19 @@
 {
-    "noAbility" : {
-        "friendly" : [],
-        "enemy" : []
-    },
-    "phalanx" : {
-        "friendly" : [
-            {
-                "type" : "defence",
-                "value" : 2,
-                "strategy" : "multiply"
-                
-            },
-            {
-                "type" : "speed",
-                "value" : 0.5,
-                "strategy" : "multiply"
-            }
-        ],
-        "enemy" : []
-    }
+    "noAbility" : [
+    ],
+    "phalanx" : [
+        {
+            "type" : "defence",
+            "value" : 2,
+            "strategy" : "multiply",
+            "who" : "friendly"
+            
+        },
+        {
+            "type" : "speed",
+            "value" : 0.5,
+            "strategy" : "multiply",
+            "who" : "friendly"
+        }
+    ]
 }
