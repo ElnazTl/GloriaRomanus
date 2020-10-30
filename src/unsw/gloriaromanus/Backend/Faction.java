@@ -9,16 +9,24 @@ import java.nio.file.Paths;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Faction {
 
-    String name;
-    List <Province> provinces;
-    List <String> availableUnits;
+    private Database db;
+    private String name;
+    private List<Province> provinces;
+    private Map<String, Integer> availableUnits;
+    private int treasury;
 
-    public Faction(String name) throws IOException {
+    public Faction(Database db, String name, int startingGold) throws IOException {
+        this.db = db;
         this.name = name;
+        this.treasury = startingGold;
         loadUnitsFromConfig();
+        provinces = new ArrayList<Province>();
+        availableUnits = new HashMap<String, Integer>();
     }
 
 
@@ -32,7 +40,7 @@ public class Faction {
     }
 
 
-    public List<String> getAvailableUnits() {
+    public Map<String, Integer> getAvailableUnits() {
         return availableUnits;
     }
     
@@ -42,6 +50,32 @@ public class Faction {
             p.newTurn();
         }
     }
+    
+    public boolean trainUnit(Province p, String unit) throws IOException {
+        if (!availableUnits.containsKey(unit)) {
+            // Unit not available to this faction
+            return false;
+        }
+        int cost = availableUnits.get(unit);
+        
+        if (cost > treasury) {
+            // Faction does not have enough gold to buy unit
+            return false;
+        }
+
+        return trainUnit(p, unit);
+    }
+
+
+    public Province findProvince(String name) {
+        for (Province p : provinces) {
+            if (name.equals(p.getName())) {
+                return p;
+            }
+        }
+        return null;
+    }
+
 
 
 
@@ -51,9 +85,12 @@ public class Faction {
      * @throws IOException
      */
     private void loadUnitsFromConfig() throws IOException {
-        String configString = Files.readString(Paths.get("src/unsw/gloriaromanus/Backend/configs/faction_units_config.json"));
+        String configString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/faction_units_config.json"));
         JSONObject unitsConfig = new JSONObject(configString);
-        JSONArray config = unitsConfig.getJSONArray(this.name);
-        availableUnits = ArrayUtil.convert(config);
+        List<Object> config = unitsConfig.getJSONArray(this.name).toList();
+        for (Object o : config) {
+            String s = (String)o;
+            availableUnits.put(s, unitsConfig.getJSONObject(s).getInt("cost"));
+        }
     }
 }
