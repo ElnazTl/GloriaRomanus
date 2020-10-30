@@ -1,5 +1,7 @@
 package unsw.gloriaromanus.Backend;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -19,7 +21,11 @@ public class Unit {
     private int trainTime;
     private double attack;
     private double speed;
+<<<<<<< HEAD
     private double armour;
+=======
+    private int movePoints;
+>>>>>>> 6a5715e15db24c5f45722263617666963945c7eb
     private double morale;
     private double shield;
     private double defence;  // Melee units only
@@ -30,11 +36,11 @@ public class Unit {
     private JSONObject baseValues;
 
     
-    public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
+    public Unit(String name, JSONObject unitConfig) throws IOException {
         this.name = name;
         this.unitID = ID;
         ID = ID + 1;
-        loadUnitFromConfig(name, unitConfig, abilityConfig);
+        loadUnitFromConfig(name, unitConfig);
     }
 
 
@@ -74,6 +80,11 @@ public class Unit {
 
     public double getSpeed() {
         return speed;
+    }
+
+
+    public int getMovePoints() {
+        return movePoints;
     }
 
 
@@ -255,7 +266,7 @@ public class Unit {
      * @param name of unit to train
      * @throws IOException
      */
-    private void loadUnitFromConfig(String name, JSONObject unitsConfig, JSONObject abilityConfig) {
+    private void loadUnitFromConfig(String name, JSONObject unitsConfig) throws IOException {
         JSONObject config = unitsConfig.getJSONObject(this.name);
         
         this.type = config.optString("type", "infantry");
@@ -268,24 +279,23 @@ public class Unit {
         this.armour = config.optDouble("armour", 1);
         this.shield = config.optDouble("shield", 1);
         this.abilityType = config.optString("ability", "noAbility");
-        this.ability = getAbilityJSON(this.abilityType, abilityConfig);
+        this.ability = getAbilityJSON(this.abilityType);
         this.charge = "cavalry".equals(this.type) ? config.optDouble("charge", 1) : 0;
         this.defence = isMelee() ? config.optDouble("defence", 1) : 0;
         switch (this.type) {
             case "cavalry":
-                this.speed = 15;
+                this.movePoints= 15;
                 break;
             case "infantry":
-                this.speed = 10;
+                this.movePoints = 10;
                 break;
             case "artillery":
-                this.speed = 4;
+                this.movePoints = 4;
                 break;
             default:
-                this.speed = 1;
+                this.movePoints = 1;
         }
         this.modifiers = new JSONArray();
-
         this.baseValues = config;
     }
 
@@ -298,8 +308,10 @@ public class Unit {
      * @return JSONObject of specified ability
      * @throws IOException
      */
-    private JSONArray getAbilityJSON(String ability, JSONObject abilityConfig) {
-        JSONArray config = abilityConfig.getJSONArray(this.abilityType);
+    private JSONArray getAbilityJSON(String ability) throws IOException {
+        String configString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/ability_config.json"));
+        JSONObject abilityConfig = new JSONObject(configString);
+        JSONArray config = abilityConfig.getJSONArray(ability);
         return config;
     }
 
@@ -318,4 +330,90 @@ public class Unit {
         Unit u = (Unit)obj;
         return unitID == u.getUnitID();
     }
+
+    public static Long getID() {
+        return ID;
+    }
+
+    public static void setID(Long iD) {
+        ID = iD;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUnitID(Long unitID) {
+        this.unitID = unitID;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setMelee(boolean melee) {
+        this.melee = melee;
+    }
+
+    public void setNumTroops(int numTroops) {
+        this.numTroops = numTroops;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
+    public void setTrainTime(int trainTime) {
+        this.trainTime = trainTime;
+    }
+
+    public void setAttack(double attack) {
+        this.attack = attack;
+    }
+
+    public void setMovePoints(int movePoints) {
+        this.movePoints = movePoints;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    public void setMorale(double morale) {
+        this.morale = morale;
+    }
+
+    public void setShield(double shield) {
+        this.shield = shield;
+    }
+
+    public void setDefence(double defence) {
+        this.defence = defence;
+    }
+
+    public void setCharge(double charge) {
+        this.charge = charge;
+    }
+
+    public void setAbilityType(String abilityType) {
+        this.abilityType = abilityType;
+    }
+
+    public void setAbility(JSONArray ability) {
+        this.ability = ability;
+    }
+
+    public void setModifiers(JSONArray modifiers) {
+        this.modifiers = modifiers;
+    }
+
+    public JSONObject getBaseValues() {
+        return baseValues;
+    }
+
+    public void setBaseValues(JSONObject baseValues) {
+        this.baseValues = baseValues;
+    }
+
+    
 }

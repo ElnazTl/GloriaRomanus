@@ -97,7 +97,8 @@ public class BattleResolver {
         int numInflict = 0;
         double N = RANDOMGEN.nextGaussian();
         double enemyTroops = defender.getNumTroops() * 0.1;
-        double playerAttack = attacker.getFriendlyModifiedValue("attack");
+        double playerAttack = attacker.getFriendlyModifiedValue("attack")
+                            + attacker.getFriendlyModifiedValue("charge");
         double enemyValues = defender.getFriendlyModifiedValue("armour")
                            + defender.getFriendlyModifiedValue("shield");
         if (enemyValues == 0) enemyValues = 10;
