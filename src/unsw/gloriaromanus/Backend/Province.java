@@ -1,6 +1,7 @@
 package unsw.gloriaromanus.Backend;
 
 import java.util.List;
+import java.io.IOException;
 import java.util.ArrayList;
 import org.json.JSONObject;
 
@@ -130,10 +131,10 @@ public class Province {
      * @param name Name of unit to train
      * @return True if training unit, otherwise False
      */
-    public boolean trainUnit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
+    public boolean trainUnit(String name, JSONObject unitConfig) throws IOException {
         if (unitsTraining.size() == 2) return false;
         else {
-            Unit u = new Unit(name, unitConfig, abilityConfig);
+            Unit u = new Unit(name, unitConfig);
             unitsTraining.add(u);
             // u.applyModifier(taxRate.getMoraleModifier());
 
