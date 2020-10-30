@@ -67,9 +67,9 @@ public class Province {
      * @param name 
      * @return
      */
-    public Unit findUnit(String name) {
+    public Unit findUnit(Long id) {
         for (Unit u : units) {
-            if (name.equals(u.getName())) {
+            if (id == u.getUnitID()) {
                 return u;
             }
         }
@@ -78,17 +78,15 @@ public class Province {
 
 
     /**
-     * Removes specified unit and returns it
+     * Removes specified unit 
      * 
      * @param name
-     * @return
      */
-    public Unit popUnit(Unit u) {
+    public void removeUnit(Long id) {
+        Unit u = findUnit(id);
         if (u != null) {
             units.remove(u);
-            return u;
         }
-        return null;
     }
 
 
