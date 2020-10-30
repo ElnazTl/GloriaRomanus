@@ -101,7 +101,7 @@ public class Player {
      * @return
      */
 
-    public String moveTroop(Unit u, String from, String to) throws IOException {
+    public String moveTroop(String u, String from, String to) throws IOException {
 
         Province f = new Province(from, database);
         Province t = new Province(to, database);

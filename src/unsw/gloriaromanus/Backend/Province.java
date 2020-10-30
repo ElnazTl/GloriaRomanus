@@ -171,15 +171,24 @@ public class Province {
      * @param u
      */
 
-    public String moveTroopTo(Province to, Unit u) throws IOException {
+    public String moveTroopTo(Province to, String u) throws IOException {
 
         // TODO: find the shortes path + movement points to move to for DN
 
         // units can only move between adjacent provinces for pass mark need to update
-        if (!confirmIfProvincesConnected(to.name, this.name))
-            return "Provinces are not adjacent";
-        database.getProvinceUnit().get(this).remove(u);
-        database.getProvinceUnit().get(to).remove(u);
+        if (!to.getFaction().equals(faction)) return "can't move the unit to enemy territoy";
+
+        if (!confirmIfProvincesConnected(to.name, this.name)) return "Provinces are not adjacent";
+        for (int i = 0; i < units.size();i++) {
+            if (units.get(i).getName().equals(u)) {
+
+                to.addUnit(units.get(i));
+                units.remove(i);
+            }
+        }
+           
+      
+        
 
         return "Successfully moved the unit";
 
