@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 public class Faction {
 
+<<<<<<< HEAD
     String name;
     List <Province> provinces;
     List <String> availableUnits;
@@ -34,6 +35,14 @@ public class Faction {
 
     public List<String> getAvailableUnits() {
         return availableUnits;
+=======
+    public String name;
+    private Army army;
+    // ArrayList <Province> provinceList;
+    public Faction(String name) {
+        this.name = name;
+        army = new Army();
+>>>>>>> 4adaecd027a12cc72fc14b0f7a9d5b292a433e28
     }
     
 

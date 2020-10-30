@@ -3,7 +3,12 @@ package unsw.gloriaromanus.Backend;
 import java.io.IOException;
 import java.util.Iterator;
 
+<<<<<<< HEAD
 import org.json.JSONArray;
+=======
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+>>>>>>> 4adaecd027a12cc72fc14b0f7a9d5b292a433e28
 import org.json.JSONObject;
 
 
@@ -29,14 +34,21 @@ public class Unit {
     private JSONObject baseValues;
 
     
+<<<<<<< HEAD
     public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
+=======
+    public Unit(){}
+    public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) throws IOException {
+>>>>>>> 4adaecd027a12cc72fc14b0f7a9d5b292a433e28
         this.name = name;
         this.unitID = ID;
         ID = ID + 1;
         loadUnitFromConfig(name, unitConfig, abilityConfig);
     }
 
-
+    public void endTurn() {
+        trainTime = trainTime-1;
+    }
     public String getName() {
         return name;
     }
@@ -178,7 +190,11 @@ public class Unit {
         return val;
     }
 
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 4adaecd027a12cc72fc14b0f7a9d5b292a433e28
     /**
      * Loads the base config values for the specified unit
      * from the configs/unit_config.json file
@@ -197,10 +213,17 @@ public class Unit {
         this.attack = config.optDouble("attack", 1);
         this.morale = config.optDouble("morale", 1);
         this.shield = config.optDouble("shield", 1);
+<<<<<<< HEAD
         this.abilityType = config.optString("ability", "noAbility");
         this.ability = getAbilityJSON(this.abilityType, abilityConfig);
+=======
+        this.ability = config.optString("ability", "noAbility");
+
+        this.modifiers = getAbilityJSON(this.ability, abilityConfig);
+>>>>>>> 4adaecd027a12cc72fc14b0f7a9d5b292a433e28
         this.charge = "cavalry".equals(this.type) ? config.optDouble("charge", 1) : 0;
         this.defence = isMelee() ? config.optDouble("defence", 1) : 0;
+
         switch (this.type) {
             case "cavalry":
                 this.speed = 15;
@@ -250,4 +273,61 @@ public class Unit {
         Unit u = (Unit)obj;
         return unitID == u.getUnitID();
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setMelee(boolean melee) {
+        this.melee = melee;
+    }
+
+    public void setNumTroops(int numTroops) {
+        this.numTroops = numTroops;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
+    public void setTrainTime(int trainTime) {
+        this.trainTime = trainTime;
+    }
+
+    public void setAttack(double attack) {
+        this.attack = attack;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    public void setMorale(double morale) {
+        this.morale = morale;
+    }
+
+    public void setShield(double shield) {
+        this.shield = shield;
+    }
+
+    public void setDefence(double defence) {
+        this.defence = defence;
+    }
+
+    public void setCharge(double charge) {
+        this.charge = charge;
+    }
+
+    public void setAbility(String ability) {
+        this.ability = ability;
+    }
+
+    public void setModifiers(JSONObject modifiers) {
+        this.modifiers = modifiers;
+    }
+    
 }

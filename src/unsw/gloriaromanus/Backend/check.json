@@ -1,0 +1,25 @@
+{
+    "Gaul": {
+        "Achaia": {
+            "wealth": 0,
+            "unit": [
+                "soldier"
+            ]
+        }
+    },
+    "Rome": {
+        "Lugdunensis": {
+            "wealth": 0,
+            "unit": []
+        }
+    }
+}
+
+{
+
+    "V": {
+        "faction":"Rome",
+        "unit":[],
+        "wealth":0
+    }
+}
