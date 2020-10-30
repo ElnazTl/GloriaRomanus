@@ -8,7 +8,8 @@
         "attack" : 4,
         "speed" : 4,
         "morale" : 5,
-        "shield" : 3,
+        "armour" : 3,
+        "shield" : 5,
         "defence" : 6,
         "ability" : "noAbility"
 
@@ -22,6 +23,7 @@
         "attack" : 6,
         "speed" : 7,
         "morale" : 4,
+        "armour" : 2,
         "shield" : 2,
         "charge" : 5,
         "ability" : "noAbility"
