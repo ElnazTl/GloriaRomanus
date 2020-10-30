@@ -1,0 +1,27 @@
+{
+    "soldier": {
+        "type" : "infantry",
+        "attackType" : "melee",
+        "numTroops" : 10,
+        "cost" : 5,
+        "trainTime" : 1,
+        "attack" : 4,
+        "morale" : 5,
+        "shield" : 3,
+        "defence" : 6,
+        "ability" : "noAbility"
+
+    },
+    "horseArcher": {
+        "type" : "cavalry",
+        "attackType" : "ranged",
+        "numTroops" : 8,
+        "cost" : 5,
+        "trainTime" : 2,
+        "attack" : 6,
+        "morale" : 4,
+        "shield" : 2,
+        "charge" : 5,
+        "ability" : "noAbility"
+    }
+}
