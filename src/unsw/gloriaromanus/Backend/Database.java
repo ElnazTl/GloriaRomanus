@@ -273,7 +273,7 @@ public class Database {
 
     public String addUnit(String name, String province, String faction) throws IOException {
 
-        if (!factionList.get(faction).contains(province)) return "can only get unit for the faction you belong to";
+        if (!belongs(provinceList,faction,province)) return "can only get unit for the faction you belong to";
         String aj = Files.readString(Paths.get("/Users/eli/new1/t13a-oop/src/unsw/gloriaromanus/Backend/configs/ability_config.json"));
         JSONObject abilityJSON = new JSONObject(aj);
 
@@ -286,6 +286,11 @@ public class Database {
 
     }
 
+    private boolean belongs(Map<String,Faction> li,String faction, String province) {
+        Faction f = li.get(province);
+        return f.name.equals(faction);
+    }
+
 
     /**
      * This function will keep track of the training time of different troops and add them to the units when training is over
@@ -296,18 +301,22 @@ public class Database {
     }
 
     public void endTurn() {
-        for (Iterator pI = provinceTraining.keySet().iterator(); pI.hasNext();){
-            String p = (String)pI.next();
-            for (Iterator<Unit> iterator =  provinceTraining.get(p).iterator(); iterator.hasNext();) {
-                Unit u = iterator.next();
-                u.endTurn();
-                System.out.println(u.getName());
+        // for (Iterator pI = provinceTraining.keySet().iterator(); pI.hasNext();){
+        //     String p = (String)pI.next();
+        //     for (Iterator<Unit> iterator =  provinceTraining.get(p).iterator(); iterator.hasNext();) {
+        //         Unit u = iterator.next();
+        //         u.endTurn();
+        //         System.out.println(u.getName());
 
-                if (u.getTrainTime() == 0) {
-                    provinceUnit.get(p).add(u);
-                    iterator.remove();
-                }
-            }
+        //         if (u.getTrainTime() == 0) {
+        //             provinceUnit.get(p).add(u);
+        //             iterator.remove();
+        //         }
+        //     }
+        // }
+        for(String p: provinceList.keySet()) {
+            Province province = new Province(p,this);
+            province.newTurn();
         }
     }
     
