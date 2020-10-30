@@ -56,6 +56,17 @@ public class Faction {
         }
     }
     
+
+    /**
+     * Attempts to start training a unit with given name
+     * as long as the player is allowed to train this unit
+     * and if they have enough gold to buy the unit
+     * 
+     * @param p Province to train unit in
+     * @param unit Name of unit to train
+     * @return 
+     * @throws IOException
+     */
     public boolean trainUnit(Province p, String unit) throws IOException {
         if (!availableUnits.containsKey(unit)) {
             // Unit not available to this faction
@@ -68,10 +79,16 @@ public class Faction {
             return false;
         }
 
-        return trainUnit(p, unit);
+        return p.trainUnit(unit);
     }
 
 
+    /**
+     * Finds province with given name
+     * 
+     * @param name Name of province to find
+     * @return Province with given name, otherwise null
+     */
     public Province findProvince(String name) {
         for (Province p : provinces) {
             if (name.equals(p.getName())) {
@@ -82,13 +99,38 @@ public class Faction {
     }
 
 
+    /**
+     * Adds given province to list of owned
+     * provinces if not already in the list
+     * 
+     * @param p Province to add
+     */
     public void addProvince(Province p) {
-        provinces.add(p);
+        if (!provinces.contains(p)) provinces.add(p);
     }
 
 
+    /**
+     * Adds given province to list of conquered
+     * provinces during current turn if not already
+     * in the list
+     * 
+     * @param p Province to add
+     */
     public void addConqueredProvince(Province p) {
-        provincesConqueredOnTurn.add(p);
+        if (!conqueredDuringTurn(p)) provincesConqueredOnTurn.add(p);
+    }
+
+
+    /**
+     * Returns True if given province was conquered
+     * during the players current turn
+     * 
+     * @param p Province to check
+     * @return True if in list, otherwise False
+     */
+    public boolean conqueredDuringTurn(Province p) {
+        return provincesConqueredOnTurn.contains(p);
     }
 
 

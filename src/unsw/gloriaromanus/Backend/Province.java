@@ -131,10 +131,10 @@ public class Province {
      * @param name Name of unit to train
      * @return True if training unit, otherwise False
      */
-    public boolean trainUnit(String name, JSONObject unitConfig) throws IOException {
+    public boolean trainUnit(String name) throws IOException {
         if (unitsTraining.size() == 2) return false;
         else {
-            Unit u = new Unit(name, unitConfig);
+            Unit u = new Unit(name);
             unitsTraining.add(u);
             // u.applyModifier(taxRate.getMoraleModifier());
 
@@ -190,6 +190,23 @@ public class Province {
 
        
     // }
+
+
+    @Override
+    public String toString() {
+        return this.name + " (Province)";
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+
+        Province p = (Province)obj;
+        
+        return name.equals(p.getName());
+    }
     
 
 }

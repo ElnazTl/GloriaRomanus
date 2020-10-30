@@ -43,7 +43,7 @@ public class Player {
     }
 
     public void endTurn() {
-        database.endTurn();
+        db.endTurn();
         turn = false;
     }
 
