@@ -46,7 +46,7 @@ public class Database {
     // assign default unit to each province 
     public Database() throws IOException {
 
-        address = "/Users/eli/Desktop/t13a-oop/src/unsw/gloriaromanus/initial_province_ownership.json";
+        address = "bin/unsw/gloriaromanus/initial_province_ownership.json";
 
         provinceList = setProvinceToOwningFactionMap();
         provinceTraining = setProvinceTraining();

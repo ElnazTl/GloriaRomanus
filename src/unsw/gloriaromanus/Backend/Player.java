@@ -1,33 +1,27 @@
 package unsw.gloriaromanus.Backend;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Player {
+
     private String faction;
     public String username;
     Boolean turn;
-    Database database;
 
    
     public Player(){}
-    public Player(String username, Database database) {
+    public Player(String username) {
         this.username = username;
-        this.database = database;
-        registerPlayer();
 
     }
 
-    /**
-     * Player choosing their faction 
-     * 
-     * @param faction
-     */
-    public void setDatabase(Database d) {
-        this.database = d;
+    
+    public List<Faction> getAvailableFactions(Database db) {
+        return db.getAvailableFactions();
     }
-    public void registerPlayer() {
-        database.addPlayer(this);
-    }
+
     public void chooseFaction(String faction) {
         // Faction f = new Faction(faction);
         setFaction(faction);

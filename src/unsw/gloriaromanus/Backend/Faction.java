@@ -17,6 +17,7 @@ public class Faction {
     private Database db;
     private String name;
     private List<Province> provinces;
+    private List<Province> provincesConqueredOnTurn;
     private Map<String, Integer> availableUnits;
     private int treasury;
 
@@ -26,6 +27,7 @@ public class Faction {
         this.treasury = startingGold;
         loadUnitsFromConfig();
         provinces = new ArrayList<Province>();
+        provincesConqueredOnTurn = new ArrayList<Province>();
         availableUnits = new HashMap<String, Integer>();
     }
 
@@ -46,6 +48,9 @@ public class Faction {
     
 
     public void newTurn() {
+        for (Province p : provincesConqueredOnTurn) {
+            provinces.add(p);
+        }
         for (Province p : provinces) {
             p.newTurn();
         }
@@ -74,6 +79,16 @@ public class Faction {
             }
         }
         return null;
+    }
+
+
+    public void addProvince(Province p) {
+        provinces.add(p);
+    }
+
+
+    public void addConqueredProvince(Province p) {
+        provincesConqueredOnTurn.add(p);
     }
 
 
