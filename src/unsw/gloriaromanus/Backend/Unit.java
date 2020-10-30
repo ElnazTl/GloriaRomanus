@@ -8,8 +8,10 @@ import org.json.JSONObject;
 
 
 public class Unit {
+    private static Long ID = 0L;
     
     private String name;
+    private Long unitID;
     private String type;
     private boolean melee;
     private int numTroops;
@@ -29,12 +31,18 @@ public class Unit {
     
     public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
         this.name = name;
+        this.unitID = ID;
+        ID = ID + 1;
         loadUnitFromConfig(name, unitConfig, abilityConfig);
     }
 
 
     public String getName() {
         return name;
+    }
+
+    public Long getUnitID() {
+        return unitID;
     }
 
 
@@ -230,6 +238,16 @@ public class Unit {
 
     @Override
     public String toString() {
-        return name + " unit (" + numTroops + ", " + abilityType + ")";
+        return "unit (" + name + ", id: " + unitID + ")";
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        
+        Unit u = (Unit)obj;
+        return unitID == u.getUnitID();
     }
 }
