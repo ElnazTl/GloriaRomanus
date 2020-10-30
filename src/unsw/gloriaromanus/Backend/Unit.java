@@ -2,13 +2,8 @@ package unsw.gloriaromanus.Backend;
 
 import java.io.IOException;
 import java.util.Iterator;
-
-<<<<<<< HEAD
+//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.json.JSONArray;
-=======
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
->>>>>>> 4adaecd027a12cc72fc14b0f7a9d5b292a433e28
 import org.json.JSONObject;
 
 
@@ -34,12 +29,8 @@ public class Unit {
     private JSONObject baseValues;
 
     
-<<<<<<< HEAD
-    public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
-=======
     public Unit(){}
-    public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) throws IOException {
->>>>>>> 4adaecd027a12cc72fc14b0f7a9d5b292a433e28
+    public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
         this.name = name;
         this.unitID = ID;
         ID = ID + 1;
@@ -190,11 +181,7 @@ public class Unit {
         return val;
     }
 
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 4adaecd027a12cc72fc14b0f7a9d5b292a433e28
     /**
      * Loads the base config values for the specified unit
      * from the configs/unit_config.json file
@@ -213,14 +200,8 @@ public class Unit {
         this.attack = config.optDouble("attack", 1);
         this.morale = config.optDouble("morale", 1);
         this.shield = config.optDouble("shield", 1);
-<<<<<<< HEAD
         this.abilityType = config.optString("ability", "noAbility");
         this.ability = getAbilityJSON(this.abilityType, abilityConfig);
-=======
-        this.ability = config.optString("ability", "noAbility");
-
-        this.modifiers = getAbilityJSON(this.ability, abilityConfig);
->>>>>>> 4adaecd027a12cc72fc14b0f7a9d5b292a433e28
         this.charge = "cavalry".equals(this.type) ? config.optDouble("charge", 1) : 0;
         this.defence = isMelee() ? config.optDouble("defence", 1) : 0;
 
@@ -322,12 +303,30 @@ public class Unit {
         this.charge = charge;
     }
 
-    public void setAbility(String ability) {
-        this.ability = ability;
+    public void setAbilityType(String abilityType) {
+        this.abilityType = abilityType;
     }
 
     public void setModifiers(JSONObject modifiers) {
         this.modifiers = modifiers;
     }
+	public static Long getID() {
+		return ID;
+	}
+	public static void setID(Long iD) {
+		ID = iD;
+	}
+	public void setUnitID(Long unitID) {
+		this.unitID = unitID;
+	}
+	public void setAbility(JSONObject ability) {
+		this.ability = ability;
+	}
+	public JSONObject getBaseValues() {
+		return baseValues;
+	}
+	public void setBaseValues(JSONObject baseValues) {
+		this.baseValues = baseValues;
+	}
     
 }
