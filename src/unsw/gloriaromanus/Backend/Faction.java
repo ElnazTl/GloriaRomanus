@@ -21,14 +21,14 @@ public class Faction {
     private Map<String, Integer> availableUnits;
     private int treasury;
 
-    public Faction(Database db, String name, int startingGold) throws IOException {
+    public Faction(Database db, String name, int startingGold, List<Province> initialProvinces) throws IOException {
         this.db = db;
         this.name = name;
         this.treasury = startingGold;
+        this.provinces = initialProvinces;
+        this.provincesConqueredOnTurn = new ArrayList<Province>();
+        this.availableUnits = new HashMap<String, Integer>();
         loadUnitsFromConfig();
-        provinces = new ArrayList<Province>();
-        provincesConqueredOnTurn = new ArrayList<Province>();
-        availableUnits = new HashMap<String, Integer>();
     }
 
 
