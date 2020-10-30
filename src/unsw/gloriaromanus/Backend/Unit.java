@@ -1,16 +1,17 @@
 package unsw.gloriaromanus.Backend;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.Iterator;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 
-
 public class Unit {
+    private static Long ID = 0L;
     
     private String name;
+    private Long unitID;
     private String type;
     private boolean melee;
     private int numTroops;
@@ -22,18 +23,26 @@ public class Unit {
     private double shield;
     private double defence;  // Melee units only
     private double charge;   // Cavalry units only
-    private String ability;
+    private String abilityType;
+    private JSONObject ability;
     private JSONObject modifiers;
+    private JSONObject baseValues;
 
     
-    public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) throws IOException {
+    public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
         this.name = name;
+        this.unitID = ID;
+        ID = ID + 1;
         loadUnitFromConfig(name, unitConfig, abilityConfig);
     }
 
 
     public String getName() {
         return name;
+    }
+
+    public Long getUnitID() {
+        return unitID;
     }
 
 
@@ -87,7 +96,12 @@ public class Unit {
     }
 
 
-    public String getAbility() {
+    public String getAbilityType() {
+        return abilityType;
+    }
+
+
+    public JSONObject getAbility() {
         return ability;
     }
 
@@ -110,6 +124,33 @@ public class Unit {
         return trainTime == 0;
     }
 
+
+    /**
+     * Inflicts given number of casualties on unit,
+     * minimum of 0 troops remaining
+     * 
+     * @param num Number of troops to 'kill'
+     */
+    public void inflictCasualties(int num) {
+        if (numTroops - num < 0) {
+            numTroops = 0;
+        } else {
+            numTroops = numTroops - num;
+        }
+    }
+
+
+    /**
+     * Returns True if unit has troops remaining,
+     * otherwise False
+     * 
+     * @return True if unit is alive, otherwise False
+     */
+    public boolean isAlive() {
+        return numTroops != 0;
+    }
+
+
     /**
      * Called at start of a new turn
      * Changes anything that needs to be changed at start of a turn
@@ -120,7 +161,24 @@ public class Unit {
         }
     }
 
+    
+    public double getModifiedValue(JSONObject modifier, String type, String who) {
+        Iterator<Object> json = modifiers.getJSONArray(who).iterator();
+        double val = baseValues.optDouble(type, 0);
+        while (json.hasNext()) {
+            JSONObject mod = (JSONObject)json.next();
+            if (type.equals(mod.getString(type))) {
+                if ("add".equals(mod.getString("strategy"))) {
+                    val = val + mod.optDouble("value", 0);
+                } else if ("multiply".equals(mod.getString("strategy"))) {
+                    val = val * mod.optDouble("value", 1);
+                }
+            }
+        }
+        return val;
+    }
 
+    
     /**
      * Loads the base config values for the specified unit
      * from the configs/unit_config.json file
@@ -128,7 +186,7 @@ public class Unit {
      * @param name of unit to train
      * @throws IOException
      */
-    private void loadUnitFromConfig(String name, JSONObject unitsConfig, JSONObject abilityConfig) throws IOException {
+    private void loadUnitFromConfig(String name, JSONObject unitsConfig, JSONObject abilityConfig) {
         JSONObject config = unitsConfig.getJSONObject(this.name);
         
         this.type = config.optString("type", "infantry");
@@ -139,8 +197,8 @@ public class Unit {
         this.attack = config.optDouble("attack", 1);
         this.morale = config.optDouble("morale", 1);
         this.shield = config.optDouble("shield", 1);
-        this.ability = config.optString("ability", "noAbility");
-        this.modifiers = getAbilityJSON(this.ability, abilityConfig);
+        this.abilityType = config.optString("ability", "noAbility");
+        this.ability = getAbilityJSON(this.abilityType, abilityConfig);
         this.charge = "cavalry".equals(this.type) ? config.optDouble("charge", 1) : 0;
         this.defence = isMelee() ? config.optDouble("defence", 1) : 0;
         switch (this.type) {
@@ -156,6 +214,11 @@ public class Unit {
             default:
                 this.speed = 1;
         }
+        this.modifiers = new JSONObject();
+        modifiers.put("friendly", new JSONArray());
+        modifiers.put("enemy", new JSONArray());
+
+        this.baseValues = config;
     }
 
 
@@ -167,17 +230,24 @@ public class Unit {
      * @return JSONObject of specified ability
      * @throws IOException
      */
-    private JSONObject getAbilityJSON(String ability, JSONObject abilityConfig) throws IOException {
-        JSONObject config = abilityConfig.getJSONObject(this.ability);
+    private JSONObject getAbilityJSON(String ability, JSONObject abilityConfig) {
+        JSONObject config = abilityConfig.getJSONObject(this.abilityType);
         return config;
     }
 
 
     @Override
     public String toString() {
-        return "Unit: " + this.name + " (" + this.type + ") {\n\tmelee: " 
-                + isMelee() + "\n\tnumTroops: " + this.numTroops + "\n\tcost: "
-                + this.cost + "\n\ttime to train: " + this.trainTime
-                + "\n\tability: " + this.ability + " }";
+        return "unit (" + name + ", id: " + unitID + ")";
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        
+        Unit u = (Unit)obj;
+        return unitID == u.getUnitID();
     }
 }
