@@ -21,6 +21,7 @@ public class Unit {
     private int trainTime;
     private double attack;
     private double speed;
+    private int movePoints;
     private double morale;
     private double shield;
     private double defence;  // Melee units only
@@ -75,6 +76,11 @@ public class Unit {
 
     public double getSpeed() {
         return speed;
+    }
+
+
+    public int getMovePoints() {
+        return movePoints;
     }
 
 
@@ -268,16 +274,16 @@ public class Unit {
         this.defence = isMelee() ? config.optDouble("defence", 1) : 0;
         switch (this.type) {
             case "cavalry":
-                this.speed = 15;
+                this.movePoints= 15;
                 break;
             case "infantry":
-                this.speed = 10;
+                this.movePoints = 10;
                 break;
             case "artillery":
-                this.speed = 4;
+                this.movePoints = 4;
                 break;
             default:
-                this.speed = 1;
+                this.movePoints = 1;
         }
         this.modifiers = new JSONArray();
         this.baseValues = config;
@@ -314,4 +320,90 @@ public class Unit {
         Unit u = (Unit)obj;
         return unitID == u.getUnitID();
     }
+
+    public static Long getID() {
+        return ID;
+    }
+
+    public static void setID(Long iD) {
+        ID = iD;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUnitID(Long unitID) {
+        this.unitID = unitID;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setMelee(boolean melee) {
+        this.melee = melee;
+    }
+
+    public void setNumTroops(int numTroops) {
+        this.numTroops = numTroops;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
+    public void setTrainTime(int trainTime) {
+        this.trainTime = trainTime;
+    }
+
+    public void setAttack(double attack) {
+        this.attack = attack;
+    }
+
+    public void setMovePoints(int movePoints) {
+        this.movePoints = movePoints;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    public void setMorale(double morale) {
+        this.morale = morale;
+    }
+
+    public void setShield(double shield) {
+        this.shield = shield;
+    }
+
+    public void setDefence(double defence) {
+        this.defence = defence;
+    }
+
+    public void setCharge(double charge) {
+        this.charge = charge;
+    }
+
+    public void setAbilityType(String abilityType) {
+        this.abilityType = abilityType;
+    }
+
+    public void setAbility(JSONArray ability) {
+        this.ability = ability;
+    }
+
+    public void setModifiers(JSONArray modifiers) {
+        this.modifiers = modifiers;
+    }
+
+    public JSONObject getBaseValues() {
+        return baseValues;
+    }
+
+    public void setBaseValues(JSONObject baseValues) {
+        this.baseValues = baseValues;
+    }
+
+    
 }
