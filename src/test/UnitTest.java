@@ -17,13 +17,11 @@ public class UnitTest {
     // NOTE: if you change the config file,
     // you will have to manually change the values in the JSON's below
     static JSONObject unitJSON = new JSONObject("{\r\n    \"soldier\": {\r\n        \"type\" : \"infantry\",\r\n        \"attackType\" : \"melee\",\r\n        \"numTroops\" : 10,\r\n        \"cost\" : 5,\r\n        \"trainTime\" : 1,\r\n        \"attack\" : 4,\r\n        \"morale\" : 5,\r\n        \"shield\" : 3,\r\n        \"defence\" : 6,\r\n        \"ability\" : \"noAbility\"\r\n\r\n    },\r\n    \"horseArcher\": {\r\n        \"type\" : \"cavalry\",\r\n        \"attackType\" : \"ranged\",\r\n        \"numTroops\" : 8,\r\n        \"cost\" : 5,\r\n        \"trainTime\" : 2,\r\n        \"attack\" : 6,\r\n        \"morale\" : 4,\r\n        \"shield\" : 2,\r\n        \"charge\" : 5,\r\n        \"ability\" : \"noAbility\"\r\n    }\r\n}");
-    static JSONObject abilityJSON = new JSONObject("{\r\n    \"noAbility\" : {\r\n        \"friendly\" : [],\r\n        \"enemy\" : []\r\n    },\r\n    \"phalanx\" : {\r\n        \"friendly\" : [\r\n            {\r\n                \"type\" : \"defence\",\r\n                \"value\" : 2,\r\n                \"strategy\" : \"multiply\"\r\n                \r\n            },\r\n            {\r\n                \"type\" : \"speed\",\r\n                \"value\" : 0.5,\r\n                \"strategy\" : \"multiply\"\r\n            }\r\n        ],\r\n        \"enemy\" : []\r\n    }\r\n}");
-
-
+    
     @Test
     public void TestLoadsConfig() throws IOException {
 
-        Unit u = new Unit("soldier", unitJSON, abilityJSON);
+        Unit u = new Unit("soldier", unitJSON);
         assertEquals("infantry", u.getType());
         assertEquals(true, u.isMelee());
         assertEquals(false, u.isRanged());
@@ -37,26 +35,23 @@ public class UnitTest {
         assertEquals(6, u.getDefence());
         assertEquals(0, u.getCharge());
         assertEquals(10, u.getSpeed());
-        assertEquals(abilityJSON.getJSONObject("noAbility"), u.getAbility());
     }
 
 
     @Test
     public void TestSoldierTrains() throws IOException {
 
-        Unit u = new Unit("soldier", unitJSON, abilityJSON);
+        Unit u = new Unit("soldier", unitJSON);
 
         assertEquals(false, u.isTrained());
         u.newTurn();
         assertEquals(true, u.isTrained());
-
-
     }
 
     @Test
     public void TestHorseArcherTrains() throws IOException {
 
-        Unit u = new Unit("horseArcher", unitJSON, abilityJSON);
+        Unit u = new Unit("horseArcher", unitJSON);
 
         assertEquals(2, u.getTrainTime());
         assertEquals(false, u.isTrained());

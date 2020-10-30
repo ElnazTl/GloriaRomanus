@@ -1,5 +1,7 @@
 package unsw.gloriaromanus.Backend;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -29,11 +31,11 @@ public class Unit {
     private JSONObject baseValues;
 
     
-    public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
+    public Unit(String name, JSONObject unitConfig) throws IOException {
         this.name = name;
         this.unitID = ID;
         ID = ID + 1;
-        loadUnitFromConfig(name, unitConfig, abilityConfig);
+        loadUnitFromConfig(name, unitConfig);
     }
 
 
@@ -249,7 +251,7 @@ public class Unit {
      * @param name of unit to train
      * @throws IOException
      */
-    private void loadUnitFromConfig(String name, JSONObject unitsConfig, JSONObject abilityConfig) {
+    private void loadUnitFromConfig(String name, JSONObject unitsConfig) throws IOException {
         JSONObject config = unitsConfig.getJSONObject(this.name);
         
         this.type = config.optString("type", "infantry");
@@ -261,7 +263,7 @@ public class Unit {
         this.morale = config.optDouble("morale", 1);
         this.shield = config.optDouble("shield", 1);
         this.abilityType = config.optString("ability", "noAbility");
-        this.ability = getAbilityJSON(this.abilityType, abilityConfig);
+        this.ability = getAbilityJSON(this.abilityType);
         this.charge = "cavalry".equals(this.type) ? config.optDouble("charge", 1) : 0;
         this.defence = isMelee() ? config.optDouble("defence", 1) : 0;
         switch (this.type) {
@@ -277,10 +279,7 @@ public class Unit {
             default:
                 this.speed = 1;
         }
-        this.modifiers = new JSONObject();
-        modifiers.put("friendly", new JSONArray());
-        modifiers.put("enemy", new JSONArray());
-
+        this.modifiers = new JSONArray();
         this.baseValues = config;
     }
 
@@ -293,8 +292,10 @@ public class Unit {
      * @return JSONObject of specified ability
      * @throws IOException
      */
-    private JSONArray getAbilityJSON(String ability, JSONObject abilityConfig) {
-        JSONArray config = abilityConfig.getJSONArray(this.abilityType);
+    private JSONArray getAbilityJSON(String ability) throws IOException {
+        String configString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/ability_config.json"));
+        JSONObject abilityConfig = new JSONObject(configString);
+        JSONArray config = abilityConfig.getJSONArray(ability);
         return config;
     }
 
