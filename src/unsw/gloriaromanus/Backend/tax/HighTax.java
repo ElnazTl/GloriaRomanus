@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 public class HighTax implements TaxRate {
         
+    final public static String TYPE = "HighTax";
     private int wealth;
     private double taxRate;
 
@@ -22,5 +23,10 @@ public class HighTax implements TaxRate {
 
     public JSONObject getMoraleModifier() {
         return new JSONObject();
+    }
+
+    @Override
+    public String toString() {
+        return "High tax";
     }
 }

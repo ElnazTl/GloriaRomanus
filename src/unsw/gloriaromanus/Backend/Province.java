@@ -1,8 +1,8 @@
 package unsw.gloriaromanus.Backend;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
+import org.json.JSONObject;
 
 import unsw.gloriaromanus.Backend.tax.*;
 
@@ -11,16 +11,15 @@ public class Province {
     String name;
     int wealth;
     List<Unit> units;
-    TaxFactory taxFactory;
-    TaxRate taxRate;
     List<Unit> unitsTraining;
+    TaxRate taxRate;
+
 
     public Province(String name) {
         this.name = name;
         this.units = new ArrayList<Unit>();
         this.unitsTraining = new ArrayList<Unit>(2);
-        this.taxFactory = new TaxFactory();
-        changeTaxRate("low");
+        changeTaxRate(LowTax.TYPE);
     }
 
     public String getName() {
@@ -39,6 +38,10 @@ public class Province {
         return unitsTraining;
     }
 
+    public TaxRate getTaxRate() {
+        return taxRate;
+    }
+
     /**
      * Called at start of a new turn
      * Changes anything that needs to be changed at start of a turn
@@ -49,8 +52,12 @@ public class Province {
         }
         for (Unit u : this.unitsTraining) {
             u.newTurn();
+            if (u.isTrained()) {
+                unitsTraining.remove(u);
+                units.add(u);
+            }
         }
-        wealth += taxRate.getWealth();
+        wealth = wealth + taxRate.getWealth();
     }
 
     
@@ -60,9 +67,9 @@ public class Province {
      * @param name 
      * @return
      */
-    public Unit findUnit(String name) {
+    public Unit findUnit(Long id) {
         for (Unit u : units) {
-            if (name.equals(u.getName())) {
+            if (id == u.getUnitID()) {
                 return u;
             }
         }
@@ -71,22 +78,74 @@ public class Province {
 
 
     /**
-     * Removes specified unit and returns it
+     * Removes specified unit 
      * 
      * @param name
-     * @return
      */
-    public Unit popUnit(Unit u) {
+    public void removeUnit(Long id) {
+        Unit u = findUnit(id);
         if (u != null) {
             units.remove(u);
-            return u;
         }
-        return null;
     }
 
 
-    public void changeTaxRate(String name) {
-        taxRate = taxFactory.newTaxRate(name);
+    /**
+     * Changes the tax rate of the province
+     * 
+     * @param tax Name of Tax Rate
+     */
+    public void changeTaxRate(String tax) {
+        //removeTaxMorale();
+        taxRate = TaxFactory.newTaxRate(tax);
+        //applyTaxMorale();
+    }
+
+
+    // TODO 
+    // public void applyTaxMorale() {
+    //     // Change morale of units
+    //     // Change morale of training units?
+    // }
+
+    //TODO
+    // public void removeTaxMorale() {
+    //     // Remove morale effect of units/training units
+    // }
+
+
+
+    /**
+     * Attempts to train a unit
+     * Returns true if training,
+     * otherwise returns false
+     * 
+     * @param name Name of unit to train
+     * @return True if training unit, otherwise False
+     */
+    public boolean trainUnit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
+        if (unitsTraining.size() == 2) return false;
+        else {
+            Unit u = new Unit(name, unitConfig, abilityConfig);
+            unitsTraining.add(u);
+            // u.applyModifier(taxRate.getMoraleModifier());
+
+            return true;
+        }
+    }
+
+
+    /**
+     * Resets the province's units and tax rate,
+     * does not modify the wealth
+     * 
+     * @return Conquered Province
+     */
+    public Province conquerProvince() {
+        units.removeAll(units);
+        unitsTraining.removeAll(unitsTraining);
+        changeTaxRate(LowTax.TYPE);
+        return this;
     }
 
 
@@ -106,22 +165,7 @@ public class Province {
     // }
 
 
-    /**
-     * Attempts to train a unit
-     * Returns true if training,
-     * otherwise returns false
-     * 
-     * @param name Name of unit to train
-     * @return True if training unit, otherwise False
-     * @throws IOException
-     */
-    public boolean trainUnit(String name) throws IOException {
-        if (unitsTraining.size() == 2) return false;
-        else {
-            unitsTraining.add(new Unit(name));
-            return true;
-        }
-    }
+
 
 
     // public String moveTroopTo(Province to, Unit u) {

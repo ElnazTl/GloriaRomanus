@@ -2,15 +2,15 @@ package unsw.gloriaromanus.Backend.tax;
 
 public class TaxFactory {
 
-    public TaxRate newTaxRate(String tax) {
+    public static TaxRate newTaxRate(String tax) {
         switch(tax) {
-            case "low":
+            case LowTax.TYPE:
                 return new LowTax();
-            case "normal":
+            case NormalTax.TYPE:
                 return new NormalTax();
-            case "high":
+            case HighTax.TYPE:
                 return new HighTax();
-            case "veryHigh":
+            case VeryHighTax.TYPE:
                 return new VeryHighTax();
             default:
                 return null;
