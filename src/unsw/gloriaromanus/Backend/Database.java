@@ -15,7 +15,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import com.esri.arcgisruntime.internal.security.Token;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -272,13 +271,18 @@ public class Database {
    
   
 
-    public String addUnit(String name, String province) throws IOException {
+    public String addUnit(String name, String province, String faction) throws IOException {
 
-        var unitJSON = new JSONObject("{\r\n    \"soldier\": {\r\n        \"type\" : \"infantry\",\r\n        \"attackType\" : \"melee\",\r\n        \"numTroops\" : 10,\r\n        \"cost\" : 5,\r\n        \"trainTime\" : 1,\r\n        \"attack\" : 4,\r\n        \"morale\" : 5,\r\n        \"shield\" : 3,\r\n        \"defence\" : 6,\r\n        \"ability\" : \"noAbility\"\r\n\r\n    },\r\n    \"horseArcher\": {\r\n        \"type\" : \"cavalry\",\r\n        \"attackType\" : \"ranged\",\r\n        \"numTroops\" : 8,\r\n        \"cost\" : 5,\r\n        \"trainTime\" : 2,\r\n        \"attack\" : 6,\r\n        \"morale\" : 4,\r\n        \"shield\" : 2,\r\n        \"charge\" : 5,\r\n        \"ability\" : \"noAbility\"\r\n    }\r\n}");
-        var abilityJSON = new JSONObject("{\r\n    \"noAbility\" : {\r\n        \"friendly\" : [],\r\n        \"enemy\" : []\r\n    },\r\n    \"phalanx\" : {\r\n        \"friendly\" : [\r\n            {\r\n                \"type\" : \"defence\",\r\n                \"value\" : 2,\r\n                \"strategy\" : \"multiply\"\r\n                \r\n            },\r\n            {\r\n                \"type\" : \"speed\",\r\n                \"value\" : 0.5,\r\n                \"strategy\" : \"multiply\"\r\n            }\r\n        ],\r\n        \"enemy\" : []\r\n    }\r\n}");
+        if (!factionList.get(faction).contains(province)) return "can only get unit for the faction you belong to";
+        String aj = Files.readString(Paths.get("/Users/eli/new1/t13a-oop/src/unsw/gloriaromanus/Backend/configs/ability_config.json"));
+        JSONObject abilityJSON = new JSONObject(aj);
+
+        String js = Files.readString(Paths.get("/Users/eli/new1/t13a-oop/src/unsw/gloriaromanus/Backend/configs/units_config.json"));
+        JSONObject unitJSON = new JSONObject(js);
+
         Unit u = new Unit(name,unitJSON,abilityJSON);
-        Province p = new Province(province,this);
-        return p.getUnit(u);
+        getProvinceTraining().get(province).add(u);
+        return "successfully added the unit";
 
     }
 
