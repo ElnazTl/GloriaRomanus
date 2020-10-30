@@ -18,7 +18,7 @@ public class Faction {
 
     public Faction(String name) throws IOException {
         this.name = name;
-        loadUnitsFromConfig();
+        // loadUnitsFromConfig();
     }
 
 

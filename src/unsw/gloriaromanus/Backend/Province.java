@@ -25,6 +25,8 @@ public class Province {
         this.units = getUnit();
         this.unitsTraining = getTraining();
         changeTaxRate(LowTax.TYPE);
+        this.faction = setFaction();
+
     }
 
 
@@ -32,6 +34,10 @@ public class Province {
      * Called at start of a new turn
      * Changes anything that needs to be changed at start of a turn
      */
+    private String setFaction() {
+        // System.out.println(database.getFactionProvince().get(name));
+        return database.getFactionProvince().get(name).name;
+    }
     public void newTurn() {
         for (Unit u : this.units) {
             u.newTurn();
@@ -52,6 +58,9 @@ public class Province {
         
         wealth = wealth + taxRate.getWealth();
 
+    }
+    public void setDatabase(Database d) {
+        this.database = d;
     }
 
     private List<Unit> getUnit() {
@@ -209,9 +218,9 @@ public class Province {
     }
 
    
-    public TaxRate getTaxRate() {
-        return taxRate;
-    }
+    // public TaxRate getTaxRate() {
+    //     return taxRate;
+    // }
 
     
 
@@ -219,8 +228,8 @@ public class Province {
         return unitsTraining;
     }
 
-    public void setFaction(Faction faction) {
-        this.faction = faction.name;
+    public void setFaction(String faction) {
+        this.faction = faction;
     }
 
     public void setName(String name) {
@@ -235,9 +244,9 @@ public class Province {
         this.units = units;
     }
 
-    public void setTaxRate(TaxRate taxRate) {
-        this.taxRate = taxRate;
-    }
+    // public void setTaxRate(TaxRate taxRate) {
+    //     this.taxRate = taxRate;
+    // }
 
     public void setUnitsTraining(List<Unit> unitsTraining) {
         this.unitsTraining = unitsTraining;

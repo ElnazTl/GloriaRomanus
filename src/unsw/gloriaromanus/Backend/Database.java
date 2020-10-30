@@ -45,7 +45,7 @@ public class Database {
     // assign default unit to each province 
     public Database() throws IOException {
 
-        address = "/Users/eli/Desktop/t13a-oop/src/unsw/gloriaromanus/initial_province_ownership.json";
+        address = "src/unsw/gloriaromanus/initial_province_ownership.json";
 
         provinceList = setProvinceToOwningFactionMap();
         provinceTraining = setProvinceTraining();
@@ -69,6 +69,7 @@ public class Database {
     }
 
     public Map<String,Faction > getFactionProvince() {
+       
         return provinceList;
     }
 
@@ -182,15 +183,19 @@ public class Database {
     
 
     public void saveGame() throws IOException {
-        OutputStream os = new FileOutputStream("/Users/eli/Desktop/t13a-oop/src/unsw/gloriaromanus/Backend/configs/load.json");
+        System.out.println("heyyyyyyyygitl");
+        OutputStream os = new FileOutputStream("src/unsw/gloriaromanus/Backend/configs/load.json");
         ObjectMapper om = new ObjectMapper();
-        OutputStream os1 = new FileOutputStream("/Users/eli/Desktop/t13a-oop/src/unsw/gloriaromanus/Backend/configs/loadPlayer.json");
+        OutputStream os1 = new FileOutputStream("src/unsw/gloriaromanus/Backend/configs/loadPlayer.json");
         JsonGenerator g = om.getFactory().createGenerator(os);
         JsonGenerator g1 = om.getFactory().createGenerator(os1);
 
 
         for (Player player:players) {
+
             om.writeValue(g1,player);
+            System.out.println("we are here");
+
             
         }
         for (String f: factionList.keySet()) {
@@ -201,7 +206,7 @@ public class Database {
       
     }
     public void loadGame() throws IOException {
-        
+
         loadPlayer();
        
         loadProvince();
@@ -212,12 +217,14 @@ public class Database {
      */
 
     public void loadPlayer() throws IOException {
-        FileReader fis = new FileReader("/Users/eli/Desktop/t13a-oop/src/unsw/gloriaromanus/Backend/configs/loadPlayer.json");
+        FileReader fis = new FileReader("src/unsw/gloriaromanus/Backend/configs/loadPlayer.json");
         JsonFactory jf = new JsonFactory();
         ObjectMapper mapper = new ObjectMapper();
         Iterator<Player> value = mapper.readValues( jf.createParser(fis), Player.class);
 
         while(value.hasNext()) {
+            System.out.println("herreeeeeee");
+
             Player p = value.next();
             p.setDatabase(this);
             addPlayer(p);
@@ -228,7 +235,7 @@ public class Database {
 
     public void loadProvince() throws IOException {
 
-        FileReader fis = new FileReader("/Users/eli/Desktop/t13a-oop/src/unsw/gloriaromanus/Backend/configs/load.json");
+        FileReader fis = new FileReader("src/unsw/gloriaromanus/Backend/configs/load.json");
         JsonFactory jf = new JsonFactory();
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -240,6 +247,8 @@ public class Database {
             List<Unit> u = p.getUnits();
             provinceUnit.put(p.getName(), u);
             provinceList.put(p.getName(), new Faction(p.getFaction()));
+            // System.out.println("heyyyyy"+p.getFaction());
+
             factionList.get(p.getFaction()).add(p);
             provinceTraining.put(p.getName(), p.getUnitsTraining());
             // p.setDatabase(this);
@@ -274,12 +283,11 @@ public class Database {
     public String addUnit(String name, String province, String faction) throws IOException {
 
         if (!belongs(provinceList,faction,province)) return "can only get unit for the faction you belong to";
-        String aj = Files.readString(Paths.get("/Users/eli/new1/t13a-oop/src/unsw/gloriaromanus/Backend/configs/ability_config.json"));
+        String aj = Files.readString(Paths.get("src/unsw/gloriaromanus/Backend/configs/ability_config.json"));
         JSONObject abilityJSON = new JSONObject(aj);
 
-        String js = Files.readString(Paths.get("/Users/eli/new1/t13a-oop/src/unsw/gloriaromanus/Backend/configs/units_config.json"));
+        String js = Files.readString(Paths.get("src/unsw/gloriaromanus/Backend/configs/units_config.json"));
         JSONObject unitJSON = new JSONObject(js);
-
         Unit u = new Unit(name,unitJSON,abilityJSON);
         getProvinceTraining().get(province).add(u);
         return "successfully added the unit";
@@ -301,19 +309,7 @@ public class Database {
     }
 
     public void endTurn() {
-        // for (Iterator pI = provinceTraining.keySet().iterator(); pI.hasNext();){
-        //     String p = (String)pI.next();
-        //     for (Iterator<Unit> iterator =  provinceTraining.get(p).iterator(); iterator.hasNext();) {
-        //         Unit u = iterator.next();
-        //         u.endTurn();
-        //         System.out.println(u.getName());
-
-        //         if (u.getTrainTime() == 0) {
-        //             provinceUnit.get(p).add(u);
-        //             iterator.remove();
-        //         }
-        //     }
-        // }
+    
         for(String p: provinceList.keySet()) {
             Province province = new Province(p,this);
             province.newTurn();
