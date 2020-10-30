@@ -25,8 +25,8 @@ public class Unit {
     private double defence;  // Melee units only
     private double charge;   // Cavalry units only
     private String abilityType;
-    private JSONObject ability;
-    private JSONObject modifiers;
+    private JSONArray ability;
+    private JSONArray modifiers;
     private JSONObject baseValues;
 
     
@@ -107,12 +107,12 @@ public class Unit {
     }
 
 
-    public JSONObject getAbility() {
+    public JSONArray getAbility() {
         return ability;
     }
 
 
-    public JSONObject getModifiers() {
+    public JSONArray getModifiers() {
         return modifiers;
     }
     
@@ -168,12 +168,75 @@ public class Unit {
     }
 
     
-    public double getModifiedValue(String type, String who) {
-        Iterator<Object> json = modifiers.getJSONArray(who).iterator();
+    /**
+     * Adds a new modifier to Unit
+     * 
+     * @param modifier New modifier object
+     * @param who Apply to friendly of enemy unit
+     */
+    public void addModifier(JSONObject modifier) {
+        modifiers.put(modifier);
+    }
+
+
+    /**
+     * Removes given modifier from modifiers,
+     * if that modifier is in the JSONArray
+     * 
+     * @param modifier Modifier to remove
+     */
+    public void removeModifier(JSONObject modifier) {
+        if (!modifiers.isEmpty()) {
+            for (int i = 0; i < modifiers.length(); i++) {
+                JSONObject mod = modifiers.getJSONObject(i);
+                if (mod.equals(modifier)) {
+                    modifiers.remove(i);
+                }
+            }
+        }
+    }
+
+
+
+    /**
+     * Returns the value of specified attribute after applying
+     * the friendly modifiers to it
+     * 
+     * @param type Value to modifiy
+     * @param who Friendly or enemy modifiers
+     * @return Modified value
+     */
+    public double getFriendlyModifiedValue(String type) {
+        Iterator<Object> json = modifiers.iterator();
         double val = baseValues.optDouble(type, 0);
         while (json.hasNext()) {
             JSONObject mod = (JSONObject)json.next();
-            if (type.equals(mod.getString(type))) {
+            if (type.equals(mod.getString(type)) && "friendly".equals(mod.getString("who"))) {
+                if ("add".equals(mod.getString("strategy"))) {
+                    val = val + mod.optDouble("value", 0);
+                } else if ("multiply".equals(mod.getString("strategy"))) {
+                    val = val * mod.optDouble("value", 1);
+                }
+            }
+        }
+        return val;
+    }
+
+
+    /**
+     * Returns the value of specified attribute after applying
+     * the enemy modifiers to it
+     * 
+     * @param type Value to modifiy
+     * @param who Friendly or enemy modifiers
+     * @return Modified value
+     */
+    public double getEnemyModifiedValue(String type) {
+        Iterator<Object> json = modifiers.iterator();
+        double val = baseValues.optDouble(type, 0);
+        while (json.hasNext()) {
+            JSONObject mod = (JSONObject)json.next();
+            if (type.equals(mod.getString(type)) && "enemy".equals(mod.getString("who"))) {
                 if ("add".equals(mod.getString("strategy"))) {
                     val = val + mod.optDouble("value", 0);
                 } else if ("multiply".equals(mod.getString("strategy"))) {
@@ -221,9 +284,7 @@ public class Unit {
             default:
                 this.speed = 1;
         }
-        this.modifiers = new JSONObject();
-        modifiers.put("friendly", new JSONArray());
-        modifiers.put("enemy", new JSONArray());
+        this.modifiers = new JSONArray();
 
         this.baseValues = config;
     }
@@ -237,8 +298,8 @@ public class Unit {
      * @return JSONObject of specified ability
      * @throws IOException
      */
-    private JSONObject getAbilityJSON(String ability, JSONObject abilityConfig) {
-        JSONObject config = abilityConfig.getJSONObject(this.abilityType);
+    private JSONArray getAbilityJSON(String ability, JSONObject abilityConfig) {
+        JSONArray config = abilityConfig.getJSONArray(this.abilityType);
         return config;
     }
 
