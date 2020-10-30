@@ -77,8 +77,6 @@ public class Faction {
     }
 
 
-
-
     /**
      * Loads the units availble to the faction
      * 
