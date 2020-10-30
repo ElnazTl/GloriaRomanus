@@ -7,7 +7,8 @@
         "trainTime" : 1,
         "attack" : 4,
         "morale" : 5,
-        "shield" : 3,
+        "armour" : 3,
+        "shield" : 5,
         "defence" : 6,
         "ability" : "noAbility"
 
@@ -20,6 +21,7 @@
         "trainTime" : 2,
         "attack" : 6,
         "morale" : 4,
+        "armour" : 2,
         "shield" : 2,
         "charge" : 5,
         "ability" : "noAbility"

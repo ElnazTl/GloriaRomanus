@@ -19,6 +19,7 @@ public class Unit {
     private int trainTime;
     private double attack;
     private double speed;
+    private double armour;
     private double morale;
     private double shield;
     private double defence;  // Melee units only
@@ -78,6 +79,11 @@ public class Unit {
 
     public double getMorale() {
         return morale;
+    }
+
+
+    public double getArmour() {
+        return armour;
     }
 
 
@@ -162,7 +168,7 @@ public class Unit {
     }
 
     
-    public double getModifiedValue(JSONObject modifier, String type, String who) {
+    public double getModifiedValue(String type, String who) {
         Iterator<Object> json = modifiers.getJSONArray(who).iterator();
         double val = baseValues.optDouble(type, 0);
         while (json.hasNext()) {
@@ -196,6 +202,7 @@ public class Unit {
         this.trainTime = config.optInt("trainTime", 1);
         this.attack = config.optDouble("attack", 1);
         this.morale = config.optDouble("morale", 1);
+        this.armour = config.optDouble("armour", 1);
         this.shield = config.optDouble("shield", 1);
         this.abilityType = config.optString("ability", "noAbility");
         this.ability = getAbilityJSON(this.abilityType, abilityConfig);
