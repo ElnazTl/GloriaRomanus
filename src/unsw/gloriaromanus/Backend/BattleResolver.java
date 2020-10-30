@@ -72,10 +72,13 @@ public class BattleResolver {
 
     
     private static void runEngagement(String type, Unit attacker, Unit defender) {
+
+        double N = RANDOMGEN.nextGaussian();
+        double enemyTroops = defender.getNumTroops() * 0.1;
         if (type == RANGED) {
             if (!attacker.isMelee()) {
-                double N = RANDOMGEN.nextGaussian();
-                int numInflict = (int)((N + 1) * );
+                double enemyValues = defender.getModifiedValue(modifier, type, who)
+                int numInflict = (int)((N + 1) * enemyTroops);
 
             }
         } else {
