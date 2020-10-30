@@ -24,7 +24,7 @@ public class Unit {
     private String ability;
     private JSONObject modifiers;
 
-    @JsonIgnoreProperties
+    
     public Unit(){}
     public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) throws IOException {
         this.name = name;
