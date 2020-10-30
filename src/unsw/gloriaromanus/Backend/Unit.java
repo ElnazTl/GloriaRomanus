@@ -21,11 +21,8 @@ public class Unit {
     private int trainTime;
     private double attack;
     private double speed;
-<<<<<<< HEAD
-    private double armour;
-=======
     private int movePoints;
->>>>>>> 6a5715e15db24c5f45722263617666963945c7eb
+    private double armour;
     private double morale;
     private double shield;
     private double defence;  // Melee units only
@@ -35,12 +32,21 @@ public class Unit {
     private JSONArray modifiers;
     private JSONObject baseValues;
 
-    
+
+    public Unit() {}
+
+    public Unit(String name) throws IOException {
+        this.name = name;
+        this.unitID = ID;
+        ID = ID + 1;
+        loadFromConfig(name);
+    }
+
     public Unit(String name, JSONObject unitConfig) throws IOException {
         this.name = name;
         this.unitID = ID;
         ID = ID + 1;
-        loadUnitFromConfig(name, unitConfig);
+        loadFromConfig(name, unitConfig);
     }
 
 
@@ -239,7 +245,6 @@ public class Unit {
      * the enemy modifiers to it
      * 
      * @param type Value to modifiy
-     * @param who Friendly or enemy modifiers
      * @return Modified value
      */
     public double getEnemyModifiedValue(String type) {
@@ -258,15 +263,31 @@ public class Unit {
         return val;
     }
 
-    
+
     /**
-     * Loads the base config values for the specified unit
+     * Loads base config values for specified unit
      * from the configs/unit_config.json file
      * 
-     * @param name of unit to train
+     * @param name
      * @throws IOException
      */
-    private void loadUnitFromConfig(String name, JSONObject unitsConfig) throws IOException {
+    private void loadFromConfig(String name) throws IOException {
+        String defaultString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/units_config.json"));
+        JSONObject unitsConfig = new JSONObject(defaultString);
+        loadFromConfig(name, unitsConfig);
+    }
+
+
+    
+    /**
+     * Loads the given config values for the specified unit
+     * 
+     * 
+     * @param name Name of unit to train
+     * @param unitsConfig JSONObject of config file
+     * @throws IOException
+     */
+    private void loadFromConfig(String name, JSONObject unitsConfig) throws IOException {
         JSONObject config = unitsConfig.getJSONObject(this.name);
         
         this.type = config.optString("type", "infantry");
