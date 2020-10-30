@@ -90,6 +90,12 @@ public class Province {
         }
     }
 
+    public void removeUnit(Unit u) {
+        if (u != null) {
+            units.remove(u);
+        }
+    }
+
 
     /**
      * Changes the tax rate of the province
@@ -101,6 +107,7 @@ public class Province {
         taxRate = TaxFactory.newTaxRate(tax);
         //applyTaxMorale();
     }
+
 
 
     // TODO 

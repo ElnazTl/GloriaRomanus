@@ -21,7 +21,11 @@ public class Unit {
     private int trainTime;
     private double attack;
     private double speed;
+<<<<<<< HEAD
+    private double armour;
+=======
     private int movePoints;
+>>>>>>> 6a5715e15db24c5f45722263617666963945c7eb
     private double morale;
     private double shield;
     private double defence;  // Melee units only
@@ -86,6 +90,11 @@ public class Unit {
 
     public double getMorale() {
         return morale;
+    }
+
+
+    public double getArmour() {
+        return armour;
     }
 
 
@@ -267,6 +276,7 @@ public class Unit {
         this.trainTime = config.optInt("trainTime", 1);
         this.attack = config.optDouble("attack", 1);
         this.morale = config.optDouble("morale", 1);
+        this.armour = config.optDouble("armour", 1);
         this.shield = config.optDouble("shield", 1);
         this.abilityType = config.optString("ability", "noAbility");
         this.ability = getAbilityJSON(this.abilityType);
