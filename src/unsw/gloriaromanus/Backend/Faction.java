@@ -51,7 +51,7 @@ public class Faction {
      * @throws IOException
      */
     private void loadUnitsFromConfig() throws IOException {
-        String configString = Files.readString(Paths.get("src/unsw/gloriaromanus/Backend/configs/faction_units_config.json"));
+        String configString = Files.readString(Paths.get("/Users/eli/new1/t13a-oop/src/unsw/gloriaromanus/Backend/configs/faction_units_config.json"));
         JSONObject unitsConfig = new JSONObject(configString);
         JSONArray config = unitsConfig.getJSONArray(this.name);
         availableUnits = ArrayUtil.convert(config);

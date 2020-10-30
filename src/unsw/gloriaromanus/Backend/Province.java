@@ -14,14 +14,16 @@ public class Province {
     List<Unit> units;
     List<Unit> unitsTraining;
     TaxRate taxRate;
+    Database database;
 
 
 
     public Province() {}
     public Province(String name, Database database) {
+        this.database = database;
         this.name = name;
-        this.units = new ArrayList<Unit>();
-        this.unitsTraining = new ArrayList<Unit>(2);
+        this.units = getUnit();
+        this.unitsTraining = getTraining();
         changeTaxRate(LowTax.TYPE);
     }
 
@@ -42,6 +44,14 @@ public class Province {
             }
         }
         wealth = wealth + taxRate.getWealth();
+
+    }
+
+    private List<Unit> getUnit() {
+        return database.getProvinceUnit().get(name);
+    }
+    private List<Unit> getTraining() {
+        return database.getProvinceTraining().get(name);
 
     }
 

@@ -82,10 +82,10 @@ public class Player {
      * @return
      */
 
-    // implementing turn ?
+    
     public String getUnit(String name, String province) throws IOException {
         if (turn) {
-            return database.addUnit(name, province);
+            return database.addUnit(name, province, faction);
         }
 
         return "It's not your turn";
