@@ -80,6 +80,12 @@ public class Province {
         }
     }
 
+    public void removeUnit(Unit u) {
+        if (u != null) {
+            units.remove(u);
+        }
+    }
+
 
     /**
      * Changes the tax rate of the province
@@ -99,6 +105,7 @@ public class Province {
      * @param d
      * @param u
      */
+
 
     // TODO 
     // public void applyTaxMorale() {
