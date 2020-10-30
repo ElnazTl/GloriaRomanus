@@ -36,13 +36,20 @@ public class Province {
         for (Unit u : this.units) {
             u.newTurn();
         }
-        for (Unit u : this.unitsTraining) {
+        ArrayList<Integer> indexs = new ArrayList<Integer> ();
+        for (int i = 0; i < unitsTraining.size() ;i++) {
+            Unit u = unitsTraining.get(i);
             u.newTurn();
             if (u.isTrained()) {
-                unitsTraining.remove(u);
+                indexs.add(i);
                 units.add(u);
             }
         }
+        for (int i: indexs) {
+            unitsTraining.remove(i);
+        }
+        
+        
         wealth = wealth + taxRate.getWealth();
 
     }
