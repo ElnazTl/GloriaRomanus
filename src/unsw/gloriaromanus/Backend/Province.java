@@ -1,5 +1,7 @@
 package unsw.gloriaromanus.Backend;
 
+
+import org.apache.commons.codec.net.QCodec;
 import org.json.*;
 
 import javafx.scene.control.ListCell;
@@ -8,35 +10,53 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.io.IOException;
+import java.util.List;
+
+
+import unsw.gloriaromanus.Backend.tax.*;
 
 public class Province {
+    
+    Database database;
+    String faction;
+    String name;
+    int wealth;
+    List<Unit> units;
+    TaxFactory taxFactory;
+    TaxRate taxRate;
+    List<Unit> unitsTraining;
 
-    public String name;
-    private Faction faction;
-    private ArrayList<Unit> unitList;
-    private Database database;
 
+    public Province() {}
     public Province(String name, Database database) {
         this.name = name;
         this.database = database;
         setFaciton();
-        database.getProvinceUnit();
-        setUnit();
+        units = setUnit();
+        unitsTraining = setTraining();
 
     }
 
-    private void setUnit() {
+    public void setDatabase(Database d){
+        this.database = d;
+    }
+    
+
+    private List<Unit> setUnit() {
         
-        unitList = database.provinceUnit.get(name);
+        return database.getProvinceUnit().get(name);
+    }
+    private List<Unit> setTraining() {
+        return database.getProvinceTraining().get(name);
     }
 
     private void setFaciton() {
-        faction = database.getFactionProvince().get(name);
+        faction = database.getFactionProvince().get(name).name;
 
     }
 
-    public ArrayList<Unit> getUnits() {
-        return unitList;
+    public List<Unit> getUnits() {
+        return units;
     }
 
     /**
@@ -48,18 +68,31 @@ public class Province {
      * @return
      * @throws IOException
      */
-    public String battle(Province enemy, Database d) throws IOException {
+    public String invade(Province enemy, Database d) throws IOException {
 
         if (!confirmIfProvincesConnected(name, enemy.name))
             return ("Provinces not adjacent, cannot invade!");
-        unitList = d.getProvinceUnit().get(this.name);
 
         // TODO: return the result of Battle resolver
         Battleresolver br = new Battleresolver(this, enemy, database);
-
-        return "true";
-
+        return ("true");
     }
+
+
+    /**
+     * Removes specified unit and returns it
+     * 
+     * @param name
+     * @return
+     */
+    public Unit popUnit(Unit u) {
+        if (u != null) {
+            units.remove(u);
+            return u;
+        }
+        return null;
+    }
+
 
     /**
      * Function will check if two provinces are adjacent, implementation taken from
@@ -85,13 +118,50 @@ public class Province {
      * @param d
      * @param u
      */
-    public String addUnit(Database d, Unit u) {
 
-        // TODO: complete the operation of buying/trining and troop availibility
-        d.getProvinceUnit().get(name).add(u);
-        setUnit();
+    // private void setWealth(int cost) {
+    //     this.wealth = wealth-cost;
+    // }
 
-        return "Successfully added the unit";
+    private void setTraining(Unit u) {
+        unitsTraining.add(u);
+    }
+    
+    /**
+     * if enough wealth would get the unit and add it to list of trining units
+     * @param u
+     * @return
+     */
+
+    public String getUnit(Unit u) {
+
+        /**
+         * gold implementation not required for pass
+         * if (wealth >= u.getCost()) {
+
+            database.getProvinceTraining().get(name).add(u);
+            setWealth(u.getCost());
+            setTraining(u);
+            return "Successfully added the unit";
+        }
+        **/
+
+        if (unitsTraining.size() >=2 ) {
+            System.out.println("Already training two troops");
+        }
+        setTraining(u);
+        return "unit started traiing ";
+
+        
+    }
+    /**
+     * will add the unit to unitlist when training is over
+     * @param u
+     */
+    private void addUnit(Unit u) {
+        database.getProvinceUnit().get(name).add(u);
+        units.add(u);
+
     }
 
     /**
@@ -119,6 +189,7 @@ public class Province {
      * @return
      */
 
+
     public ArrayList<String> ListOfUnitString() {
         ArrayList<String> result = new ArrayList<String> ();
         for (Unit u: getUnits()) {
@@ -126,6 +197,80 @@ public class Province {
         }
         return result;
     }
+
+    public String getFaction() {
+        return faction;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+   
+
+    public int getWealth() {
+        return wealth;
+    }
+
+   
+
+    public TaxFactory getTaxFactory() {
+        return taxFactory;
+    }
+
+   
+    public TaxRate getTaxRate() {
+        return taxRate;
+    }
+
+    
+
+    public List<Unit> getUnitsTraining() {
+        return unitsTraining;
+    }
+
+    public void setFaction(Faction faction) {
+        this.faction = faction.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setWealth(int wealth) {
+        this.wealth = wealth;
+    }
+
+    public void setUnits(List<Unit> units) {
+        this.units = units;
+    }
+
+    public void setTaxFactory(TaxFactory taxFactory) {
+        this.taxFactory = taxFactory;
+    }
+
+    public void setTaxRate(TaxRate taxRate) {
+        this.taxRate = taxRate;
+    }
+
+    public void setUnitsTraining(List<Unit> unitsTraining) {
+        this.unitsTraining = unitsTraining;
+    }
+
+  
+
+    // public Province desirilise(JSONObject jo) {
+    //     jo.getString("wealth")
+    // }
+
+    
+
+
+  
+
+       
+    // }
     
 
 

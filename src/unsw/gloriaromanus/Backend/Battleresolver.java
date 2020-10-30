@@ -24,8 +24,8 @@ public class Battleresolver {
       * @param enemy
       */
     private void runSkirmish(Province player,Province enemy) {
-        ArrayList<Unit> playerUnitList = player.getUnits();
-        ArrayList<Unit> enemyUnitList = player.getUnits();
+        List<Unit> playerUnitList = player.getUnits();
+        List<Unit> enemyUnitList = player.getUnits();
         startSkirmish(chooseUnit(playerUnitList), chooseUnit(enemyUnitList));
 
     }
