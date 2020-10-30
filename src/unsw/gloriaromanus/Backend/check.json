@@ -14,3 +14,12 @@
         }
     }
 }
+
+{
+
+    "V": {
+        "faction":"Rome",
+        "unit":[],
+        "wealth":0
+    }
+}

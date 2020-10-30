@@ -17,7 +17,7 @@
         "attackType" : "ranged",
         "numTroops" : 8,
         "cost" : 5,
-        "trainTime" : 1,
+        "trainTime" : 2,
         "attack" : 6,
         "morale" : 4,
         "shield" : 2,
