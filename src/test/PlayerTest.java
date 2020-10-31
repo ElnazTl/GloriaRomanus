@@ -70,24 +70,6 @@ public class PlayerTest {
         assertTrue(d.getProvinceUnit().get("V").get(0).getName().equals("soldier"));
 
     }
-        @Test
-        public static void main(String[] args) throws IOException {
-            Database d = new Database();
-            Player x= new Player("ani",d);
-            x.startTurn();
-            x.chooseFaction("Rome");
-            // x.getUnit("soldier", "V");
-            
-            // d.saveGame();
-          
-            // // d.loadGame();
-            // Database k = new Database();
-            // k.loadGame();
-            
-            // assertTrue(k.getPlayer(0).username.equals("aniiii"));
-
-
-
-        }
+       
     
 }
