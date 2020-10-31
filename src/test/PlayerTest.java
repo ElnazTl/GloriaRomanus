@@ -40,6 +40,10 @@ public class PlayerTest {
 
     }
 
+    /**
+     * test the functionality of adding unit and the training period 
+     * @throws IOException
+     */
     @Test 
     public void TestgetUnit() throws IOException {
         Database d = new Database("test");
@@ -60,9 +64,29 @@ public class PlayerTest {
     public void TestLoadPlayer() throws IOException {
         Database d = new Database("test");
         d.loadGame();
-        assertTrue(d.getPlayer(0).username.equals("ara"));
+        assertTrue(d.getPlayer(0).username.equals("Sara"));
 
     }
+    /**
+     * testing units are added to the province according to their training time
+     */
+    @Test 
+    public void TestTrainingTime () throws IOException {
+        Database d = new Database("test");
+        d.loadGame();
+        Player p = d.getPlayer(0);
+        p.startTurn();
+        assertEquals("successfully added the unit", p.getUnit("horseArcher", "X"));
+        p.endTurn();
+        Province pr = new Province("X",d);
+        assertTrue(pr.getUnits().isEmpty() == true);
+        p.startTurn();
+        p.endTurn();
+        assertTrue(!pr.getUnits().isEmpty());
+        assertTrue(pr.getUnits().get(0).getName().equals("horseArcher"));
+
+    }
+    
     @Test
     public void TestLoadUnit() throws IOException {
         Database d = new Database("test");
@@ -70,6 +94,25 @@ public class PlayerTest {
         assertTrue(d.getProvinceUnit().get("V").get(0).getName().equals("soldier"));
 
     }
-       
-    
+    /**
+     * test "turn" feature for multiplayers
+     */
+    @Test
+    public void TestMultiPlayer() throws IOException {
+        Database d = new Database("test");
+        Player p = new Player("suzi",d);
+        p.chooseFaction("Rome");
+        Player q = new Player ("sarah",d);
+        q.chooseFaction("Gaul");
+        p.startTurn();
+        assertEquals("successfully added the unit", p.getUnit("horseArcher", "X"));
+        assertEquals("can only get unit for the faction you belong to", q.getUnit("horseArcher", "X"));
+        assertEquals("It's not your turn", q.getUnit("horseArcher", "Achaia"));
+        assertEquals("It's another player's turn", q.startTurn());
+        p.endTurn();
+        q.startTurn();
+        assertEquals("successfully added the unit", q.getUnit("horseArcher", "Achaia"));
+        
+    }
+   
 }
