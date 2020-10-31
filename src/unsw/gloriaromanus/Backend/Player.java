@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Player {
 
-    private String faction;
+    private Faction faction;
     public String username;
     Boolean turn;
 
@@ -14,20 +14,16 @@ public class Player {
     public Player(){}
     public Player(String username) {
         this.username = username;
-
-    }
-
-    
-    public List<Faction> getAvailableFactions(Database db) {
-        return db.getAvailableFactions();
     }
 
 
-    private void setFaction(String faction) {
+
+
+    public void setFaction(Faction faction) {
         this.faction = faction;
     }
 
-    public String getFaction() {
+    public Faction getFaction() {
         return faction;
     }
 
@@ -39,7 +35,10 @@ public class Player {
     }
 
     public void endTurn() {
-        db.endTurn();
+        if (!turn) {
+            // Not player turn, cant end turn
+        }
+        faction.endTurn();
         turn = false;
     }
 
@@ -48,22 +47,21 @@ public class Player {
         faction.invade(ownedProvince, enemyProvince);
     }
 
+
     /**
-     * if enough gold, buying the required unit for the given province
+     * Attempts to train a given unit in a given province
      * 
-     * @param name
-     * @param category
-     * @param province
-     * @return
+     * @param province Province to train unit in
+     * @param unit Unit to train
+     * @throws IOException
      */
-
-    // implementing turn ?
-    public String getUnit(String name, String province) throws IOException {
-        if (turn) {
-            return database.addUnit(name, province);
+    public void trainUnit(String province, String unit) throws IOException {
+        boolean training = faction.trainUnit(province, unit);
+        if (training) {
+            // Unit is training
+        } else {
+            // Unit training failed
         }
-
-        return "It's not your turn";
     }
 
     /**
@@ -76,12 +74,14 @@ public class Player {
      * @return
      */
 
-    public String moveTroop(String u, String from, String to) throws IOException {
-
-        Province f = new Province(from, database);
-        Province t = new Province(to, database);
-
-        return f.moveTroopTo(t, u);
+    public boolean moveUnits(String from, String to) throws IOException {
+        boolean move = faction.moveUnits(from, to);
+        if (move) {
+            // Unit moved successfully
+        } else {
+            // Unit could not move
+        }
+        return move;
     }
 
     public String getUsername() {
@@ -90,5 +90,22 @@ public class Player {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Player: " + username;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+
+        Player p = (Player)obj;
+
+        return username.equals(p.getUsername());
     }
 }

@@ -178,7 +178,7 @@ public class Unit {
      * Called at start of a new turn
      * Changes anything that needs to be changed at start of a turn
      */
-    public void newTurn() {
+    public void endTurn() {
         if (trainTime != 0) {
             trainTime = trainTime - 1;
         }

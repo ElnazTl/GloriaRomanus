@@ -48,12 +48,12 @@ public class Province {
      * Called at start of a new turn
      * Changes anything that needs to be changed at start of a turn
      */
-    public void newTurn() {
+    public void endTurn() {
         for (Unit u : this.units) {
-            u.newTurn();
+            u.endTurn();
         }
         for (Unit u : this.unitsTraining) {
-            u.newTurn();
+            u.endTurn();
             if (u.isTrained()) {
                 unitsTraining.remove(u);
                 units.add(u);
@@ -141,7 +141,7 @@ public class Province {
         }
     }
 
-    public void clearAllSelected() {
+    public void removeAllSelected() {
         selectedUnits.removeAll(selectedUnits);
     }
 

@@ -42,7 +42,11 @@ public class Database {
     
     private Map<String, Faction> factions;
     private Map<Player, Faction> playerFactions;
-
+    private int numPlayers = 0;
+    private int turnNumber = 0;
+    private Player currentPlayer = null;
+    private String gameYear = (200 + turnNumber) + " BC";
+    private JSONObject provinceAdjacencyMatrix;
 
 
 
@@ -56,35 +60,48 @@ public class Database {
         provinceUnit = setOwningUnit();
         factionList = setOwningProvince();
 
+        loadAdjacencyMatrix();
+        
+
 
         factions = new HashMap<String, Faction>();
         playerFactions = new HashMap<Player, Faction>();
         
     }
 
-    
-    public List<String> availableFactions() {
-        List<String> list = new ArrayList<String>();
-        for (Faction f : factions.values()) {
-            if (!playerFactions.containsValue(f)) {
-                list.add(f.getName());
+
+    public Player addNewPlayer(String player, String name) {
+        for (Player p : playerFactions.keySet()) {
+            if (player.equals(p.getUsername())) {
+                // Username taken
+                return null;
             }
         }
-        return list;
+        if (factions.containsKey(name)) {
+            Player p = new Player(player);
+            Faction f = factions.get(name);
+            playerFactions.put(p, f);
+            factions.remove(f.getName());
+            numPlayers++;
+            if (currentPlayer == null) currentPlayer = p;
+            return p;
+        }
+        return null;
     }
 
-    public void addPlayer(Player p) {
-        players.add(p);
+
+    public void startGame() {
+        turnNumber = 1;
+        if (numPlayers < 2) {
+            System.out.println("Not enough players");
+            return;
+        }
+        assignProvinces();
+
     }
 
 
-    // public Map<String,List<Unit>> getProvinceUnit() {
-    //     return provinceUnit;
-    // }
 
-    // public Map<String,Faction > getFactionProvince() {
-    //     return provinceList;
-    // }
 
     public Province findProvince(String name) {
         Province p = null;
@@ -95,23 +112,21 @@ public class Database {
         return p;
     }
 
+
     public int invade(Province attacker, String enemy) {
         Province defender = findProvince(enemy);
         int result = BattleResolver.battle(attacker, defender);
-        if (result != -1) {
-            Faction aFaction = getFactionOfProvince(attacker);
-            Faction dFaction = getFactionOfProvince(defender);
 
-            if (result == 1) {
-                // Attacker conquered province
-                aFaction.addConqueredProvince(defender);
-                dFaction.removeProvince(defender);
-                return 1;
-            }
-            // else defender won
-            return 0;
+        Faction aFaction = getFactionOfProvince(attacker);
+        Faction dFaction = getFactionOfProvince(defender);
+
+        if (result == 1) {
+            // Attacker conquered province
+            aFaction.addConqueredProvince(defender);
+            dFaction.removeProvince(defender);
+            return 1;
         }
-        return -1;
+        return result;
     }
 
 
@@ -123,6 +138,62 @@ public class Database {
     }
 
 
+    public boolean isAdjacentProvince(String province1, String province2) throws IOException {
+        return provinceAdjacencyMatrix.getJSONObject(province1).getBoolean(province2);
+    }
+
+
+    private void loadAdjacencyMatrix() throws IOException {
+        String content = Files.readString(Paths.get("bin/unsw/gloriaromanus/province_adjacency_matrix_fully_connected.json"));
+        provinceAdjacencyMatrix = new JSONObject(content);
+    }
+
+    private Player getPlayerOfFaction(Faction f) {
+        for (Map.Entry<Player, Faction> entry : playerFactions.entrySet()) {
+            if (f.equals(entry.getValue())) {
+                return entry.getKey(); 
+            }
+        }
+        return null;
+    }
+
+    public void endTurn(Faction f) {
+        Player p = getPlayerOfFaction(f);
+        currentPlayer = nextPlayer(p);
+        turnNumber++;
+
+    }
+
+
+    private Player nextPlayer(Player player) {
+        List<Player> playerList = new ArrayList<Player>(playerFactions.keySet());
+
+        for (int i = 0; i < playerList.size(); i++) {
+            if (player.equals(playerList.get(i))) {
+                if (i == playerList.size() - 1) return playerList.get(0);
+                else return playerList.get(i + 1);
+            }
+        }
+        return null;
+    }
+
+
+
+
+
+
+
+
+
+
+
+    // public Map<String,List<Unit>> getProvinceUnit() {
+    //     return provinceUnit;
+    // }
+
+    // public Map<String,Faction > getFactionProvince() {
+    //     return provinceList;
+    // }
 
 
     public void addFaction(String faction) throws IOException {
@@ -287,16 +358,15 @@ public class Database {
             factionList.get(p.getFaction()).add(p);
             provinceTraining.put(p.getName(), p.getUnitsTraining());
             // p.setDatabase(this);
-            p.setDatabase(this);
             if (!p.getUnits().isEmpty()) System.out.println(p.getUnits().get(0).getCost());
         }
 
 
     }
 
-    public Player getPlayer(int index) {
-        return players.get(index);
-    }
+    // public Player getPlayer(int index) {
+    //     return players.get(index);
+    // }
 
     
 
@@ -315,24 +385,24 @@ public class Database {
    
   
 
-    public String addUnit(String name, String province) throws IOException {
+    // public String addUnit(String name, String province) throws IOException {
 
-        var unitJSON = new JSONObject("{\r\n    \"soldier\": {\r\n        \"type\" : \"infantry\",\r\n        \"attackType\" : \"melee\",\r\n        \"numTroops\" : 10,\r\n        \"cost\" : 5,\r\n        \"trainTime\" : 1,\r\n        \"attack\" : 4,\r\n        \"morale\" : 5,\r\n        \"shield\" : 3,\r\n        \"defence\" : 6,\r\n        \"ability\" : \"noAbility\"\r\n\r\n    },\r\n    \"horseArcher\": {\r\n        \"type\" : \"cavalry\",\r\n        \"attackType\" : \"ranged\",\r\n        \"numTroops\" : 8,\r\n        \"cost\" : 5,\r\n        \"trainTime\" : 2,\r\n        \"attack\" : 6,\r\n        \"morale\" : 4,\r\n        \"shield\" : 2,\r\n        \"charge\" : 5,\r\n        \"ability\" : \"noAbility\"\r\n    }\r\n}");
-        var abilityJSON = new JSONObject("{\r\n    \"noAbility\" : {\r\n        \"friendly\" : [],\r\n        \"enemy\" : []\r\n    },\r\n    \"phalanx\" : {\r\n        \"friendly\" : [\r\n            {\r\n                \"type\" : \"defence\",\r\n                \"value\" : 2,\r\n                \"strategy\" : \"multiply\"\r\n                \r\n            },\r\n            {\r\n                \"type\" : \"speed\",\r\n                \"value\" : 0.5,\r\n                \"strategy\" : \"multiply\"\r\n            }\r\n        ],\r\n        \"enemy\" : []\r\n    }\r\n}");
-        Unit u = new Unit(name,unitJSON,abilityJSON);
-        Province p = new Province(province,this);
-        return p.getUnit(u);
+    //     var unitJSON = new JSONObject("{\r\n    \"soldier\": {\r\n        \"type\" : \"infantry\",\r\n        \"attackType\" : \"melee\",\r\n        \"numTroops\" : 10,\r\n        \"cost\" : 5,\r\n        \"trainTime\" : 1,\r\n        \"attack\" : 4,\r\n        \"morale\" : 5,\r\n        \"shield\" : 3,\r\n        \"defence\" : 6,\r\n        \"ability\" : \"noAbility\"\r\n\r\n    },\r\n    \"horseArcher\": {\r\n        \"type\" : \"cavalry\",\r\n        \"attackType\" : \"ranged\",\r\n        \"numTroops\" : 8,\r\n        \"cost\" : 5,\r\n        \"trainTime\" : 2,\r\n        \"attack\" : 6,\r\n        \"morale\" : 4,\r\n        \"shield\" : 2,\r\n        \"charge\" : 5,\r\n        \"ability\" : \"noAbility\"\r\n    }\r\n}");
+    //     var abilityJSON = new JSONObject("{\r\n    \"noAbility\" : {\r\n        \"friendly\" : [],\r\n        \"enemy\" : []\r\n    },\r\n    \"phalanx\" : {\r\n        \"friendly\" : [\r\n            {\r\n                \"type\" : \"defence\",\r\n                \"value\" : 2,\r\n                \"strategy\" : \"multiply\"\r\n                \r\n            },\r\n            {\r\n                \"type\" : \"speed\",\r\n                \"value\" : 0.5,\r\n                \"strategy\" : \"multiply\"\r\n            }\r\n        ],\r\n        \"enemy\" : []\r\n    }\r\n}");
+    //     Unit u = new Unit(name,unitJSON,abilityJSON);
+    //     Province p = new Province(province,this);
+    //     return p.getUnit(u);
 
-    }
+    // }
 
 
-    /**
-     * This function will keep track of the training time of different troops and add them to the units when training is over
-     */
-    public void update(Unit u, String p) {
-        provinceTraining.get(p).remove(u);
+    // /**
+    //  * This function will keep track of the training time of different troops and add them to the units when training is over
+    //  */
+    // public void update(Unit u, String p) {
+    //     provinceTraining.get(p).remove(u);
 
-    }
+    // }
 
     public void endTurn() {
         for (Iterator pI = provinceTraining.keySet().iterator(); pI.hasNext();){
