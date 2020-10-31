@@ -8,6 +8,7 @@ public class LowTax implements TaxRate {
     private int wealth;
     private double taxRate;
 
+    // public LowTax(){}
     public LowTax() {
         wealth = 10;
         taxRate = 0.1;

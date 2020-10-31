@@ -1,6 +1,7 @@
 package unsw.gloriaromanus.Backend;
 
 import java.util.List;
+import java.io.IOException;
 import java.util.ArrayList;
 import org.json.JSONObject;
 
@@ -8,13 +9,16 @@ import unsw.gloriaromanus.Backend.tax.*;
 
 public class Province {
     
-    String faction;
+    // Faction faction;
     String name;
     int wealth;
     List<Unit> units;
     List<Unit> unitsTraining;
     TaxRate taxRate;
     Database database;
+    List<Unit> selectedUnits;
+
+
 
 
 
@@ -25,7 +29,9 @@ public class Province {
         this.units = getUnit();
         this.unitsTraining = getTraining();
         changeTaxRate(LowTax.TYPE);
-        this.faction = setFaction();
+        this.selectedUnits = new ArrayList<Unit>();
+
+        // this.faction = setFaction();
 
     }
 
@@ -36,7 +42,7 @@ public class Province {
      */
     private String setFaction() {
         // System.out.println(database.getFactionProvince().get(name));
-        return database.getFactionProvince().get(name).name;
+        return database.getFactionProvince().get(name).getName();
     }
     public void newTurn() {
         for (Unit u : this.units) {
@@ -124,6 +130,52 @@ public class Province {
         //applyTaxMorale();
     }
 
+     /**
+     * Adds unit with given id to selected units in province
+     * 
+     * @param id Id of unit to select
+     */
+    public void selectUnit(Long id) {
+        Unit u = findUnit(id);
+        if (u == null) return;
+        if (selectedUnits.contains(u)) {
+            // Remove unit from selection
+            selectedUnits.remove(u);
+            units.add(u);
+        } else {
+            // Add unit to selection
+            selectedUnits.add(u);
+            units.remove(u);
+        }
+    }
+
+     /**
+     * Removes all units from selection
+     * 
+     */
+    public void deselectAllUnits() {
+        for (Unit u : selectedUnits) {
+            units.add(u);
+            selectedUnits.remove(u);
+        }
+    }
+
+    public void clearAllSelected() {
+        selectedUnits.removeAll(selectedUnits);
+    }
+
+
+    public List<Unit> getSelectedUnits() {
+        return selectedUnits;
+    }
+
+    public void addUnits(List<Unit> unitsList) {
+        units.addAll(unitsList);
+    }
+
+
+
+
     /**
      * given the game database adds the unit to the list of units present in the
      * province
@@ -153,16 +205,25 @@ public class Province {
      * @param name Name of unit to train
      * @return True if training unit, otherwise False
      */
-    public boolean trainUnit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
+     /**
+     * Attempts to train a unit
+     * Returns true if training,
+     * otherwise returns false
+     * 
+     * @param name Name of unit to train
+     * @return True if training unit, otherwise False
+     */
+    public boolean trainUnit(String name) throws IOException {
         if (unitsTraining.size() == 2) return false;
         else {
-            Unit u = new Unit(name, unitConfig, abilityConfig);
+            Unit u = new Unit(name);
             unitsTraining.add(u);
             // u.applyModifier(taxRate.getMoraleModifier());
 
             return true;
         }
     }
+
 
     
 
@@ -178,6 +239,22 @@ public class Province {
         unitsTraining.removeAll(unitsTraining);
         changeTaxRate(LowTax.TYPE);
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Province: " + this.name;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+
+        Province p = (Province)obj;
+        
+        return name.equals(p.getName());
     }
 
 
@@ -202,9 +279,9 @@ public class Province {
 
     // public String moveTroopTo(Province to, Unit u) {
 
-    public String getFaction() {
-        return faction;
-    }
+    // public String getFaction() {
+    //     return faction;
+    // }
 
 
     public String getName() {
@@ -228,9 +305,9 @@ public class Province {
         return unitsTraining;
     }
 
-    public void setFaction(String faction) {
-        this.faction = faction;
-    }
+    // public void setFaction(String faction) {
+    //     this.faction = faction;
+    // }
 
     public void setName(String name) {
         this.name = name;
@@ -250,6 +327,10 @@ public class Province {
 
     public void setUnitsTraining(List<Unit> unitsTraining) {
         this.unitsTraining = unitsTraining;
+    }
+
+    public void setSelectedUnits(List<Unit> selectedUnits) {
+        this.selectedUnits = selectedUnits;
     }
 
   
