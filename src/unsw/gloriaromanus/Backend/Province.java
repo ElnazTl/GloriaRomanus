@@ -3,7 +3,6 @@ package unsw.gloriaromanus.Backend;
 import java.util.List;
 import java.io.IOException;
 import java.util.ArrayList;
-import org.json.JSONObject;
 
 import unsw.gloriaromanus.Backend.tax.*;
 
@@ -14,11 +13,18 @@ public class Province {
     int wealth;
     List<Unit> units;
     List<Unit> unitsTraining;
+    List<Unit> selectedUnits;
     TaxRate taxRate;
     Database database;
-    List<Unit> selectedUnits;
 
 
+    public Province(String name) {
+        this.name = name;
+        this.units = new ArrayList<Unit>();
+        this.unitsTraining = new ArrayList<Unit>(2);
+        this.selectedUnits = new ArrayList<Unit>();
+        changeTaxRate(LowTax.TYPE);
+    }
 
 
 
@@ -36,35 +42,20 @@ public class Province {
     }
 
 
-    /**
-     * Called at start of a new turn
-     * Changes anything that needs to be changed at start of a turn
-     */
-    private String setFaction() {
-        // System.out.println(database.getFactionProvince().get(name));
-        return database.getFactionProvince().get(name).getName();
-    }
-    public void newTurn() {
+    
+    public void endTurn() {
         for (Unit u : this.units) {
-            u.newTurn();
+            u.endTurn();
         }
-        ArrayList<Integer> indexs = new ArrayList<Integer> ();
-        for (int i = 0; i < unitsTraining.size() ;i++) {
-            Unit u = unitsTraining.get(i);
-            u.newTurn();
+        for (Unit u : this.unitsTraining) {
+            u.endTurn();
             if (u.isTrained()) {
-                indexs.add(i);
                 units.add(u);
             }
         }
-        for (int i: indexs) {
-            unitsTraining.remove(i);
-        }
-        
-        
         wealth = wealth + taxRate.getWealth();
-
     }
+
     public void setDatabase(Database d) {
         this.database = d;
     }
@@ -174,15 +165,11 @@ public class Province {
     }
 
 
+    public void removeAllSelected() {
+        selectedUnits.removeAll(selectedUnits);
+    }
 
 
-    /**
-     * given the game database adds the unit to the list of units present in the
-     * province
-     * 
-     * @param d
-     * @param u
-     */
 
 
     // TODO 
@@ -234,10 +221,11 @@ public class Province {
      * 
      * @return Conquered Province
      */
-    public Province conquerProvince() {
+    public Province conquerProvince(List<Unit> newUnits) {
         units.removeAll(units);
         unitsTraining.removeAll(unitsTraining);
         changeTaxRate(LowTax.TYPE);
+        units.addAll(newUnits);
         return this;
     }
 
@@ -260,7 +248,7 @@ public class Province {
 
     // private boolean confirmIfProvincesConnected(String province1, String province2) throws IOException {
     //     String content = Files
-    //         .readString(Paths.get("src/unsw/gloriaromanus/province_adjacency_matrix_fully_connected.json"));
+    //         .readString(Paths.get("bin/unsw/gloriaromanus/province_adjacency_matrix_fully_connected.json"));
     //     JSONObject provinceAdjacencyMatrix = new JSONObject(content);
     //     return provinceAdjacencyMatrix.getJSONObject(province1).getBoolean(province2);
     // }
@@ -346,7 +334,8 @@ public class Province {
 
        
     // }
-    
+
+  
 
 
 }

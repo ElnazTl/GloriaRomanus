@@ -1,9 +1,12 @@
 package unsw.gloriaromanus.Backend;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Player {
-    private String faction;
+
+    private Faction faction;
     public String username;
     Boolean turn;
     Database database;
@@ -17,6 +20,7 @@ public class Player {
         turn = false;
 
     }
+
     public Boolean getTurn() {
         return turn;
     }
@@ -32,16 +36,16 @@ public class Player {
     public void registerPlayer() throws IOException{
         database.addPlayer(this);
     }
-    public void chooseFaction(String faction) {
+    public void chooseFaction(Faction faction) {
         // Faction f = new Faction(faction);
         setFaction(faction);
     }
 
-    private void setFaction(String faction) {
+    private void setFaction(Faction faction) {
         this.faction = faction;
     }
 
-    public String getFaction() {
+    public Faction getFaction() {
         return faction;
     }
 
@@ -58,29 +62,35 @@ public class Player {
     }
 
     public void endTurn() {
-        database.endTurn();
+        if (!turn) {
+            // Not player turn, cant end turn
+        }
+        faction.endTurn();
         turn = false;
     }
 
+
+    public void invade(String ownedProvince, String enemyProvince) {
+        faction.invade(ownedProvince, enemyProvince);
+    }
+
+
     /**
-     * launching invasion 
+     * Attempts to train a given unit in a given province
      * 
-     * @param human
-     * @param enemy
-     * @param d
-     * @return
+     * @param province Province to train unit in
+     * @param unit Unit to train
      * @throws IOException
      */
-    public String invade(String attacker, String enemy) throws IOException {
-        if (turn) {
-
-            Province attackerProvince = new Province(attacker, database);
-            var result = database.invade(attackerProvince, enemy) ;
-            if (result == 0) return "You lost the battle";
-            if (result == 1) return "You won";
-            else return "the battle is a tie";
+    public void trainUnit(String province, String unit) throws IOException {
+        boolean training = faction.trainUnit(province, unit);
+        if (training) {
+            // Unit is training
+            System.out.println("Trained unit successfully");
+        } else {
+            // Unit training failed
+            System.out.println("Could not train unit");
         }
-        return "It's not your turn";
     }
 
     /**
@@ -96,14 +106,15 @@ public class Player {
     public String getUnit(String name, String province) throws IOException {
         if (!database.getFactionProvince().get(province).getName().equals(faction)) return "can only get unit for the faction you belong to";
         if (turn) {
-            if (!database.addUnit(name,faction,province)) return "can't add unit";
+            if (!database.addUnit(name,faction.getName(),province)) return "can't add unit";
             return "successfully added the unit";
         }
 
         return "It's not your turn";
     }
 
-    /**
+
+    /*
      * given the unit and from and to if the provinces are adjacent the unit will be
      * moved
      * 
@@ -113,13 +124,17 @@ public class Player {
      * @return
      */
 
-    // public String moveTroop(String u, String from, String to) throws IOException {
-
-    //     Province f = new Province(from, database);
-    //     Province t = new Province(to, database);
-
-    //     return f.moveTroopTo(t, u);
-    // }
+    public boolean moveUnits(String from, String to) throws IOException {
+        boolean move = faction.moveUnits(from, to);
+        if (move) {
+            // Unit moved successfully
+            System.out.println("Move units successfully");
+        } else {
+            // Unit could not move
+            System.out.println("Could not move units");
+        }
+        return move;
+    }
 
     public String getUsername() {
         return username;
@@ -127,5 +142,22 @@ public class Player {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Player: " + username;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+
+        Player p = (Player)obj;
+
+        return username.equals(p.getUsername());
     }
 }

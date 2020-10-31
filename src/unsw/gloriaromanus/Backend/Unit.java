@@ -38,12 +38,9 @@ public class Unit {
     
     @JsonIgnoreProperties private JSONArray modifiers;
     @JsonIgnoreProperties private JSONObject baseValues;
-// 
 
-    public Unit() {
-        
-    }
 
+    public Unit() {}
 
     public Unit(String name) throws IOException {
         this.name = name;
@@ -134,14 +131,14 @@ public class Unit {
     }
 
 
-    // public JSONArray getAbility() {
-    //     return ability;
-    // }
+    public JSONArray getAbility() {
+        return ability;
+    }
 
-    // @Ignore
-    // public JSONArray getModifiers() {
-    //     return modifiers;
-    // }
+
+    public JSONArray getModifiers() {
+        return modifiers;
+    }
     
     @JsonIgnore
     public boolean isMelee() {
@@ -189,7 +186,7 @@ public class Unit {
      * Called at start of a new turn
      * Changes anything that needs to be changed at start of a turn
      */
-    public void newTurn() {
+    public void endTurn() {
         if (trainTime != 0) {
             trainTime = trainTime - 1;
         }
@@ -311,7 +308,7 @@ public class Unit {
         this.armour = config.optDouble("armour", 1);
         this.shield = config.optDouble("shield", 1);
         this.abilityType = config.optString("ability", "noAbility");
-        // this.ability = getAbilityJSON(this.abilityType);
+        this.ability = getAbilityJSON(this.abilityType);
         this.charge = "cavalry".equals(this.type) ? config.optDouble("charge", 1) : 0;
         this.defence = isMelee() ? config.optDouble("defence", 1) : 0;
         switch (this.type) {
