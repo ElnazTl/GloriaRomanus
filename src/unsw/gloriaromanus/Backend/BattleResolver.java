@@ -17,6 +17,13 @@ public class BattleResolver {
     private static List<Unit> defenderRouted;
 
 
+    /**
+     * Battle an attacker province against a defender province
+     * 
+     * @param attacker Attacking province
+     * @param defender Defending province
+     * @return Returns -1 if draw, 0 if defender won, 1 if attacker won
+     */
     public static int battle(Province attacker, Province defender) {
 
         attackerArmy = new ArrayList<Unit>();
@@ -58,6 +65,10 @@ public class BattleResolver {
 
             numSkirmishes++;
         }
+        if (numSkirmishes == 200) {
+            attacker.addUnits(attackerArmy);
+            defender.addUnits(defenderArmy);
+        }
 
         attackerArmy.removeAll(attackerArmy);
         defenderArmy.removeAll(defenderArmy);
@@ -67,8 +78,11 @@ public class BattleResolver {
         return battleWinner;
     }
 
+
      /**
-      * selets units from each player and battles them against eachother until invasion result is determined
+      * Selects units from each player and battles them against
+      * each other until invasion result is determined
+      *
       * @param player
       * @param enemy
       */
@@ -82,7 +96,8 @@ public class BattleResolver {
     }
     
     /**
-    * randomly chooses a unit in the province for battle
+    * Randomly chooses a unit in the province for battle
+    *
     * @param u
     */
     private static Unit randomUnit(List<Unit> u) {
@@ -92,6 +107,12 @@ public class BattleResolver {
     }
 
     
+    /**
+     * Runs all engagements for a skirmish
+     * 
+     * @param attacker
+     * @param defender
+     */
     private static void runEngagements(Unit attacker, Unit defender) {
         String type = null;
         if (attacker.isMelee() && defender.isMelee()) {
@@ -147,6 +168,7 @@ public class BattleResolver {
                     boolean defenderBreaks = unitBreaks(defender, defenderCasualtiesInflicted, attackCasualtiesInflicted, numDefenderTroops, numAttackerTroops);
 
                     if (attackerBreaks && !defenderBreaks) {
+                        // Defender wins
                         // Attacker breaks, defender inflicts casualties
                         while (attacker.isAlive()) {
                             attacker.inflictCasualties(calculateCasualties(type, defender, attacker));
@@ -160,6 +182,7 @@ public class BattleResolver {
                         break;
 
                     } else if (!attackerBreaks && defenderBreaks) {
+                        // Attacker wins
                         // Defender breaks, attacker inflicts casualties
                         while (defender.isAlive()) {
                             defender.inflictCasualties(calculateCasualties(type, attacker, defender));
