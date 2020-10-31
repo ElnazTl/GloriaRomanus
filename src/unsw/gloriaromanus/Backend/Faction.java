@@ -25,13 +25,19 @@ public class Faction {
         this.db = db;
         this.name = name;
         this.treasury = startingGold;
+    }
+    
+    public Faction(Database db, String name, List<Province> initialProvinces) throws IOException {
+        this.db = db;
+        this.name = name;
+        this.treasury = 200;    // Starting gold
         this.provinces = initialProvinces;
         this.provincesConqueredOnTurn = new ArrayList<Province>();
         this.availableUnits = new HashMap<String, Integer>();
         loadFromConfig();
     }
 
-    public void setDatabase(Database db){
+    public void setDatabase(Database db) {
         this.db = db;
     }
 
@@ -51,13 +57,14 @@ public class Faction {
     }
     
 
-    public void newTurn() {
+    public void endTurn() {
         for (Province p : provincesConqueredOnTurn) {
             provinces.add(p);
         }
         for (Province p : provinces) {
-            p.newTurn();
+            p.endTurn();
         }
+        db.endTurn(this);
     }
     
 
@@ -72,16 +79,16 @@ public class Faction {
      * @throws IOException
      */
     public boolean trainUnit(Province p, String unit) throws IOException {
-        // if (!availableUnits.containsKey(unit)) {
-        //     // Unit not available to this faction
-        //     return false;
-        // }
-        // int cost = availableUnits.get(unit);
+        if (!availableUnits.containsKey(unit)) {
+            // Unit not available to this faction
+            return false;
+        }
+        int cost = availableUnits.get(unit);
         
-        // if (cost > treasury) {
-        //     // Faction does not have enough gold to buy unit
-        //     return false;
-        // }
+        if (cost > treasury) {
+            // Faction does not have enough gold to buy unit
+            return false;
+        }
 
         return p.trainUnit(unit);
     }
@@ -101,6 +108,40 @@ public class Faction {
         }
         return null;
     }
+
+
+
+
+    public boolean trainUnit(String province, String unit) throws IOException {
+        Province p = findProvince(province);
+        if (p == null) {
+            return false;
+        }
+        return p.trainUnit(name);
+    }
+
+    public boolean moveUnits(String from, String to) throws IOException {
+        Province p1 = findProvince(from);
+        Province p2 = findProvince(to);
+        if (p1 == null || p2 == null) {
+            // One or both provinces not owned by faction
+            // Use invade to move from owned province to enemy province
+            return false;
+        } else if (!db.isAdjacentProvince(p1.getName(), p2.getName())) {
+            // Provinces are not adjacent
+            return false;
+        } else if (p1.getSelectedUnits().isEmpty()) {
+            // Player has not selected units to move
+            return false;
+        } else {
+            p2.addUnits(p1.getSelectedUnits());
+            p1.removeAllSelected();
+            return true;
+        }
+
+
+    }
+
 
 
     /**
@@ -174,12 +215,12 @@ public class Faction {
      * @throws IOException
      */
     private void loadFromConfig() throws IOException {
-        String configString = Files.readString(Paths.get("/Users/eli/new1/t13a-oop/src/unsw/gloriaromanus/Backend/configs/faction_units_config.json"));
+        String configString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/faction_units_config.json"));
         JSONObject unitsConfig = new JSONObject(configString);
         List<Object> config = unitsConfig.getJSONArray(this.name).toList();
         for (Object o : config) {
             String s = (String)o;
-            // availableUnits.put(s, unitsConfig.getJSONObject(s).getInt("cost"));
+            availableUnits.put(s, unitsConfig.getJSONObject(s).getInt("cost"));
         }
     }
 

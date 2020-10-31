@@ -32,9 +32,9 @@ public class BattleResolver {
         defenderRouted = new ArrayList<Unit>();
 
         attackerArmy.addAll(attacker.getSelectedUnits());
-        attacker.clearAllSelected();
+        attacker.removeAllSelected();
         defenderArmy.addAll(defender.getUnits());
-        defender.clearAllSelected();
+        defender.removeAllSelected();
 
 
 
