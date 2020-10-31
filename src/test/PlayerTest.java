@@ -1,8 +1,10 @@
 package test;
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.json.JSONObject;
 import org.junit.Before;
@@ -20,17 +22,18 @@ public class PlayerTest {
     Player p;
     Database d;
 
+    
+
    @Test
     public void TestaddingPlayer() throws IOException {
         
-        // assertEquals("sara",name);
-        // Player q = new Player ("Annie",d);
-        // assertEquals("Annie", d.getPlayer(1).getUsername());
-        p.chooseFaction("Rome");
+        Database d  = new Database("test");
+        Player q = new Player ("Annie",d);
+        assertEquals("Annie", d.getPlayer(0).getUsername());
     }
     @Test
     public void TestFaction() throws IOException {
-        Database d = new Database();
+        Database d = new Database("test");
         Player p = new Player("sara",d);
         p.chooseFaction("Rome");
         assertEquals("Rome",d.getPlayer(0).getFaction());
@@ -39,7 +42,7 @@ public class PlayerTest {
 
     @Test 
     public void TestgetUnit() throws IOException {
-        Database d = new Database();
+        Database d = new Database("test");
         Player p = new Player("Sara",d);
         p.chooseFaction("Rome");
         p.startTurn();
@@ -54,25 +57,35 @@ public class PlayerTest {
 
     }
     @Test 
-    public void TestLoad() throws IOException {
-        Database d = new Database();
+    public void TestLoadPlayer() throws IOException {
+        Database d = new Database("test");
         d.loadGame();
-        assertTrue(d.getPlayer(0).username.equals("sara"));
+        assertTrue(d.getPlayer(0).username.equals("ara"));
 
     }
+    @Test
+    public void TestLoadUnit() throws IOException {
+        Database d = new Database("test");
+        d.loadGame();
+        assertTrue(d.getProvinceUnit().get("V").get(0).getName().equals("soldier"));
 
+    }
+        @Test
         public static void main(String[] args) throws IOException {
             Database d = new Database();
             Player x= new Player("ani",d);
             x.startTurn();
             x.chooseFaction("Rome");
-            x.getUnit("soldier", "V");
-
+            // x.getUnit("soldier", "V");
+            
             // d.saveGame();
           
-            // d.loadGame();
-            Database k = new Database();
-            k.loadGame();
+            // // d.loadGame();
+            // Database k = new Database();
+            // k.loadGame();
+            
+            // assertTrue(k.getPlayer(0).username.equals("aniiii"));
+
 
 
         }
