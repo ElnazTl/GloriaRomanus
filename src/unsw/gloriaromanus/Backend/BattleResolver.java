@@ -10,29 +10,59 @@ public class BattleResolver {
     final public static String MELEE = "melee";
     final public static String RANGED = "ranged";
 
-    final public static Random RANDOMGEN = new Random();
+    
+    private static List<Unit> attackerArmy;
+    private static List<Unit> defenderArmy;
+    private static List<Unit> attackerRouted;
+    private static List<Unit> defenderRouted;
 
-    public static Province battle(Province attacker, Province defender) {
-        
-        List<Unit> attackerArmy = attacker.getUnits();
-        List<Unit> defenderArmy = defender.getUnits();
 
-        Province battleWinner = null;
+    public static int battle(Province attacker, Province defender) {
+
+        attackerArmy = new ArrayList<Unit>();
+        defenderArmy = new ArrayList<Unit>();
+        attackerRouted = new ArrayList<Unit>();
+        defenderRouted = new ArrayList<Unit>();
+
+        attackerArmy.addAll(attacker.getSelectedUnits());
+        attacker.clearAllSelected();
+        defenderArmy.addAll(defender.getUnits());
+        defender.clearAllSelected();
+
+
+
+
+        int battleWinner = -1;
         int numSkirmishes = 0;
         while (numSkirmishes < 200) {
             if (attackerArmy.isEmpty() && defenderArmy.isEmpty()) {
+                // Both armies have routed
                 break;
             } else if (!attackerArmy.isEmpty() && defenderArmy.isEmpty()) {
-                battleWinner = attacker;
-            } else {
-                battleWinner = defender;
+                // Attacking army wins
+                battleWinner = 1;
+                attackerArmy.addAll(attackerRouted);
+                defender.conquerProvince(attackerArmy);
+                defenderRouted.removeAll(defenderRouted);
+                break;
+            } else if (attackerArmy.isEmpty() && !defenderArmy.isEmpty()) {
+                // Defending army wins
+                battleWinner = 0;
+                attacker.addUnits(attackerRouted);
+                defenderArmy.addAll(defenderRouted);
+                break;
             }
 
-            runSkirmish(attackerArmy, defenderArmy);
+            runSkirmish();
 
 
             numSkirmishes++;
         }
+
+        attackerArmy.removeAll(attackerArmy);
+        defenderArmy.removeAll(defenderArmy);
+        attackerRouted.removeAll(attackerRouted);
+        defenderRouted.removeAll(defenderRouted);
 
         return battleWinner;
     }
@@ -42,14 +72,13 @@ public class BattleResolver {
       * @param player
       * @param enemy
       */
-    private static void runSkirmish(List<Unit> attackerArmy, List<Unit> defenderArmy) {
+    private static void runSkirmish() {
 
-        Unit attackerUnit = randomUnit(attackerArmy);
-        Unit defenderUnit = randomUnit(defenderArmy);
+        Unit attacker = randomUnit(attackerArmy);
+        Unit defender = randomUnit(defenderArmy);
 
-
-        runEngagement(attackerUnit, defenderUnit);
-
+        runEngagements(attacker, defender);
+        
     }
     
     /**
@@ -63,7 +92,7 @@ public class BattleResolver {
     }
 
     
-    private static void runEngagement(Unit attacker, Unit defender) {
+    private static void runEngagements(Unit attacker, Unit defender) {
         String type = null;
         if (attacker.isMelee() && defender.isMelee()) {
             type = MELEE;
@@ -74,28 +103,105 @@ public class BattleResolver {
             // 10% x (speed of melee unit - speed of missile unit) (value of this formula can be negative)
         }
 
-        boolean attackerBreaks = false;
-        boolean defenderBreaks = false;
+
         boolean attackerRoutes = false;
         boolean defenderRoutes = false;
 
-        int attackerNumTroops = attacker.getNumTroops();
-        int defenderNumTroops = defender.getNumTroops();
 
-        while (defender.isAlive() && attacker.isAlive()) {
-            if (!attackerRoutes && defenderRoutes)
-            defender.inflictCasualties(calculateCasualties(type, attacker, defender));
+
+        // Run engagements
+        while (true) {
+            int numAttackerTroops = attacker.getNumTroops();
+            int numDefenderTroops = defender.getNumTroops();
+
+            // Attacker defeats defender
+            if (attacker.isAlive() && !defender.isAlive()) break;   
+            // Defender defeats attacker
+            if (!attacker.isAlive() && defender.isAlive()) break;   
+            
+            // Attacker escapes engagement
+            if (attackerRoutes) {  
+                attackerRouted.add(attacker);
+                break;
+            }
+            // Defender escapes battle
+            if (defenderRoutes) {
+                defenderRouted.add(defender);
+                break;
+            }
+
+            int attackCasualtiesInflicted = calculateCasualties(type, attacker, defender);
+            defender.inflictCasualties(attackCasualtiesInflicted);
+
             if (defender.isAlive()) {
-                attacker.inflictCasualties(calculateCasualties(type, defender, attacker));
+                int defenderCasualtiesInflicted = calculateCasualties(type, defender, attacker);
+                attacker.inflictCasualties(defenderCasualtiesInflicted);
+
+                if (!attacker.isAlive()) {
+                    // Defender killed all attacker troops
+                    attackerArmy.remove(attacker);
+                    break;
+                } else {
+                    // Both units are still alive
+                    boolean attackerBreaks = unitBreaks(attacker, attackCasualtiesInflicted, defenderCasualtiesInflicted, numAttackerTroops, numDefenderTroops);
+                    boolean defenderBreaks = unitBreaks(defender, defenderCasualtiesInflicted, attackCasualtiesInflicted, numDefenderTroops, numAttackerTroops);
+
+                    if (attackerBreaks && !defenderBreaks) {
+                        // Attacker breaks, defender inflicts casualties
+                        while (attacker.isAlive()) {
+                            attacker.inflictCasualties(calculateCasualties(type, defender, attacker));
+                            attackerRoutes = unitRoutes(attacker, defender);
+                            if (attackerRoutes) {
+                                attackerRouted.add(attacker);
+                                break;
+                            }
+                        }
+                        attackerArmy.remove(attacker);
+                        break;
+
+                    } else if (!attackerBreaks && defenderBreaks) {
+                        // Defender breaks, attacker inflicts casualties
+                        while (defender.isAlive()) {
+                            defender.inflictCasualties(calculateCasualties(type, attacker, defender));
+                            defenderRoutes = unitRoutes(defender, attacker);
+                            if (defenderRoutes) {
+                                defenderRouted.add(defender);
+                                break;
+                            }
+                        }
+                        defenderArmy.remove(defender);
+                        break;
+                    } else if (!attackerBreaks && !defenderBreaks) {
+                        // Neither unit breaks, new engagement
+                        continue;
+                    }
+                    break;
+                }
+
+            } else {
+                // Attacker killed all defender troops
+                defenderArmy.remove(defender);
+                break;
             }
         }
         
-        
     }
 
+
+
+    /**
+     * Calculates the number of casualties to inflict on an enemy
+     * 
+     * @param type Type of engagement
+     * @param attacker Unit that attacks
+     * @param defender Unit that casualties are inflicted on
+     * @return
+     */
     private static int calculateCasualties (String type, Unit attacker, Unit defender) {
+        Random RGen = new Random();
+        
         int numInflict = 0;
-        double N = RANDOMGEN.nextGaussian();
+        double N = RGen.nextGaussian();
         double enemyTroops = defender.getNumTroops() * 0.1;
         double playerAttack = attacker.getFriendlyModifiedValue("attack")
                             + attacker.getFriendlyModifiedValue("charge");
@@ -110,8 +216,55 @@ public class BattleResolver {
         return numInflict;
     }
 
-    private static void killUnit(Province p, Unit u) {
-        p.removeUnit(u);
+
+    /**
+     * Calculates chance for a unit to break, and return if unit breaks
+     * 
+     * @param unit Unit to calculate break chance of
+     * @param aCasualties Number of casualties inflicted by attacker during engagement
+     * @param dCasualties Number of casualties inflicted by defender during engagement
+     * @param aTroops Number of attacker troops before engagement
+     * @param dTroops Number of defender troops before engagement
+     * @return True if unit breaks, otherwise False
+     */
+    private static boolean unitBreaks(Unit unit, int aCasualties, int dCasualties, int aTroops, int dTroops) {
+        Random RGen = new Random();
+
+        double r = RGen.nextDouble();
+        double a = aCasualties / aTroops;
+        double d = dCasualties / dTroops;
+        if (d == 0) d = Double.MIN_VALUE;
+        double chance = a/d * 0.1 + (1 - unit.getFriendlyModifiedValue("morale") * 0.1);
+
+        if (chance < 0.05) chance = 0.05;
+        else if (chance > 1) chance = 1;
+
+        return r < chance;
+    }
+
+
+    /**
+     * Calculates chance for unit to route, and returns if routed or not
+     * 
+     * @param router
+     * @param pursuer
+     * @return
+     */
+    private static boolean unitRoutes(Unit router, Unit pursuer) {
+
+        if (!router.isAlive()) return false;
+
+        Random RGen = new Random();
+
+        double r = RGen.nextDouble();
+
+        double chance = 0.5 + 0.1 * (router.getFriendlyModifiedValue("speed") 
+                                     - pursuer.getFriendlyModifiedValue("speed"));
+
+        if (chance < 0.1) chance = 0.1;
+        else if (chance > 1) chance = 1;
+
+        return r < chance;
     }
 
 }

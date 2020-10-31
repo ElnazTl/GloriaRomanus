@@ -13,6 +13,7 @@ public class Province {
     int wealth;
     List<Unit> units;
     List<Unit> unitsTraining;
+    List<Unit> selectedUnits;
     TaxRate taxRate;
 
 
@@ -20,6 +21,7 @@ public class Province {
         this.name = name;
         this.units = new ArrayList<Unit>();
         this.unitsTraining = new ArrayList<Unit>(2);
+        this.selectedUnits = new ArrayList<Unit>();
         changeTaxRate(LowTax.TYPE);
     }
 
@@ -109,6 +111,52 @@ public class Province {
     }
 
 
+    /**
+     * Adds unit with given id to selected units in province
+     * 
+     * @param id Id of unit to select
+     */
+    public void selectUnit(Long id) {
+        Unit u = findUnit(id);
+        if (u == null) return;
+        if (selectedUnits.contains(u)) {
+            // Remove unit from selection
+            selectedUnits.remove(u);
+            units.add(u);
+        } else {
+            // Add unit to selection
+            selectedUnits.add(u);
+            units.remove(u);
+        }
+    }
+
+
+    /**
+     * Removes all units from selection
+     * 
+     */
+    public void deselectAllUnits() {
+        for (Unit u : selectedUnits) {
+            units.add(u);
+            selectedUnits.remove(u);
+        }
+    }
+
+    public void clearAllSelected() {
+        selectedUnits.removeAll(selectedUnits);
+    }
+
+
+    public List<Unit> getSelectedUnits() {
+        return selectedUnits;
+    }
+
+
+    public void addUnits(List<Unit> unitsList) {
+        units.addAll(unitsList);
+    }
+
+
 
     // TODO 
     // public void applyTaxMorale() {
@@ -149,17 +197,18 @@ public class Province {
      * 
      * @return Conquered Province
      */
-    public Province conquerProvince() {
+    public Province conquerProvince(List<Unit> newUnits) {
         units.removeAll(units);
         unitsTraining.removeAll(unitsTraining);
         changeTaxRate(LowTax.TYPE);
+        units.addAll(newUnits);
         return this;
     }
 
 
     // private boolean confirmIfProvincesConnected(String province1, String province2) throws IOException {
     //     String content = Files
-    //         .readString(Paths.get("src/unsw/gloriaromanus/province_adjacency_matrix_fully_connected.json"));
+    //         .readString(Paths.get("bin/unsw/gloriaromanus/province_adjacency_matrix_fully_connected.json"));
     //     JSONObject provinceAdjacencyMatrix = new JSONObject(content);
     //     return provinceAdjacencyMatrix.getJSONObject(province1).getBoolean(province2);
     // }
@@ -194,7 +243,7 @@ public class Province {
 
     @Override
     public String toString() {
-        return this.name + " (Province)";
+        return "Province: " + this.name;
     }
 
 
