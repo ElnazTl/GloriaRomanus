@@ -10,7 +10,7 @@ public class Player {
 
    
     public Player(){}
-    public Player(String username, Database database) {
+    public Player(String username, Database database) throws IOException {
         this.username = username;
         this.database = database;
         registerPlayer();
@@ -25,7 +25,7 @@ public class Player {
     public void setDatabase(Database d) {
         this.database = d;
     }
-    public void registerPlayer() {
+    public void registerPlayer() throws IOException{
         database.addPlayer(this);
     }
     public void chooseFaction(String faction) {
@@ -62,13 +62,14 @@ public class Player {
      * @return
      * @throws IOException
      */
-    public String invade(String human, String enemy) throws IOException {
+    public String invade(String attacker, String enemy) throws IOException {
         if (turn) {
 
-            Province h = new Province(human, database);
-            Province e = new Province(enemy, database);
-
-            return h.invade(e, database);
+            Province attackerProvince = new Province(attacker, database);
+            var result = database.invade(attackerProvince, enemy) ;
+            if (result == 0) return "You lost the battle";
+            if (result == 1) return "You won";
+            else return "the battle is a tie";
         }
         return "It's not your turn";
     }
@@ -101,13 +102,13 @@ public class Player {
      * @return
      */
 
-    public String moveTroop(String u, String from, String to) throws IOException {
+    // public String moveTroop(String u, String from, String to) throws IOException {
 
-        Province f = new Province(from, database);
-        Province t = new Province(to, database);
+    //     Province f = new Province(from, database);
+    //     Province t = new Province(to, database);
 
-        return f.moveTroopTo(t, u);
-    }
+    //     return f.moveTroopTo(t, u);
+    // }
 
     public String getUsername() {
         return username;
