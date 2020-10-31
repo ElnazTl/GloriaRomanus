@@ -1,7 +1,6 @@
 package unsw.gloriaromanus.Backend;
 
 import org.json.JSONObject;
-import org.json.JSONArray;
 
 import java.io.IOException;
 import java.nio.file.Files;
