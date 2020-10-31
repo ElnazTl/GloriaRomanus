@@ -14,7 +14,11 @@ public class Player {
         this.username = username;
         this.database = database;
         registerPlayer();
+        turn = false;
 
+    }
+    public Boolean getTurn() {
+        return turn;
     }
 
     /**
@@ -44,8 +48,13 @@ public class Player {
     /**
      * setting the player turn
      */
-    public void startTurn() {
+    public String startTurn() {
+        
+        for (Player p: database.getPlayers()) {
+            if (p.getTurn())return "It's another player's turn";
+        }
         turn = true;
+        return "now it's your turn";
     }
 
     public void endTurn() {
@@ -85,8 +94,10 @@ public class Player {
 
     
     public String getUnit(String name, String province) throws IOException {
+        if (!database.getFactionProvince().get(province).getName().equals(faction)) return "can only get unit for the faction you belong to";
         if (turn) {
-            return database.addUnit(name, province, faction);
+            if (!database.addUnit(name,faction,province)) return "can't add unit";
+            return "successfully added the unit";
         }
 
         return "It's not your turn";
