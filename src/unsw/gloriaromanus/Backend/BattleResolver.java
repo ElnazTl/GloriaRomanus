@@ -44,7 +44,11 @@ public class BattleResolver {
         while (numSkirmishes < 200) {
             if (attackerArmy.isEmpty() && defenderArmy.isEmpty()) {
                 // Both armies have routed
+                battleWinner = -1;
+                attacker.addUnits(attackerRouted);
+                defender.addUnits(defenderRouted);
                 break;
+
             } else if (!attackerArmy.isEmpty() && defenderArmy.isEmpty()) {
                 // Attacking army wins
                 battleWinner = 1;
@@ -52,6 +56,7 @@ public class BattleResolver {
                 defender.conquerProvince(attackerArmy);
                 defenderRouted.removeAll(defenderRouted);
                 break;
+
             } else if (attackerArmy.isEmpty() && !defenderArmy.isEmpty()) {
                 // Defending army wins
                 battleWinner = 0;
@@ -114,21 +119,7 @@ public class BattleResolver {
      * @param defender
      */
     private static void runEngagements(Unit attacker, Unit defender) {
-        String type = null;
-        if (attacker.isMelee() && defender.isMelee()) {
-            type = MELEE;
-        } else if (attacker.isRanged() && defender.isRanged()) {
-            type = RANGED;
-        } else {
-            // base 50% chance of either engagement
-            // 10% x (speed of melee unit - speed of missile unit) (value of this formula can be negative)
-        }
-
-
-        boolean attackerRoutes = false;
-        boolean defenderRoutes = false;
-
-
+        String type = engagementType(attacker, defender);
 
         // Run engagements
         while (true) {
@@ -139,17 +130,6 @@ public class BattleResolver {
             if (attacker.isAlive() && !defender.isAlive()) break;   
             // Defender defeats attacker
             if (!attacker.isAlive() && defender.isAlive()) break;   
-            
-            // Attacker escapes engagement
-            if (attackerRoutes) {  
-                attackerRouted.add(attacker);
-                break;
-            }
-            // Defender escapes battle
-            if (defenderRoutes) {
-                defenderRouted.add(defender);
-                break;
-            }
 
             int attackCasualtiesInflicted = calculateCasualties(type, attacker, defender);
             defender.inflictCasualties(attackCasualtiesInflicted);
@@ -172,7 +152,7 @@ public class BattleResolver {
                         // Attacker breaks, defender inflicts casualties
                         while (attacker.isAlive()) {
                             attacker.inflictCasualties(calculateCasualties(type, defender, attacker));
-                            attackerRoutes = unitRoutes(attacker, defender);
+                            boolean attackerRoutes = unitRoutes(attacker, defender);
                             if (attackerRoutes) {
                                 attackerRouted.add(attacker);
                                 break;
@@ -186,7 +166,7 @@ public class BattleResolver {
                         // Defender breaks, attacker inflicts casualties
                         while (defender.isAlive()) {
                             defender.inflictCasualties(calculateCasualties(type, attacker, defender));
-                            defenderRoutes = unitRoutes(defender, attacker);
+                            boolean defenderRoutes = unitRoutes(defender, attacker);
                             if (defenderRoutes) {
                                 defenderRouted.add(defender);
                                 break;
@@ -288,6 +268,44 @@ public class BattleResolver {
         else if (chance > 1) chance = 1;
 
         return r < chance;
+    }
+
+
+    private static String engagementType(Unit attacker, Unit defender) {
+        if (attacker.isMelee() && defender.isMelee()) {
+            return MELEE;
+        } else if (attacker.isRanged() && defender.isRanged()) {
+            return RANGED;
+        } else {
+            // base 50% chance of either engagement
+            // 10% x (speed of melee unit - speed of missile unit) (value of this formula can be negative)
+            Random RGen = new Random();
+
+            double r = RGen.nextDouble();
+
+            double meleeSpeed = 0;
+            double rangedSpeed = 0;
+            if (attacker.isMelee()) {
+                meleeSpeed = attacker.getFriendlyModifiedValue("speed");
+                rangedSpeed = defender.getFriendlyModifiedValue("speed");
+            } else {
+                rangedSpeed = attacker.getFriendlyModifiedValue("speed");
+                meleeSpeed = defender.getFriendlyModifiedValue("speed");
+            }
+
+            double meleeChance = 0.5 + 0.1 * (meleeSpeed - rangedSpeed);
+
+            if (meleeChance < 0.05) meleeChance = 0.05;
+            else if (meleeChance > 0.95) meleeChance = 0.95;
+
+            if (r < meleeChance) {
+                return MELEE;
+            } else {
+                return RANGED;
+            }
+
+        }
+
     }
 
 }
