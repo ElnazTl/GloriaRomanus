@@ -47,7 +47,7 @@ public class Database {
     private Map<String,Faction> provinceList;
 
     private Map<String, ArrayList<Province>> factionList;
-
+    private Map<String,Faction> factions;
 
     private String address;
     private String loadProvince;
@@ -84,6 +84,27 @@ public class Database {
 
         //factions = new HashMap<String, Faction>();
         
+    }
+    
+     private Map<String,Faction> setFaction() throws IOException {
+        Map<String,Faction> m = new HashMap<String,Faction>();
+        String content = Files.readString(Paths.get(address));
+        JSONObject ownership = new JSONObject(content);
+        for (String key : ownership.keySet()) {
+            JSONArray ja = ownership.getJSONArray(key);
+            ArrayList<Province> province = new ArrayList<Province>();
+            for (int i = 0; i < ja.length(); i++) {
+                ArrayList<Unit> u= new ArrayList<Unit>();
+                ArrayList<Unit> t= new ArrayList<Unit>();
+
+                provinceUnit.put(ja.getString(i),u);
+                provinceTraining.put(ja.getString(i),t);
+                province.add(new Province(ja.getString(i),this));
+            }
+            m.put(key,new Faction(this,key,0,province));
+        }
+        return m;
+
     }
 
     public void setAddress(String a) {
