@@ -22,10 +22,6 @@ public class Player {
         return db.getAvailableFactions();
     }
 
-    public void chooseFaction(String faction) {
-        // Faction f = new Faction(faction);
-        setFaction(faction);
-    }
 
     private void setFaction(String faction) {
         this.faction = faction;
@@ -47,24 +43,9 @@ public class Player {
         turn = false;
     }
 
-    /**
-     * launching invasion 
-     * 
-     * @param human
-     * @param enemy
-     * @param d
-     * @return
-     * @throws IOException
-     */
-    public String invade(String human, String enemy) throws IOException {
-        if (turn) {
 
-            Province h = new Province(human, database);
-            Province e = new Province(enemy, database);
-
-            return h.invade(e, database);
-        }
-        return "It's not your turn";
+    public void invade(String ownedProvince, String enemyProvince) {
+        faction.invade(ownedProvince, enemyProvince);
     }
 
     /**

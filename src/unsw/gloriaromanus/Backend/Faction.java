@@ -28,7 +28,7 @@ public class Faction {
         this.provinces = initialProvinces;
         this.provincesConqueredOnTurn = new ArrayList<Province>();
         this.availableUnits = new HashMap<String, Integer>();
-        loadUnitsFromConfig();
+        loadFromConfig();
     }
 
 
@@ -123,6 +123,36 @@ public class Faction {
 
 
     /**
+     * Removes given province from list of owned provinces
+     * 
+     * @param p Province to remove
+     */
+    public void removeProvince(Province p) {
+        if (provinces.contains(p)) provinces.remove(p);
+    }
+
+
+    /**
+     * Adds unit to selected units for given province
+     * 
+     * @param province Province to add unit to
+     * @param unit Unit to add to selection
+     */
+    public void addUnitSelection(String province, Long unit) {
+        Province p = findProvince(province);
+        p.selectUnit(unit);
+    }
+
+
+
+    public int invade(String ownedProvince, String enemyProvince) {
+        Province p = findProvince(ownedProvince);
+        if (p.getSelectedUnits().isEmpty()) return -1;
+        return db.invade(p, enemyProvince);
+    }
+
+
+    /**
      * Returns True if given province was conquered
      * during the players current turn
      * 
@@ -139,7 +169,7 @@ public class Faction {
      * 
      * @throws IOException
      */
-    private void loadUnitsFromConfig() throws IOException {
+    private void loadFromConfig() throws IOException {
         String configString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/faction_units_config.json"));
         JSONObject unitsConfig = new JSONObject(configString);
         List<Object> config = unitsConfig.getJSONArray(this.name).toList();

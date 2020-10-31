@@ -86,6 +86,42 @@ public class Database {
     //     return provinceList;
     // }
 
+    public Province findProvince(String name) {
+        Province p = null;
+        for (Faction f : playerFactions.values()) {
+            p = f.findProvince(name);
+            if (p != null) break;
+        }
+        return p;
+    }
+
+    public int invade(Province attacker, String enemy) {
+        Province defender = findProvince(enemy);
+        int result = BattleResolver.battle(attacker, defender);
+        if (result != -1) {
+            Faction aFaction = getFactionOfProvince(attacker);
+            Faction dFaction = getFactionOfProvince(defender);
+
+            if (result == 1) {
+                // Attacker conquered province
+                aFaction.addConqueredProvince(defender);
+                dFaction.removeProvince(defender);
+                return 1;
+            }
+            // else defender won
+            return 0;
+        }
+        return -1;
+    }
+
+
+    public Faction getFactionOfProvince(Province p) {
+        for (Faction f : playerFactions.values()) {
+            if (f.findProvince(p.getName()) != null) return f;
+        }
+        return null;
+    }
+
 
 
 
