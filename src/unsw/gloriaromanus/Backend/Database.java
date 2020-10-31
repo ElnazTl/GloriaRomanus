@@ -187,13 +187,13 @@ public class Database {
 
 
 
-    // public Map<String,List<Unit>> getProvinceUnit() {
-    //     return provinceUnit;
-    // }
+    public Map<String,List<Unit>> getProvinceUnit() {
+        return provinceUnit;
+    }
 
-    // public Map<String,Faction > getFactionProvince() {
-    //     return provinceList;
-    // }
+    public Map<String,Faction > getFactionProvince() {
+        return provinceList;
+    }
 
 
     public void addFaction(String faction) throws IOException {
@@ -364,9 +364,9 @@ public class Database {
 
     }
 
-    // public Player getPlayer(int index) {
-    //     return players.get(index);
-    // }
+    public Player getPlayer(int index) {
+        return players.get(index);
+    }
 
     
 
@@ -385,24 +385,24 @@ public class Database {
    
   
 
-    // public String addUnit(String name, String province) throws IOException {
+    public String addUnit(String name, String province) throws IOException {
 
-    //     var unitJSON = new JSONObject("{\r\n    \"soldier\": {\r\n        \"type\" : \"infantry\",\r\n        \"attackType\" : \"melee\",\r\n        \"numTroops\" : 10,\r\n        \"cost\" : 5,\r\n        \"trainTime\" : 1,\r\n        \"attack\" : 4,\r\n        \"morale\" : 5,\r\n        \"shield\" : 3,\r\n        \"defence\" : 6,\r\n        \"ability\" : \"noAbility\"\r\n\r\n    },\r\n    \"horseArcher\": {\r\n        \"type\" : \"cavalry\",\r\n        \"attackType\" : \"ranged\",\r\n        \"numTroops\" : 8,\r\n        \"cost\" : 5,\r\n        \"trainTime\" : 2,\r\n        \"attack\" : 6,\r\n        \"morale\" : 4,\r\n        \"shield\" : 2,\r\n        \"charge\" : 5,\r\n        \"ability\" : \"noAbility\"\r\n    }\r\n}");
-    //     var abilityJSON = new JSONObject("{\r\n    \"noAbility\" : {\r\n        \"friendly\" : [],\r\n        \"enemy\" : []\r\n    },\r\n    \"phalanx\" : {\r\n        \"friendly\" : [\r\n            {\r\n                \"type\" : \"defence\",\r\n                \"value\" : 2,\r\n                \"strategy\" : \"multiply\"\r\n                \r\n            },\r\n            {\r\n                \"type\" : \"speed\",\r\n                \"value\" : 0.5,\r\n                \"strategy\" : \"multiply\"\r\n            }\r\n        ],\r\n        \"enemy\" : []\r\n    }\r\n}");
-    //     Unit u = new Unit(name,unitJSON,abilityJSON);
-    //     Province p = new Province(province,this);
-    //     return p.getUnit(u);
+        var unitJSON = new JSONObject("{\r\n    \"soldier\": {\r\n        \"type\" : \"infantry\",\r\n        \"attackType\" : \"melee\",\r\n        \"numTroops\" : 10,\r\n        \"cost\" : 5,\r\n        \"trainTime\" : 1,\r\n        \"attack\" : 4,\r\n        \"morale\" : 5,\r\n        \"shield\" : 3,\r\n        \"defence\" : 6,\r\n        \"ability\" : \"noAbility\"\r\n\r\n    },\r\n    \"horseArcher\": {\r\n        \"type\" : \"cavalry\",\r\n        \"attackType\" : \"ranged\",\r\n        \"numTroops\" : 8,\r\n        \"cost\" : 5,\r\n        \"trainTime\" : 2,\r\n        \"attack\" : 6,\r\n        \"morale\" : 4,\r\n        \"shield\" : 2,\r\n        \"charge\" : 5,\r\n        \"ability\" : \"noAbility\"\r\n    }\r\n}");
+        var abilityJSON = new JSONObject("{\r\n    \"noAbility\" : {\r\n        \"friendly\" : [],\r\n        \"enemy\" : []\r\n    },\r\n    \"phalanx\" : {\r\n        \"friendly\" : [\r\n            {\r\n                \"type\" : \"defence\",\r\n                \"value\" : 2,\r\n                \"strategy\" : \"multiply\"\r\n                \r\n            },\r\n            {\r\n                \"type\" : \"speed\",\r\n                \"value\" : 0.5,\r\n                \"strategy\" : \"multiply\"\r\n            }\r\n        ],\r\n        \"enemy\" : []\r\n    }\r\n}");
+        Unit u = new Unit(name,unitJSON,abilityJSON);
+        Province p = new Province(province,this);
+        return p.getUnit(u);
 
-    // }
+    }
 
 
-    // /**
-    //  * This function will keep track of the training time of different troops and add them to the units when training is over
-    //  */
-    // public void update(Unit u, String p) {
-    //     provinceTraining.get(p).remove(u);
+    /**
+     * This function will keep track of the training time of different troops and add them to the units when training is over
+     */
+    public void update(Unit u, String p) {
+        provinceTraining.get(p).remove(u);
 
-    // }
+    }
 
     public void endTurn() {
         for (Iterator pI = provinceTraining.keySet().iterator(); pI.hasNext();){

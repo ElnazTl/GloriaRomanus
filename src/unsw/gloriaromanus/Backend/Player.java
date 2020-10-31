@@ -59,8 +59,10 @@ public class Player {
         boolean training = faction.trainUnit(province, unit);
         if (training) {
             // Unit is training
+            System.out.println("Trained unit successfully");
         } else {
             // Unit training failed
+            System.out.println("Could not train unit");
         }
     }
 
@@ -78,8 +80,10 @@ public class Player {
         boolean move = faction.moveUnits(from, to);
         if (move) {
             // Unit moved successfully
+            System.out.println("Move units successfully");
         } else {
             // Unit could not move
+            System.out.println("Could not move units");
         }
         return move;
     }
