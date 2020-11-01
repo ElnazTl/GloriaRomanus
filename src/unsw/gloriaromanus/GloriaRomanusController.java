@@ -90,14 +90,7 @@ public class GloriaRomanusController{
 
     // TODO = load this from a configuration file you create (user should be able to
     // select in loading screen)
-<<<<<<< HEAD
     humanFaction = "Rome";
-=======
-
-    // making a player
-
-
->>>>>>> 4adaecd027a12cc72fc14b0f7a9d5b292a433e28
 
     currentlySelectedHumanProvince = null;
     currentlySelectedEnemyProvince = null;

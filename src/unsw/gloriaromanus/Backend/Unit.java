@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONPropertyIgnore;
-import org.junit.Ignore;
+//import org.junit.Ignore;
 
 
 public class Unit {
@@ -423,7 +423,7 @@ public class Unit {
     public void setCharge(double charge) {
         this.charge = charge;
     }
-    @Ignore
+    // @Ignore
     public void setAbilityType(String abilityType) {
         this.abilityType = abilityType;
     }
