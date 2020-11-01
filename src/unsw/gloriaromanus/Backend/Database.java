@@ -53,9 +53,10 @@ public class Database {
     private String loadProvince;
     private String loadPlayer;
     private String loadFaction;
-
+    private String adjMatrix;
 
     private ArrayList<Player> players;
+
 
 
     // assign default unit to each province 
@@ -117,7 +118,7 @@ public class Database {
             loadProvince = "bin/unsw/gloriaromanus/Backend/configs/load.json";
             loadPlayer = "bin/unsw/gloriaromanus/Backend/configs/loadPlayer.json";
             loadFaction = "bin/unsw/gloriaromanus/Backend/configs/loadFaction.json";
-            
+            adjMatrix = "bin/unsw/gloriaromanus/province_adjacency_matrix_fully_connected.json";
            
             
         }
@@ -126,6 +127,8 @@ public class Database {
             loadProvince = "src/unsw/gloriaromanus/Backend/configs/load.json";
             loadPlayer = "src/unsw/gloriaromanus/Backend/configs/loadPlayer.json";
             loadFaction = "src/unsw/gloriaromanus/Backend/configs/loadFaction.json";
+            adjMatrix = "src/unsw/gloriaromanus/province_adjacency_matrix_fully_connected.json";
+
 
         }
     }
@@ -250,7 +253,7 @@ public class Database {
 
 
     private void loadAdjacencyMatrix() throws IOException {
-        String content = Files.readString(Paths.get("bin/unsw/gloriaromanus/province_adjacency_matrix_fully_connected.json"));
+        String content = Files.readString(Paths.get(adjMatrix));
         provinceAdjacencyMatrix = new JSONObject(content);
     }
 
