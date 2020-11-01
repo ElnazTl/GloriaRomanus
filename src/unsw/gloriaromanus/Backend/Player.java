@@ -70,6 +70,16 @@ public class Player {
     }
 
 
+    public int getFactionTreasury() {
+        return faction.getTreasury();
+    }
+
+
+    public void moveUnits() {
+
+    }
+
+
     public void invade(String ownedProvince, String enemyProvince) {
         faction.invade(ownedProvince, enemyProvince);
     }
@@ -82,7 +92,7 @@ public class Player {
      * @param unit Unit to train
      * @throws IOException
      */
-    public void trainUnit(String province, String unit) throws IOException {
+    public boolean trainUnit(String province, String unit) throws IOException {
         boolean training = faction.trainUnit(province, unit);
         if (training) {
             // Unit is training
@@ -91,6 +101,7 @@ public class Player {
             // Unit training failed
             System.out.println("Could not train unit");
         }
+        return training;
     }
 
     /**

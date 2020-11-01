@@ -47,14 +47,21 @@ public class Province {
         for (Unit u : this.units) {
             u.endTurn();
         }
+        List<Unit> unitsCompleted = new ArrayList<Unit>();
         for (Unit u : this.unitsTraining) {
             u.endTurn();
             if (u.isTrained()) {
-                units.add(u);
-                unitsTraining.remove(u);
+                unitsCompleted.add(u);
             }
         }
+        units.addAll(unitsCompleted);
+        unitsTraining.removeAll(unitsCompleted);
+        
         wealth = wealth + taxRate.getWealth();
+    }
+
+    public double taxProvince() {
+        return wealth * taxRate.getRate();
     }
 
     public void setDatabase(Database d) {
@@ -202,7 +209,10 @@ public class Province {
      * @return True if training unit, otherwise False
      */
     public boolean trainUnit(String name) throws IOException {
-        if (unitsTraining.size() == 2) return false;
+        if (unitsTraining.size() == 2) {
+            System.out.println("Only 2 units can be trained at a time");
+            return false;
+        }
         else {
             Unit u = new Unit(name);
             unitsTraining.add(u);
