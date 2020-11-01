@@ -47,11 +47,25 @@ public class Province {
         for (Unit u : this.units) {
             u.endTurn();
         }
+<<<<<<< HEAD
         List<Unit> unitsCompleted = new ArrayList<Unit>();
+=======
+        ArrayList<Unit> rem = new ArrayList<Unit>();
+>>>>>>> f5ad4e5cff58ee543c485c996aaab765cce2fc3c
         for (Unit u : this.unitsTraining) {
-            u.endTurn();
+            // u.endTurn();
             if (u.isTrained()) {
+<<<<<<< HEAD
                 unitsCompleted.add(u);
+=======
+                units.add(u);
+
+                rem.add(u); 
+            }
+            for (Unit del: rem) {
+                unitsTraining.remove(del);
+
+>>>>>>> f5ad4e5cff58ee543c485c996aaab765cce2fc3c
             }
         }
         units.addAll(unitsCompleted);
