@@ -41,6 +41,63 @@ public class InvadeTest {
 
     }
 
+    @Test
+    public void TestInvadeNotAdjacent() throws IOException {
 
+        Database db = new Database("test");
+
+        Player A = db.addNewPlayer("A", "Spain");
+        Player B = db.addNewPlayer("B", "Numidia");
+
+        A.startTurn();
+
+        A.trainUnit("V", "soldier");
+        A.trainUnit("V", "soldier");
+        A.endTurn();
+        B.startTurn();
+        B.endTurn();
+
+        List<Unit> unitsA = A.getUnitsFromProvince("V");
+        System.out.println(unitsA);
+
+        A.selectUnit("V", unitsA.get(0).getUnitID());
+
+        int result = A.invade("V", "XI");
+        assertEquals(-1, result);
+
+    }
+
+
+    @Test
+    public void TestInvadeAdjacentOneEnemy() throws IOException {
+
+        Database db = new Database("test");
+
+        Player A = db.addNewPlayer("A", "Spain");
+        Player B = db.addNewPlayer("B", "Numidia");
+
+        A.startTurn();
+
+        A.trainUnit("V", "soldier");
+        A.trainUnit("V", "soldier");
+        A.endTurn();
+        B.startTurn();
+        B.trainUnit("VI", "soldier");
+        B.endTurn();
+
+        List<Unit> unitsA = A.getUnitsFromProvince("V");
+        // System.out.println(unitsA);
+
+        List<Unit> unitsB = B.getUnitsFromProvince("VI");
+        // System.out.println(unitsB);
+
+        A.selectUnit("V", unitsA.get(0).getUnitID());
+        // System.out.println(unitsA);
+        A.selectUnit("V", unitsA.get(0).getUnitID());
+
+        int result = A.invade("V", "VI");
+        assertEquals(1, result);
+
+    }
 }
 

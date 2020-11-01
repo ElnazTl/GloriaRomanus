@@ -162,6 +162,10 @@ public class Database {
     }
 
     public int invade(Province attacker, String enemy) {
+        if (!isAdjacentProvince(attacker.getName(), enemy)) {
+            System.out.println("Provinces not adjacent, can't invade");
+            return -1;
+        }
         Province defender = findProvince(enemy);
         int result = BattleResolver.battle(attacker, defender);
         if (result != -1) {
@@ -172,11 +176,14 @@ public class Database {
                 // Attacker conquered province
                 aFaction.addConqueredProvince(defender);
                 dFaction.removeProvince(defender);
+                System.out.println("Attacker won");
                 return 1;
             }
             // else defender won
+            System.out.println("Defender won");
             return 0;
         }
+        System.out.println("Something went wrong");
         return -1;
     }
 
@@ -237,7 +244,7 @@ public class Database {
 
     // }
 
-    public boolean isAdjacentProvince(String province1, String province2) throws IOException {
+    public boolean isAdjacentProvince(String province1, String province2) {
         return provinceAdjacencyMatrix.getJSONObject(province1).getBoolean(province2);
     }
 

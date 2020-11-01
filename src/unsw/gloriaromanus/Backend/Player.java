@@ -84,7 +84,7 @@ public class Player {
     // }
 
 
-    public int invade(String ownedProvince, String enemyProvince) {
+    public int invade(String ownedProvince, String enemyProvince) throws IOException {
         return faction.invade(ownedProvince, enemyProvince);
     }
 
