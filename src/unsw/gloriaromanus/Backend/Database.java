@@ -33,6 +33,7 @@ public class Database {
     
     private Map<String, Faction> factions;
     private Map<Player, Faction> playerFactions;
+    private List<String> factionsTaken;
     private int numPlayers = 0;
     private int turnNumber = 0;
     private Player currentPlayer = null;
@@ -47,7 +48,6 @@ public class Database {
     private Map<String,Faction> provinceList;
 
     private Map<String, ArrayList<Province>> factionList;
-    private Map<String,Faction> factions;
 
     private String address;
     private String loadProvince;
@@ -71,6 +71,7 @@ public class Database {
 
         factionList = setOwningProvince();
         players = new ArrayList<Player>();
+        factionsTaken = new ArrayList<String>();
 
 
 
@@ -196,18 +197,21 @@ public class Database {
         for (Player p : playerFactions.keySet()) {
             if (player.equals(p.getUsername())) {
                 // Username taken
+                System.out.println("Username taken");
                 return null;
             }
         }
-        if (factions.containsKey(name)) {
+        System.out.println("Valid username");
+        if (!factionsTaken.contains(name)) {
             Player p = new Player(player, this);
             Faction f = factions.get(name);
             playerFactions.put(p, f);
-            factions.remove(f.getName());
+            factionsTaken.add(name);
             numPlayers++;
             if (currentPlayer == null) currentPlayer = p;
             return p;
         }
+        System.out.println("Faction taken");
         return null;
     }
 
