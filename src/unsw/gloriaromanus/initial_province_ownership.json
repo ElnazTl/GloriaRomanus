@@ -1,16 +1,17 @@
 {
-  "Rome": [
-    "Lugdunensis",
-    "Lusitania",
-    "Lycia et Pamphylia",
-    "Macedonia"
-  ],
+ 
   "Gaul": [
     "Narbonensis",
     "Noricum",
     "Numidia",
     "Mauretania Caesariensis"
 
+  ],
+  "Rome": [
+    "Lugdunensis",
+    "Lusitania",
+    "Lycia et Pamphylia",
+    "Macedonia"
   ],
   "Carthage": [
     "Pannonia Inferior",
