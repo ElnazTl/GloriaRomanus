@@ -21,11 +21,6 @@ public class Faction {
     private int treasury;
 
     public Faction(){}
-    public Faction(Database db, String name, int startingGold, List<Province> initialProvinces) throws IOException {
-        this.db = db;
-        this.name = name;
-        this.treasury = startingGold;
-    }
     
     public Faction(Database db, String name, List<Province> initialProvinces) throws IOException {
         this.db = db;
@@ -34,7 +29,7 @@ public class Faction {
         this.provinces = initialProvinces;
         this.provincesConqueredOnTurn = new ArrayList<Province>();
         this.availableUnits = new HashMap<String, Integer>();
-        loadFromConfig();
+        // loadFromConfig();
     }
 
     public void setDatabase(Database db) {
@@ -79,16 +74,16 @@ public class Faction {
      * @throws IOException
      */
     public boolean trainUnit(Province p, String unit) throws IOException {
-        if (!availableUnits.containsKey(unit)) {
-            // Unit not available to this faction
-            return false;
-        }
-        int cost = availableUnits.get(unit);
+        // if (!availableUnits.containsKey(unit)) {
+        //     // Unit not available to this faction
+        //     return false;
+        // }
+        // int cost = availableUnits.get(unit);
         
-        if (cost > treasury) {
-            // Faction does not have enough gold to buy unit
-            return false;
-        }
+        // if (cost > treasury) {
+        //     // Faction does not have enough gold to buy unit
+        //     return false;
+        // }
 
         return p.trainUnit(unit);
     }
