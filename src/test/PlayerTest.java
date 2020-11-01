@@ -29,7 +29,10 @@ public class PlayerTest {
         Database d  = new Database("test");
         d.addNewPlayer("Annie", "Rome");
         assertEquals("Annie", d.getPlayer(0).getUsername());
+        d.saveGame();
     }
+    
+    
     @Test
     public void TestFaction() throws IOException {
         Database d = new Database("test");
@@ -72,15 +75,8 @@ public class PlayerTest {
     }
 
     
-    @Test 
-    public void TestLoadPlayer() throws IOException {
-        Database d = new Database("test");
-        d.loadGame();
-        assertTrue(d.getPlayer(0).username.equals("sara"));
-        Province p = new Province("Noricum",d);
-        assertTrue(p.getUnits().size() == 2);
-
-    }
+   
+   
     /**
      * testing units are added to the province according to their training time
      */
