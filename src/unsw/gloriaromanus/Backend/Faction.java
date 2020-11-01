@@ -34,7 +34,7 @@ public class Faction {
         this.provinces = initialProvinces;
         this.provincesConqueredOnTurn = new ArrayList<Province>();
         this.availableUnits = new HashMap<String, Integer>();
-        loadFromConfig();
+        // loadFromConfig();
     }
 
     public void setDatabase(Database db) {

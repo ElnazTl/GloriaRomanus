@@ -104,9 +104,9 @@ public class Player {
 
     
     public String getUnit(String name, String province) throws IOException {
-        if (!database.getFactionProvince().get(province).getName().equals(faction)) return "can only get unit for the faction you belong to";
+        if (!database.getFactionProvince().get(province).getName().equals(faction.getName())) return "can only get unit for the faction you belong to";
         if (turn) {
-            if (!database.addUnit(name,faction.getName(),province)) return "can't add unit";
+            if (!database.addUnit(name,faction.getN,province)) return "can't add unit";
             return "successfully added the unit";
         }
 
