@@ -141,6 +141,9 @@ public class PlayerTest {
         assertEquals("not adjecant",p.moveUnits("Narbonensis","Noricum"));
         assertEquals("successfully moved",p.moveUnits("Narbonensis","Numidia"));
         assertEquals("provinces not in the same faction",p.moveUnits("Narbonensis","Lugdunensis"));
+        Province to = new Province("Numidia",d);
+        assertTrue(pro.getUnits().isEmpty());
+        assertTrue(to.getUnits().get(0).getName().equals("soldier"));
         // assertEquals("Move units successfully",p.moveUnits("Narbonensis","Alpes Graiae et Poeninae"));
     }
 
