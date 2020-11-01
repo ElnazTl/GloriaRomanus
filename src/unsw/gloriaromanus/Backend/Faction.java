@@ -29,6 +29,9 @@ public class Faction {
         this.provinces = initialProvinces;
         this.provincesConqueredOnTurn = new ArrayList<Province>();
         this.availableUnits = new HashMap<String, Integer>();
+        for (Province p: provinces) {
+            p.setDatabase(db);
+        }
         // loadFromConfig();
     }
 
@@ -57,6 +60,9 @@ public class Faction {
             provinces.add(p);
         }
         for (Province p : provinces) {
+            
+            p.setDatabase(db);
+            
             p.endTurn();
             
         }
