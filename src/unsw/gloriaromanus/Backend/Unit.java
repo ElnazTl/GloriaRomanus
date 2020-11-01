@@ -33,7 +33,7 @@ public class Unit {
     private double defence;  // Melee units only
     private double charge;   // Cavalry units only
     private String abilityType;
-
+    @JsonIgnoreProperties
     private JSONArray ability;
     
     @JsonIgnoreProperties private JSONArray modifiers;
@@ -130,12 +130,12 @@ public class Unit {
         return abilityType;
     }
 
-
+    @JsonIgnore
     public JSONArray getAbility() {
         return ability;
     }
 
-
+    @JsonIgnore
     public JSONArray getModifiers() {
         return modifiers;
     }

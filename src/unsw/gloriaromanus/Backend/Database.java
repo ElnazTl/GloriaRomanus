@@ -67,6 +67,8 @@ public class Database {
 
         
         factions = setFaction();
+        // System.out.println( "heyyyyy"+factions.get("Gaul").getAvailableUnits());
+
         provinceList = setProvinceToOwningFactionMap();
 
         factionList = setOwningProvince();
@@ -83,7 +85,6 @@ public class Database {
 
         loadAdjacencyMatrix();
 
-        //factions = new HashMap<String, Faction>();
         
     }
     
@@ -102,7 +103,9 @@ public class Database {
                 provinceTraining.put(ja.getString(i),t);
                 province.add(new Province(ja.getString(i),this));
             }
-            m.put(key,new Faction(this,key,0,province));
+            
+
+            m.put(key,new Faction(this,key,province));
         }
         return m;
 
@@ -112,8 +115,8 @@ public class Database {
         if (a.equals("test"))  {
             address = "bin/unsw/gloriaromanus/initial_province_ownership.json";
             loadProvince = "bin/unsw/gloriaromanus/Backend/configs/load.json";
-            loadPlayer = "bin/unsw/gloriaromanus/Backend/configs/loadPlayer.json";
-            loadFaction = "bin/unsw/gloriaromanus/Backend/configs/loadFaction.json";
+            loadPlayer = "/Users/eli/new1/t13a-oop/src/unsw/gloriaromanus/Backend/configs/loadPlayer.json";
+            loadFaction = "/Users/eli/new1/t13a-oop/src/unsw/gloriaromanus/Backend/configs/loadFaction.json";
 
            
             
@@ -208,6 +211,8 @@ public class Database {
             playerFactions.put(p, f);
             factionsTaken.add(name);
             numPlayers++;
+            p.chooseFaction(f);
+            players.add(p);
             if (currentPlayer == null) currentPlayer = p;
             return p;
         }
@@ -581,7 +586,9 @@ public class Database {
         Province p = new Province(province, this);
         return factions.get(faction).trainUnit(p, unit);
     }
-    
+    public Map<String,Faction> getFaction() {
+        return factions;
+    }
 }
 
 
