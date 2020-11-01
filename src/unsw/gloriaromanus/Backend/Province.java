@@ -39,24 +39,28 @@ public class Province {
         database.provinceUnit.get(name).add(u);
     }
     public void endTurn() {
+
         ArrayList<Unit> rem = new ArrayList<Unit>();
 
         for (Unit u : this.database.provinceTraining.get(name)) {
             u.endTurn();
             if (u.isTrained()) {
+
                 addunit(u);
-                units.add(u);
+                units =   database.provinceUnit.get(name);
+
                 rem.add(u);
             }
-
         }
-      
             for (Unit del: rem) {
                 unitsTraining.remove(del);
                 database.getProvinceTraining().get(name).remove(del);
-
             }
-     
+
+    }
+
+    public double taxProvince() {
+        return wealth * taxRate.getRate();
     }
 
     public void setDatabase(Database d) {
@@ -205,10 +209,14 @@ public class Province {
      * @return True if training unit, otherwise False
      */
     public boolean trainUnit(String name) throws IOException {
-        if (unitsTraining.size() == 2) return false;
+        if (unitsTraining.size() == 2) {
+            System.out.println("Only 2 units can be trained at a time");
+            return false;
+        }
         else {
             Unit u = new Unit(name);
-            unitsTraining.add(u);
+            database.getProvinceTraining().get(this.name).add(u);
+            unitsTraining =  database.getProvinceTraining().get(this.name);
 
             // u.applyModifier(taxRate.getMoraleModifier());
 

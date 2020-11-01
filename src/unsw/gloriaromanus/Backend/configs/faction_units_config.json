@@ -1,11 +1,13 @@
 {
     "Rome": [
         "soldier",
-        "horseArcher"
+        "horseArcher",
+        "artillery"
     ],
     "Gaul": [
         "soldier",
-        "horseArcher"
+        "horseArcher",
+        "artillery"
     ],
     "Carthage": [
         "soldier",
