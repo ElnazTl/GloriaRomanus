@@ -47,10 +47,15 @@ public class Province {
         for (Unit u : this.units) {
             u.endTurn();
         }
+        ArrayList<Unit> rem = new ArrayList<Unit>();
         for (Unit u : this.unitsTraining) {
-            u.endTurn();
+            // u.endTurn();
             if (u.isTrained()) {
                 units.add(u);
+                rem.add(u); 
+            }
+            for (Unit del: rem) {
+                unitsTraining.remove(del);
             }
         }
         wealth = wealth + taxRate.getWealth();
