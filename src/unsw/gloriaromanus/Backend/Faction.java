@@ -74,6 +74,15 @@ public class Faction {
         db.endTurn(this);
     }
     
+    public void selectUnit(String province, Long unit) {
+        Province p = findProvince(province);
+        p.selectUnit(unit);
+    }
+
+    public List<Unit> getUnitsFromProvince(String province) {
+        Province p = findProvince(province);
+        return p.getUnits();
+    }
 
 
     /**
