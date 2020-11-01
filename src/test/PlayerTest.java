@@ -126,38 +126,26 @@ public class PlayerTest {
         assertEquals("successfully added the unit", q.getUnit("horseArcher", "Narbonensis"));
         
     }
-
-
     @Test
-    public void TestAll() throws IOException {
-
-        Database db = new Database("test");
-
-        Player p = db.addNewPlayer("A", "Rome");
-        System.out.println(p.getFaction());
-
-        assertEquals(200, p.getFactionTreasury());
+    public void testMoveTroop() throws IOException {
+        Database d = new Database("test");
+        d.loadGame();
+        Player p = d.getPlayer(0);
+        p.startTurn();
+        assertEquals("successfully added the unit", p.getUnit("soldier", "Narbonensis"));
         p.endTurn();
-        assertEquals(204, p.getFactionTreasury());
-
-
-        // int i = 1;
-        // boolean training = true;
+        Province pro = new Province("Narbonensis",d);
+        Long id  = pro.getUnits().get(0).getUnitID();
+        p.selectUnit("Narbonensis", id);
         
-        // int j = 0;
-        // while (j < 10) {
-        //     System.out.println("Training unit " + i);
-        //     training = p.trainUnit(p.getFaction().getProvinces().get(0).getName(), "artillery");
-        //     System.out.println("Gold after training: " + p.getFactionTreasury());
-        //     System.out.println("Ending turn");
-        //     p.endTurn();
-        //     System.out.println("Gold after ending turn");
-            
-        //     if (training) i++;
-        //     j++;
-        // }
+        assertEquals("not adjecant",p.moveUnits("Narbonensis","Noricum"));
+        assertEquals("successfully moved",p.moveUnits("Narbonensis","Numidia"));
+        assertEquals("provinces not in the same faction",p.moveUnits("Narbonensis","Lugdunensis"));
+        // assertEquals("Move units successfully",p.moveUnits("Narbonensis","Alpes Graiae et Poeninae"));
     }
 
+
+    
 
 
 
