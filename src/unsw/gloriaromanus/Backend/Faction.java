@@ -58,6 +58,7 @@ public class Faction {
         }
         for (Province p : provinces) {
             p.endTurn();
+            
         }
         db.endTurn(this);
     }

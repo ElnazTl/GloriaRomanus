@@ -78,7 +78,7 @@ public class Database {
 
 
         playerFactions = new HashMap<Player, Faction>();
-        address = "bin/unsw/gloriaromanus/initial_province_ownership.json";
+        // address = "bin/unsw/gloriaromanus/initial_province_ownership.json";
         provinceList = setProvinceToOwningFactionMap();
         provinceUnit = setOwningUnit();
         factionList = setOwningProvince();
@@ -451,6 +451,7 @@ public class Database {
 
         while(value.hasNext()) {
             Faction f = value.next();
+            f.setDatabase(this);
             factions.put(f.getName(),f);
             factionList.put(f.getName(),(ArrayList)f.getProvinces());
             f.setDatabase(this);
@@ -490,6 +491,7 @@ public class Database {
 
         while(value.hasNext()) {
             Player p = value.next();
+            p.getFaction().setDatabase(this);
             p.setDatabase(this);
             addPlayer(p);
 
@@ -574,13 +576,7 @@ public class Database {
 
     }
 
-    public void endTurn() {
     
-        for(String p: provinceList.keySet()) {
-            Province province = new Province(p,this);
-            province.endTurn();
-        }
-    }
 
     public Boolean addUnit(String unit, String faction, String province) throws IOException {
         Province p = new Province(province, this);
