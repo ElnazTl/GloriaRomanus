@@ -19,8 +19,7 @@ import unsw.gloriaromanus.Backend.*;
 import unsw.gloriaromanus.*;
 
 public class PlayerTest {
-    Player p;
-    Database d;
+
 
     
 
@@ -55,7 +54,7 @@ public class PlayerTest {
         assertEquals("successfully added the unit",p.getUnit("soldier","Noricum" ));
 
         Province province = new Province("Noricum" ,d);
-
+       
         assertTrue(province.getUnits().isEmpty());
         assertTrue(province.getUnitsTraining().get(0).getName().equals("soldier"));
 
@@ -64,8 +63,10 @@ public class PlayerTest {
         assertEquals("successfully added the unit",p.getUnit("soldier","Noricum" ));
 
         p.endTurn();
+        Province pro = new Province("Noricum" ,d);
+
         assertTrue(province.getUnitsTraining().isEmpty());
-        assertTrue(province.getUnits().size() == 2);
+        assertTrue(pro.getUnits().size() == 2);
         d.saveGame();
 
     }
@@ -76,6 +77,8 @@ public class PlayerTest {
         Database d = new Database("test");
         d.loadGame();
         assertTrue(d.getPlayer(0).username.equals("sara"));
+        Province p = new Province("Noricum",d);
+        assertTrue(p.getUnits().size() == 2);
 
     }
     /**
@@ -89,82 +92,78 @@ public class PlayerTest {
         p.startTurn();
         assertEquals("successfully added the unit", p.getUnit("soldier", "Noricum"));
         p.endTurn();
+        
         Province pr = new Province("Noricum",d);
-        assertTrue(pr.getUnits().size() == 3);
+        // assertTrue(pr.getUnits().size() == 3);
         p.startTurn();
-        assertEquals("successfully added the unit", p.getUnit("horseArcher", "Noricum"));
-        p.startTurn();
-        assertTrue(pr.getUnits().size() == 3);
+         assertEquals("successfully added the unit", p.getUnit("horseArcher", "Noricum"));
         p.endTurn();
-        p.startTurn();
-        assertTrue(pr.getUnits().size() == 3);
-        p.endTurn();
-        assertTrue(pr.getUnits().size() == 4);
+        // // assertTrue(pr.getUnits().size() == 3);
+        
+         p.startTurn();
+         p.endTurn();
+         assertTrue(pr.getUnits().size() == 4);
 
         d.saveGame();
         
 
     }
     
-    @Test
-    public void TestLoadUnit() throws IOException {
-        Database d = new Database("test");
-        d.loadGame();
-        assertTrue(d.getProvinceUnit().get("V").get(0).getName().equals("soldier"));
-
-    }
+    
     /**
      * test "turn" feature for multiplayers
      */
     @Test
     public void TestMultiPlayer() throws IOException {
         Database d = new Database("test");
-        Player p = new Player("suzi",d);
-        p.chooseFaction("Rome");
-        Player q = new Player ("sarah",d);
-        q.chooseFaction("Gaul");
+        Player p = d.addNewPlayer("andi", "Rome");
+        
+        Player q = d.addNewPlayer("sara", "Gaul");
         p.startTurn();
-        assertEquals("successfully added the unit", p.getUnit("horseArcher", "X"));
-        assertEquals("can only get unit for the faction you belong to", q.getUnit("horseArcher", "X"));
-        assertEquals("It's not your turn", q.getUnit("horseArcher", "Achaia"));
+
+        assertEquals("successfully added the unit", p.getUnit("horseArcher", "Lugdunensis"));
+        assertEquals("can only get unit for the faction you belong to", q.getUnit("horseArcher", "Lugdunensis"));
+        assertEquals("It's not your turn", q.getUnit("horseArcher", "Narbonensis"));
         assertEquals("It's another player's turn", q.startTurn());
         p.endTurn();
         q.startTurn();
-        assertEquals("successfully added the unit", q.getUnit("horseArcher", "Achaia"));
+        assertEquals("successfully added the unit", q.getUnit("horseArcher", "Narbonensis"));
         
     }
-    public static void main(String[] args) throws IOException {
-        Database d = new Database("");
-        Player p = d.addNewPlayer("sara", "Gaul");
-        p.startTurn();
-        p.getUnit("soldier", "Narbonensis");
-        Province pp = new Province("Narbonensis", d);
-        System.out.println(pp.getUnitsTraining());
+
+
+    @Test
+    public void TestAll() throws IOException {
+
+        Database db = new Database("test");
+
+        Player p = db.addNewPlayer("A", "Rome");
+        System.out.println(p.getFaction());
+
+        assertEquals(200, p.getFactionTreasury());
         p.endTurn();
-        p.startTurn();
-        d.saveGame();
-        Database k = new Database("");
-        k.loadGame();
-        Player q = k.getPlayer(0);
-
-        q.startTurn();
-        System.out.println(q.getUnit("soldier", "Narbonensis"));
-        Province x = new Province("Narbonensis", k);
-        System.out.println("check the fnction"+k.getProvinceTraining().get("Narbonensis"));
-        System.out.println("are we good"+x.getUnitsTraining());
-        // x.setDatabase(k);
+        assertEquals(204, p.getFactionTreasury());
 
 
-
-        q.endTurn();
-        q.startTurn();
-        q.endTurn();
-
-        System.out.println("are we dont yet"+x.getUnits());
-        System.out.println("well look what we have here"+k.getFaction().get("Gaul").getProvinces().get(0).getUnitsTraining());
-
-
-
+        // int i = 1;
+        // boolean training = true;
+        
+        // int j = 0;
+        // while (j < 10) {
+        //     System.out.println("Training unit " + i);
+        //     training = p.trainUnit(p.getFaction().getProvinces().get(0).getName(), "artillery");
+        //     System.out.println("Gold after training: " + p.getFactionTreasury());
+        //     System.out.println("Ending turn");
+        //     p.endTurn();
+        //     System.out.println("Gold after ending turn");
+            
+        //     if (training) i++;
+        //     j++;
+        // }
     }
-   
+
+
+
+
+    
 }

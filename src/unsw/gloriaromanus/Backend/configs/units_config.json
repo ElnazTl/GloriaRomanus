@@ -45,7 +45,7 @@
         "type" : "artillery",
         "attackType" : "ranged",
         "numTroops" : 3,
-        "cost" : 10,
+        "cost" : 40,
         "trainTime" : 3,
         "attack" : 12,
         "speed" : 1,

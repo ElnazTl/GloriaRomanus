@@ -15,7 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import com.esri.arcgisruntime.internal.security.Token;
+// import com.esri.arcgisruntime.internal.security.Token;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -227,15 +227,15 @@ public class Database {
             System.out.println("Not enough players");
             return;
         }
-        assignProvinces();
+        // assignProvinces();
 
     }
 
     // TODO
     // Assign provinces correctly
-    private void assignProvinces() {
+    // private void assignProvinces() {
 
-    }
+    // }
 
     public boolean isAdjacentProvince(String province1, String province2) throws IOException {
         return provinceAdjacencyMatrix.getJSONObject(province1).getBoolean(province2);
@@ -579,8 +579,7 @@ public class Database {
     
 
     public Boolean addUnit(String unit, String faction, String province) throws IOException {
-        Province p = new Province(province, this);
-        return factions.get(faction).trainUnit(p, unit);
+        return factions.get(faction).trainUnit(province, unit);
     }
     public Map<String,Faction> getFaction() {
         return factions;

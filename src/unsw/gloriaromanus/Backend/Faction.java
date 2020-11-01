@@ -29,10 +29,14 @@ public class Faction {
         this.provinces = initialProvinces;
         this.provincesConqueredOnTurn = new ArrayList<Province>();
         this.availableUnits = new HashMap<String, Integer>();
-        for (Province p: provinces) {
-            p.setDatabase(db);
-        }
+
+        // for (Province p: provinces) {
+        //     p.setDatabase(db);
+        // }
         // loadFromConfig();
+
+        loadFromConfig();
+
     }
 
     public void setDatabase(Database db) {
@@ -64,36 +68,12 @@ public class Faction {
             p.setDatabase(db);
             
             p.endTurn();
-            
+
+            // treasury += p.taxProvince();
         }
         db.endTurn(this);
     }
     
-
-    /**
-     * Attempts to start training a unit with given name
-     * as long as the player is allowed to train this unit
-     * and if they have enough gold to buy the unit
-     * 
-     * @param p Province to train unit in
-     * @param unit Name of unit to train
-     * @return 
-     * @throws IOException
-     */
-    public boolean trainUnit(Province p, String unit) throws IOException {
-        // if (!availableUnits.containsKey(unit)) {
-        //     // Unit not available to this faction
-        //     return false;
-        // }
-        // int cost = availableUnits.get(unit);
-        
-        // if (cost > treasury) {
-        //     // Faction does not have enough gold to buy unit
-        //     return false;
-        // }
-
-        return p.trainUnit(unit);
-    }
 
 
     /**
@@ -112,14 +92,38 @@ public class Faction {
     }
 
 
-
-
+    /**
+     * Attempts to start training a unit with given name
+     * as long as the player is allowed to train this unit
+     * and if they have enough gold to buy the unit
+     * 
+     * @param p Province to train unit in
+     * @param unit Name of unit to train
+     * @return 
+     * @throws IOException
+     */
     public boolean trainUnit(String province, String unit) throws IOException {
         Province p = findProvince(province);
         if (p == null) {
+            System.out.println("Could not find province");
             return false;
         }
-        return p.trainUnit(name);
+        if (!availableUnits.containsKey(unit)) {
+            // Unit not available to this faction
+            System.out.println("Faction cannot train this unit");
+            return false;
+        }
+        int cost = availableUnits.get(unit);
+        if (cost > treasury) {
+            // Faction does not have enough gold to buy unit
+            System.out.println("Faction does not have enough gold to train this unit");
+            return false;
+        }
+        boolean training = p.trainUnit(unit);
+        if (training) {
+            treasury = treasury - cost;
+        }
+        return training;
     }
 
     public boolean moveUnits(String from, String to) throws IOException {
@@ -217,9 +221,13 @@ public class Faction {
      * @throws IOException
      */
     private void loadFromConfig() throws IOException {
-        String configString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/faction_units_config.json"));
-        JSONObject unitsConfig = new JSONObject(configString);
-        List<Object> config = unitsConfig.getJSONArray(this.name).toList();
+        String unitConfigString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/units_config.json"));
+        JSONObject unitsConfig = new JSONObject(unitConfigString);
+
+        String factionConfigString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/faction_units_config.json"));
+        JSONObject allowedUnitsConfig = new JSONObject(factionConfigString);
+
+        List<Object> config = allowedUnitsConfig.getJSONArray(this.name).toList();
         for (Object o : config) {
             String s = (String)o;
             availableUnits.put(s, unitsConfig.getJSONObject(s).getInt("cost"));
@@ -252,6 +260,23 @@ public class Faction {
 
     public void setTreasury(int treasury) {
         this.treasury = treasury;
+    }
+
+
+
+
+    @Override
+    public String toString() {
+        return name + " Faction: " + (provinces.size() + provincesConqueredOnTurn.size()) + " provinces owned";
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        Faction f = (Faction)obj;
+        return name.equals(f.getName());
     }
 
 
