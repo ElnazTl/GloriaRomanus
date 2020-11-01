@@ -88,6 +88,13 @@ public class Player {
         faction.invade(ownedProvince, enemyProvince);
     }
 
+    public void selectUnit(String province, Long unit) {
+        faction.selectUnit(province,unit);
+    }
+
+    public List<Unit> getUnitsFromProvince(String province) {
+        return faction.getUnitsFromProvince(province);
+    }
 
     /**
      * Attempts to train a given unit in a given province
