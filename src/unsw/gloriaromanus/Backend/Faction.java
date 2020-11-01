@@ -58,7 +58,11 @@ public class Faction {
         }
         for (Province p : provinces) {
             p.endTurn();
+<<<<<<< HEAD
             treasury += p.taxProvince();
+=======
+            
+>>>>>>> f5ad4e5cff58ee543c485c996aaab765cce2fc3c
         }
         db.endTurn(this);
     }
