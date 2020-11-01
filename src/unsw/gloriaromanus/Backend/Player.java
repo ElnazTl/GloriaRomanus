@@ -146,15 +146,9 @@ public class Player {
      * @return
      */
 
-    public boolean moveUnits(String from, String to) throws IOException {
-        boolean move = faction.moveUnits(from, to);
-        if (move) {
-            // Unit moved successfully
-            System.out.println("Move units successfully");
-        } else {
-            // Unit could not move
-            System.out.println("Could not move units");
-        }
+    public String moveUnits(String from, String to) throws IOException {
+        String move = faction.moveUnits(from, to);
+        
         return move;
     }
 
