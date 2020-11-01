@@ -208,6 +208,7 @@ public class Faction {
 
     public int invade(String ownedProvince, String enemyProvince) {
         Province p = findProvince(ownedProvince);
+        if (findProvince(enemyProvince) != null) return -1;
         if (p.getSelectedUnits().isEmpty()) return -1;
         return db.invade(p, enemyProvince);
     }
