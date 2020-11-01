@@ -113,6 +113,41 @@ public class PlayerTest {
         assertEquals("successfully added the unit", q.getUnit("horseArcher", "Achaia"));
         
     }
+
+
+    @Test
+    public void TestAll() throws IOException {
+
+        Database db = new Database("test");
+
+        Player p = db.addNewPlayer("A", "Rome");
+        System.out.println(p.getFaction());
+
+        assertEquals(200, p.getFactionTreasury());
+        p.endTurn();
+        assertEquals(204, p.getFactionTreasury());
+
+
+        // int i = 1;
+        // boolean training = true;
+        
+        // int j = 0;
+        // while (j < 10) {
+        //     System.out.println("Training unit " + i);
+        //     training = p.trainUnit(p.getFaction().getProvinces().get(0).getName(), "artillery");
+        //     System.out.println("Gold after training: " + p.getFactionTreasury());
+        //     System.out.println("Ending turn");
+        //     p.endTurn();
+        //     System.out.println("Gold after ending turn");
+            
+        //     if (training) i++;
+        //     j++;
+        // }
+    }
+
+
+
+
     public static void main(String[] args) throws IOException {
         Database d = new Database("");
         Player p = d.addNewPlayer("sara", "Rome");

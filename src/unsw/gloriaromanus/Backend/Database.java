@@ -583,8 +583,7 @@ public class Database {
     }
 
     public Boolean addUnit(String unit, String faction, String province) throws IOException {
-        Province p = new Province(province, this);
-        return factions.get(faction).trainUnit(p, unit);
+        return factions.get(faction).trainUnit(province, unit);
     }
     public Map<String,Faction> getFaction() {
         return factions;
