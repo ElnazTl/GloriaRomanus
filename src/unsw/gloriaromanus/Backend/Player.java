@@ -84,8 +84,8 @@ public class Player {
     // }
 
 
-    public void invade(String ownedProvince, String enemyProvince) {
-        faction.invade(ownedProvince, enemyProvince);
+    public int invade(String ownedProvince, String enemyProvince) {
+        return faction.invade(ownedProvince, enemyProvince);
     }
 
     public void selectUnit(String province, Long unit) {
