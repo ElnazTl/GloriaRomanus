@@ -52,10 +52,12 @@ public class Province {
             // u.endTurn();
             if (u.isTrained()) {
                 units.add(u);
+
                 rem.add(u); 
             }
             for (Unit del: rem) {
                 unitsTraining.remove(del);
+
             }
         }
         wealth = wealth + taxRate.getWealth();
