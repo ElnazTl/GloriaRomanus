@@ -169,7 +169,8 @@ public class Province {
     }
 
     public void addUnits(List<Unit> unitsList) {
-        units.addAll(unitsList);
+        database.getProvinceUnit().get(this.name).addAll(unitsList);
+        units = database.getProvinceUnit().get(this.name);
     }
 
 
