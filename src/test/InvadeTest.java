@@ -99,5 +99,35 @@ public class InvadeTest {
         assertEquals(1, result);
 
     }
+
+
+    @Test
+    public void TestEnemyInvadeLose() throws IOException {
+
+        Database db = new Database("test");
+
+        Player A = db.addNewPlayer("A", "Spain");
+        Player B = db.addNewPlayer("B", "Numidia");
+
+        A.startTurn();
+
+        A.trainUnit("V", "soldier");
+        A.trainUnit("V", "soldier");
+        A.endTurn();
+        B.startTurn();
+        B.trainUnit("VI", "soldier");
+        B.endTurn();
+        A.trainUnit("V", "soldier");
+        A.endTurn();
+
+        List<Unit> unitsB = B.getUnitsFromProvince("VI");
+
+        A.selectUnit("V", unitsB.get(0).getUnitID());
+
+        int result = B.invade("VI", "V");
+        assertEquals(-1, result);
+
+
+    }
 }
 
