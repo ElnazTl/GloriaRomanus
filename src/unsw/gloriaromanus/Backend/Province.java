@@ -51,6 +51,7 @@ public class Province {
             u.endTurn();
             if (u.isTrained()) {
                 units.add(u);
+                unitsTraining.remove(u);
             }
         }
         wealth = wealth + taxRate.getWealth();
