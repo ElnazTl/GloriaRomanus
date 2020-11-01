@@ -42,8 +42,8 @@ public class Database {
 
 
 
-    private Map<String,List<Unit>> provinceUnit;
-    private Map<String,List<Unit>> provinceTraining;
+    public Map<String,List<Unit>> provinceUnit;
+    public Map<String,List<Unit>> provinceTraining;
 
     private Map<String,Faction> provinceList;
 
@@ -454,18 +454,18 @@ public class Database {
             f.setDatabase(this);
             factions.put(f.getName(),f);
             factionList.put(f.getName(),(ArrayList)f.getProvinces());
-            f.setDatabase(this);
-            System.out.println(((ArrayList<Province>)f.getProvinces()).get(0).getUnits());
             ArrayList<Province> p= (ArrayList<Province>)f.getProvinces();
             for (int i = 0;i < p.size();i++) {
                 List<Unit> u = p.get(i).getUnits();
                 List<Unit> u1 = p.get(i).getUnitsTraining();
                 provinceTraining.put(p.get(i).getName(), u1);
                 provinceUnit.put(p.get(i).getName(), u);
-
-                p.get(i);
+               
+                p.get(i).setDatabase(this);
 
             }
+            f.setDatabase(this);
+
             // for (Province p: f.getProvinces()) {
             //     List<Unit> u = p.getUnits();
             //     List<Unit> u1 = p.getUnitsTraining();

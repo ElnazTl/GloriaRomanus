@@ -18,14 +18,7 @@ public class Province {
     Database database;
 
 
-    public Province(String name) {
-        this.name = name;
-        this.units = new ArrayList<Unit>();
-        this.unitsTraining = new ArrayList<Unit>(2);
-        this.selectedUnits = new ArrayList<Unit>();
-        changeTaxRate(LowTax.TYPE);
-    }
-
+   
 
 
     public Province() {}
@@ -41,26 +34,29 @@ public class Province {
 
     }
 
-
-    
+   
+    public void addunit(Unit u) {
+        database.provinceUnit.get(name).add(u);
+    }
     public void endTurn() {
-        for (Unit u : this.units) {
-            u.endTurn();
-        }
         ArrayList<Unit> rem = new ArrayList<Unit>();
-        for (Unit u : this.unitsTraining) {
-            // u.endTurn();
-            if (u.isTrained()) {
-                units.add(u);
 
-                rem.add(u); 
+        for (Unit u : this.database.provinceTraining.get(name)) {
+            u.endTurn();
+            if (u.isTrained()) {
+                addunit(u);
+                units.add(u);
+                rem.add(u);
             }
+
+        }
+      
             for (Unit del: rem) {
                 unitsTraining.remove(del);
+                database.getProvinceTraining().get(name).remove(del);
 
             }
-        }
-        wealth = wealth + taxRate.getWealth();
+     
     }
 
     public void setDatabase(Database d) {
@@ -71,6 +67,7 @@ public class Province {
         return database.getProvinceUnit().get(name);
     }
     private List<Unit> getTraining() {
+        // System.out.println("is this the reason for problem"+database.getProvinceTraining().get(name));
         return database.getProvinceTraining().get(name);
 
     }
@@ -212,6 +209,7 @@ public class Province {
         else {
             Unit u = new Unit(name);
             unitsTraining.add(u);
+
             // u.applyModifier(taxRate.getMoraleModifier());
 
             return true;
