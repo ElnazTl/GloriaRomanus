@@ -44,7 +44,7 @@ public class UnitTest {
         Unit u = new Unit("soldier", unitJSON);
 
         assertEquals(false, u.isTrained());
-        u.newTurn();
+        u.endTurn();
         assertEquals(true, u.isTrained());
     }
 
@@ -55,12 +55,12 @@ public class UnitTest {
 
         assertEquals(2, u.getTrainTime());
         assertEquals(false, u.isTrained());
-        u.newTurn();
+        u.endTurn();
         assertEquals(false, u.isTrained());
-        u.newTurn();
+        u.endTurn();
         assertEquals(true, u.isTrained());
 
-        u.newTurn();
+        u.endTurn();
         assertEquals(true, u.isTrained());
 
     }
