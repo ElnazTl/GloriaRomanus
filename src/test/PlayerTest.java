@@ -63,7 +63,7 @@ public class PlayerTest {
     public void TestLoadPlayer() throws IOException {
         Database d = new Database("test");
         d.loadGame();
-        assertTrue(d.getPlayer(0).username.equals("sara"));
+        assertTrue(d.getPlayer(0).username.equals("ara"));
 
     }
     /**

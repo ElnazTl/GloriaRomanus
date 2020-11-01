@@ -84,13 +84,8 @@
                     "shield": 5.0,
                     "defence": 6.0,
                     "charge": 0.0,
-                    "abilityType": "noAbility",
-                    "ability": {
-                        "empty": true
-                    },
-                    "modifiers": {
-                        "empty": true
-                    }
+                    "abilityType": "noAbility"
+                   
                 }
             ],
             "selectedUnits": []
