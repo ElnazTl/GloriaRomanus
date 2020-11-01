@@ -21,11 +21,6 @@ public class Faction {
     private int treasury;
 
     public Faction(){}
-    public Faction(Database db, String name, int startingGold, List<Province> initialProvinces) throws IOException {
-        this.db = db;
-        this.name = name;
-        this.treasury = startingGold;
-    }
     
     public Faction(Database db, String name, List<Province> initialProvinces) throws IOException {
         this.db = db;
