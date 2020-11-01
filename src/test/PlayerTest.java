@@ -46,24 +46,36 @@ public class PlayerTest {
     @Test 
     public void TestgetUnit() throws IOException {
         Database d = new Database("test");
+
         Player p = d.addNewPlayer("sara", "Gaul");
+
         p.startTurn();
+
         assertEquals("can only get unit for the faction you belong to",p.getUnit("soldier","Achaia" ));
-        d.getFaction().get("Gaul").getName();
-        assertEquals("successfully added the unit",p.getUnit("soldier","Narbonensis" ));
-        Province province = new Province("Narbonensis" ,d);
+        assertEquals("successfully added the unit",p.getUnit("soldier","Noricum" ));
+
+        Province province = new Province("Noricum" ,d);
+
         assertTrue(province.getUnits().isEmpty());
         assertTrue(province.getUnitsTraining().get(0).getName().equals("soldier"));
-        d.endTurn();
-        assertTrue(province.getUnits().get(0).getName().equals("soldier"));
+
+        p.endTurn();
+        p.startTurn();
+        assertEquals("successfully added the unit",p.getUnit("soldier","Noricum" ));
+
+        p.endTurn();
+        assertTrue(province.getUnitsTraining().isEmpty());
+        assertTrue(province.getUnits().size() == 2);
         d.saveGame();
 
     }
+
+    
     @Test 
     public void TestLoadPlayer() throws IOException {
         Database d = new Database("test");
         d.loadGame();
-        assertTrue(d.getPlayer(0).username.equals("ara"));
+        assertTrue(d.getPlayer(0).username.equals("sara"));
 
     }
     /**
@@ -75,14 +87,22 @@ public class PlayerTest {
         d.loadGame();
         Player p = d.getPlayer(0);
         p.startTurn();
-        assertEquals("successfully added the unit", p.getUnit("horseArcher", "X"));
+        assertEquals("successfully added the unit", p.getUnit("soldier", "Noricum"));
         p.endTurn();
-        Province pr = new Province("X",d);
-        assertTrue(pr.getUnits().isEmpty() == true);
+        Province pr = new Province("Noricum",d);
+        assertTrue(pr.getUnits().size() == 3);
         p.startTurn();
+        assertEquals("successfully added the unit", p.getUnit("horseArcher", "Noricum"));
+        p.startTurn();
+        assertTrue(pr.getUnits().size() == 3);
         p.endTurn();
-        assertTrue(!pr.getUnits().isEmpty());
-        assertTrue(pr.getUnits().get(0).getName().equals("horseArcher"));
+        p.startTurn();
+        assertTrue(pr.getUnits().size() == 3);
+        p.endTurn();
+        assertTrue(pr.getUnits().size() == 4);
+
+        d.saveGame();
+        
 
     }
     
@@ -115,9 +135,36 @@ public class PlayerTest {
     }
     public static void main(String[] args) throws IOException {
         Database d = new Database("");
-        Player p = d.addNewPlayer("sara", "Rome");
+        Player p = d.addNewPlayer("sara", "Gaul");
         p.startTurn();
-        System.out.println(d.getFaction().keySet());
+        p.getUnit("soldier", "Narbonensis");
+        Province pp = new Province("Narbonensis", d);
+        System.out.println(pp.getUnitsTraining());
+        p.endTurn();
+        p.startTurn();
+        d.saveGame();
+        Database k = new Database("");
+        k.loadGame();
+        Player q = k.getPlayer(0);
+
+        q.startTurn();
+        System.out.println(q.getUnit("soldier", "Narbonensis"));
+        Province x = new Province("Narbonensis", k);
+        System.out.println("check the fnction"+k.getProvinceTraining().get("Narbonensis"));
+        System.out.println("are we good"+x.getUnitsTraining());
+        // x.setDatabase(k);
+
+
+
+        q.endTurn();
+        q.startTurn();
+        q.endTurn();
+
+        System.out.println("are we dont yet"+x.getUnits());
+        System.out.println("well look what we have here"+k.getFaction().get("Gaul").getProvinces().get(0).getUnitsTraining());
+
+
+
     }
    
 }
