@@ -79,16 +79,16 @@ public class Faction {
      * @throws IOException
      */
     public boolean trainUnit(Province p, String unit) throws IOException {
-        if (!availableUnits.containsKey(unit)) {
-            // Unit not available to this faction
-            return false;
-        }
-        int cost = availableUnits.get(unit);
+        // if (!availableUnits.containsKey(unit)) {
+        //     // Unit not available to this faction
+        //     return false;
+        // }
+        // int cost = availableUnits.get(unit);
         
-        if (cost > treasury) {
-            // Faction does not have enough gold to buy unit
-            return false;
-        }
+        // if (cost > treasury) {
+        //     // Faction does not have enough gold to buy unit
+        //     return false;
+        // }
 
         return p.trainUnit(unit);
     }

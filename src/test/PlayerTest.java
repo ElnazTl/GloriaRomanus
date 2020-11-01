@@ -48,22 +48,22 @@ public class PlayerTest {
         Database d = new Database("test");
         Player p = d.addNewPlayer("sara", "Gaul");
         p.startTurn();
-        // assertEquals("can only get unit for the faction you belong to",p.getUnit("soldier","Achaia" ));
+        assertEquals("can only get unit for the faction you belong to",p.getUnit("soldier","Achaia" ));
         d.getFaction().get("Gaul").getName();
-        // assertEquals("successfully added the unit",p.getUnit("soldier","Lugdunensis" ));
-        // Province province = new Province("V",d);
-        // assertTrue(province.getUnits().isEmpty());
-        // assertTrue(province.getUnitsTraining().get(0).getName().equals("soldier"));
-        // d.endTurn();
-        // assertTrue(province.getUnits().get(0).getName().equals("soldier"));
-        // d.saveGame();
+        assertEquals("successfully added the unit",p.getUnit("soldier","Narbonensis" ));
+        Province province = new Province("Narbonensis" ,d);
+        assertTrue(province.getUnits().isEmpty());
+        assertTrue(province.getUnitsTraining().get(0).getName().equals("soldier"));
+        d.endTurn();
+        assertTrue(province.getUnits().get(0).getName().equals("soldier"));
+        d.saveGame();
 
     }
     @Test 
     public void TestLoadPlayer() throws IOException {
         Database d = new Database("test");
         d.loadGame();
-        assertTrue(d.getPlayer(0).username.equals("Sara"));
+        assertTrue(d.getPlayer(0).username.equals("sara"));
 
     }
     /**

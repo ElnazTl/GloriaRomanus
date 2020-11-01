@@ -113,8 +113,8 @@ public class Database {
         if (a.equals("test"))  {
             address = "bin/unsw/gloriaromanus/initial_province_ownership.json";
             loadProvince = "bin/unsw/gloriaromanus/Backend/configs/load.json";
-            loadPlayer = "bin/unsw/gloriaromanus/Backend/configs/loadPlayer.json";
-            loadFaction = "bin/unsw/gloriaromanus/Backend/configs/loadFaction.json";
+            loadPlayer = "/Users/eli/new1/t13a-oop/src/unsw/gloriaromanus/Backend/configs/loadPlayer.json";
+            loadFaction = "/Users/eli/new1/t13a-oop/src/unsw/gloriaromanus/Backend/configs/loadFaction.json";
 
            
             
