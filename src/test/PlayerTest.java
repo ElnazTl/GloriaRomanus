@@ -28,15 +28,14 @@ public class PlayerTest {
     public void TestaddingPlayer() throws IOException {
         
         Database d  = new Database("test");
-        Player q = new Player ("Annie",d);
+        d.addNewPlayer("Annie", "Rome");
         assertEquals("Annie", d.getPlayer(0).getUsername());
     }
     @Test
     public void TestFaction() throws IOException {
         Database d = new Database("test");
-        Player p = new Player("sara",d);
-        p.chooseFaction("Rome");
-        assertEquals("Rome",d.getPlayer(0).getFaction());
+        d.addNewPlayer("sara", "Rome");
+        assertEquals("Rome",d.getPlayer(0).getFaction().getName());
 
     }
 
@@ -47,17 +46,17 @@ public class PlayerTest {
     @Test 
     public void TestgetUnit() throws IOException {
         Database d = new Database("test");
-        Player p = new Player("Sara",d);
-        p.chooseFaction("Rome");
+        Player p = d.addNewPlayer("sara", "Gaul");
         p.startTurn();
-        assertEquals("can only get unit for the faction you belong to",p.getUnit("soldier","Achaia" ));
-        assertEquals("successfully added the unit",p.getUnit("soldier","V" ));
-        Province province = new Province("V",d);
-        assertTrue(province.getUnits().isEmpty());
-        assertTrue(province.getUnitsTraining().get(0).getName().equals("soldier"));
-        d.endTurn();
-        assertTrue(province.getUnits().get(0).getName().equals("soldier"));
-        d.saveGame();
+        // assertEquals("can only get unit for the faction you belong to",p.getUnit("soldier","Achaia" ));
+        d.getFaction().get("Gaul").getName();
+        // assertEquals("successfully added the unit",p.getUnit("soldier","Lugdunensis" ));
+        // Province province = new Province("V",d);
+        // assertTrue(province.getUnits().isEmpty());
+        // assertTrue(province.getUnitsTraining().get(0).getName().equals("soldier"));
+        // d.endTurn();
+        // assertTrue(province.getUnits().get(0).getName().equals("soldier"));
+        // d.saveGame();
 
     }
     @Test 
@@ -113,6 +112,12 @@ public class PlayerTest {
         q.startTurn();
         assertEquals("successfully added the unit", q.getUnit("horseArcher", "Achaia"));
         
+    }
+    public static void main(String[] args) throws IOException {
+        Database d = new Database("");
+        Player p = d.addNewPlayer("sara", "Rome");
+        p.startTurn();
+        System.out.println(d.getFaction().keySet());
     }
    
 }

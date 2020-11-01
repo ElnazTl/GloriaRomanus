@@ -47,7 +47,6 @@ public class Database {
     private Map<String,Faction> provinceList;
 
     private Map<String, ArrayList<Province>> factionList;
-    private Map<String,Faction> factions;
 
     private String address;
     private String loadProvince;
@@ -67,6 +66,8 @@ public class Database {
 
         
         factions = setFaction();
+        // System.out.println( "heyyyyy"+factions.get("Gaul").getAvailableUnits());
+
         provinceList = setProvinceToOwningFactionMap();
 
         factionList = setOwningProvince();
@@ -82,7 +83,6 @@ public class Database {
 
         loadAdjacencyMatrix();
 
-        //factions = new HashMap<String, Faction>();
         
     }
     
@@ -101,7 +101,9 @@ public class Database {
                 provinceTraining.put(ja.getString(i),t);
                 province.add(new Province(ja.getString(i),this));
             }
-            m.put(key,new Faction(this,key,0,province));
+            
+
+            m.put(key,new Faction(this,key,province));
         }
         return m;
 
@@ -203,8 +205,10 @@ public class Database {
             Player p = new Player(player, this);
             Faction f = factions.get(name);
             playerFactions.put(p, f);
-            factions.remove(f.getName());
+            // factions.remove(f.getName());
             numPlayers++;
+            p.chooseFaction(f);
+            players.add(p);
             if (currentPlayer == null) currentPlayer = p;
             return p;
         }
@@ -577,7 +581,9 @@ public class Database {
         Province p = new Province(province, this);
         return factions.get(faction).trainUnit(p, unit);
     }
-    
+    public Map<String,Faction> getFaction() {
+        return factions;
+    }
 }
 
 
