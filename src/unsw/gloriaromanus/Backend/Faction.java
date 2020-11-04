@@ -19,6 +19,15 @@ public class Faction {
     private Province selectedProvince;
 
 
+    /**
+     * Initialises a faction with the given provinces, allowed units
+     * and default config for units
+     * @param db
+     * @param name
+     * @param provincesOwned
+     * @param allowedUnits
+     * @param unitsConfig
+     */
     public Faction(Database db, String name, List<Province> provincesOwned, JSONObject allowedUnits, JSONObject unitsConfig) {
         this.db = db;
         this.name = name;
@@ -46,6 +55,10 @@ public class Faction {
     }
     
 
+    /**
+     * Updates the faction after the turn,
+     * then ends turn for the provinces it owns
+     */
     public void endTurn() {
         deselectProvince();
         for (Province p : provincesConqueredOnTurn) {
@@ -60,34 +73,14 @@ public class Faction {
     }
     
 
+    /**
+     * Returns if it is the players turn
+     * @return
+     */
     public boolean isTurn() {
         return db.isTurn(this);
     }
 
-    /**
-     * Attempts to start training a unit with given name
-     * as long as the player is allowed to train this unit
-     * and if they have enough gold to buy the unit
-     * 
-     * @param p Province to train unit in
-     * @param unit Name of unit to train
-     * @return 
-     * @throws IOException
-     */
-    public boolean trainUnit(Province p, String unit) {
-        if (!availableUnits.containsKey(unit)) {
-            // Unit not available to this faction
-            return false;
-        }
-        int cost = availableUnits.get(unit);
-        
-        if (cost > treasury) {
-            // Faction does not have enough gold to buy unit
-            return false;
-        }
-
-        return p.trainUnit(unit);
-    }
 
 
     /**
@@ -139,6 +132,11 @@ public class Faction {
         if (provinces.contains(p)) provinces.remove(p);
     }
 
+    /**
+     * Selects an owned province with given name
+     * If province aleady selected, it is deselected
+     * @param name
+     */
     public void selectProvince(String name) {
         Province p = findProvince(name); 
         if (p == null) return;
@@ -146,25 +144,27 @@ public class Faction {
             provinces.remove(p);
             selectedProvince = p;
         } else if (selectedProvince.equals(p)) {
-            provinces.add(p);
-            selectedProvince = null;
+            deselectProvince();
         } else {
             provinces.add(selectedProvince);
             selectedProvince = p;
         }
     }
 
+
+    /**
+     * Deselects selected province
+     */
     public void deselectProvince() {
         if (selectedProvince == null) return;
         provinces.add(selectedProvince);
         selectedProvince = null;
     }
 
+
     /**
-     * Adds unit to selected units for given province
-     * 
-     * @param province Province to add unit to
-     * @param unit Unit to add to selection
+     * Adds unit with given id from selected province
+     * @param unitID
      */
     public void selectUnit(Long unitID) {
         if (selectedProvince == null) return;
@@ -172,26 +172,58 @@ public class Faction {
     }
 
 
-
-    public int invade(String ownedProvince, String enemyProvince) {
-        Province p = findProvince(ownedProvince);
-        if (p.getSelectedUnits().isEmpty()) return -1;
-        return db.invade(p, enemyProvince);
+    /**
+     * Attempts to invade specified enemy province
+     * with units selected in selected province
+     * @param ownedProvince
+     * @param enemyProvince
+     * @return
+     */
+    public int invade(String enemyProvince) {
+        if (findProvince(enemyProvince) != null) return -1;        // Enemy province is owned by this faction
+        if (selectedProvince == null) return -1;        // No selected province
+        if (selectedProvince.getSelectedUnits().isEmpty()) return -1;      // No selected units to invade with
+        return db.invade(selectedProvince, enemyProvince);
     }
 
+    /**
+     * Attempts to train unit in selected province with
+     * given unit name
+     * @param unit
+     * @return
+     */
     public boolean trainUnit(String unit) {
         if (selectedProvince == null) {
             System.out.println("Player has not selected a province");
             return false;
         }
-        return selectedProvince.trainUnit(unit);
+        int cost = availableUnits.get(unit);
+        if (cost > treasury) {
+            // Faction does not have enough gold to buy unit
+            return false;
+        }
+        boolean trained = selectedProvince.trainUnit(unit);
+        if (!trained) return false;
+        treasury -= cost;
+        return true;
     }
 
+    
+    /**
+     * Moves selected units from selected province to
+     * specfied province
+     * @param to
+     * @return
+     */
     public boolean moveUnits(String to) {
         Province pTo = findProvince(to);
-        if (selectedProvince == null || pTo == null) {
-            // One or both provinces not owned by faction
-            // Use invade to move from owned province to enemy province
+        if (selectedProvince == null) {
+            // No selected province to move troops from
+            return false;
+        } else if (pTo == null) {
+            // Province selected to move troops to is not
+            // owned by this factions, use invade to move
+            // troops from owned province to enemy province
             return false;
         } else if (conqueredDuringTurn(pTo)) {
             // Cant move to a province conquered on turn
@@ -225,9 +257,9 @@ public class Faction {
 
 
     /**
-     * Loads the units availble to the faction
-     * 
-     * @throws IOException
+     * Loads faction from specified configs
+     * @param allowedUnits
+     * @param unitsConfig
      */
     private void loadFromConfig(JSONObject allowedUnits, JSONObject unitsConfig) {
         JSONArray config = allowedUnits.getJSONArray(this.name);
@@ -237,7 +269,12 @@ public class Faction {
         }
     }
 
-
+    
+    /**
+     * Gets the string representation of the specified province
+     * @param name
+     * @return
+     */
     public String getStateProvince(String name) {
         Province p = findProvince(name);
         if (p != null) return p.getState();

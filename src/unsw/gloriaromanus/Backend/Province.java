@@ -20,7 +20,12 @@ public class Province {
     JSONObject abilityConfig;
     
 
-
+    /**
+     * Initialises a province using the base values
+     * @param name
+     * @param unitsConfig
+     * @param abilityConfig
+     */
     public Province(String name, JSONObject unitsConfig, JSONObject abilityConfig) {
         this.name = name;
         this.units = new ArrayList<Unit>();
@@ -31,6 +36,15 @@ public class Province {
         changeTaxRate(LowTax.TYPE);
     }
 
+
+    /**
+     * Initialises a province from a saved game
+     * @param name
+     * @param unitsConfig
+     * @param abilityConfig
+     * @param initialUnits
+     * @param initialUnitsTaining
+     */
     public Province(String name, JSONObject unitsConfig, JSONObject abilityConfig, List<Unit> initialUnits, List<Unit> initialUnitsTaining) {
         this.name = name;
         this.units = initialUnits;
@@ -62,14 +76,17 @@ public class Province {
     }
 
 
-
+    /**
+     * Returns the gold value taxed by the faction
+     * @return
+     */
     public double taxProvince() {
         return wealth * taxRate.getTaxRate();
     }
 
     /**
-     * Called at start of a new turn
-     * Changes anything that needs to be changed at start of a turn
+     * Called at the end of a turn,
+     * updates the province and units
      */
     public void endTurn() {
         deselectAllUnits();
@@ -92,9 +109,9 @@ public class Province {
 
     
     /**
-     * Returns the first unit with specified name
+     * Returns the unit with given id
      *
-     * @param name 
+     * @param id 
      * @return
      */
     public Unit findUnit(Long id) {
@@ -108,22 +125,15 @@ public class Province {
 
 
     /**
-     * Removes specified unit 
+     * Removes all units, only called by battleresolver
+     * when this province is the defending province
      * 
      * @param name
      */
-    public void removeUnit(Long id) {
-        Unit u = findUnit(id);
-        if (u != null) {
-            units.remove(u);
-        }
+    public void removeAllUnits() {
+        units.removeAll(units);
     }
 
-    public void removeUnit(Unit u) {
-        if (u != null) {
-            units.remove(u);
-        }
-    }
 
 
     /**
@@ -169,16 +179,30 @@ public class Province {
         }
     }
 
+
+    /**
+     * Removes all selected units, only called by
+     * battleresolver when this province is the
+     * attacking province
+     */
     public void removeAllSelected() {
         selectedUnits.removeAll(selectedUnits);
     }
 
 
+    /**
+     * Returns list of the selected units
+     * @return
+     */
     public List<Unit> getSelectedUnits() {
         return selectedUnits;
     }
 
 
+    /**
+     * Adds all units from a given list to the province
+     * @param unitsList
+     */
     public void addUnits(List<Unit> unitsList) {
         units.addAll(unitsList);
     }
@@ -233,6 +257,10 @@ public class Province {
     }
 
 
+    /**
+     * Returns a string representation of the province state
+     * @return
+     */
     public String getState() {
         String state = "Province: " + "\"" + name + "\"";
         state += "\n\t-> wealth: " + wealth;
