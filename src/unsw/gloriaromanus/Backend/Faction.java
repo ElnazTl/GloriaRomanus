@@ -1,10 +1,7 @@
 package unsw.gloriaromanus.Backend;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -19,15 +16,18 @@ public class Faction {
     private List<Province> provincesConqueredOnTurn;
     private Map<String, Integer> availableUnits;
     private int treasury;
+    private Province selectedProvince;
 
-    public Faction(Database db, String name, List<Province> initialProvinces) throws IOException {
+
+    public Faction(Database db, String name, List<Province> provincesOwned, JSONObject allowedUnits, JSONObject unitsConfig) {
         this.db = db;
         this.name = name;
         this.treasury = 200;    // Starting gold
-        this.provinces = initialProvinces;
+        this.provinces = provincesOwned;
         this.provincesConqueredOnTurn = new ArrayList<Province>();
         this.availableUnits = new HashMap<String, Integer>();
-        loadFromConfig();
+        this.selectedProvince = null;
+        loadFromConfig(allowedUnits, unitsConfig);
     }
 
 
@@ -47,15 +47,22 @@ public class Faction {
     
 
     public void endTurn() {
+        deselectProvince();
         for (Province p : provincesConqueredOnTurn) {
             provinces.add(p);
         }
         for (Province p : provinces) {
+            treasury += p.taxProvince();
             p.endTurn();
         }
+        
         db.endTurn(this);
     }
     
+
+    public boolean isTurn() {
+        return db.isTurn(this);
+    }
 
     /**
      * Attempts to start training a unit with given name
@@ -67,7 +74,7 @@ public class Faction {
      * @return 
      * @throws IOException
      */
-    public boolean trainUnit(Province p, String unit) throws IOException {
+    public boolean trainUnit(Province p, String unit) {
         if (!availableUnits.containsKey(unit)) {
             // Unit not available to this faction
             return false;
@@ -95,6 +102,7 @@ public class Faction {
                 return p;
             }
         }
+        if (name.equals(selectedProvince.getName())) return selectedProvince;
         return null;
     }
 
@@ -131,6 +139,26 @@ public class Faction {
         if (provinces.contains(p)) provinces.remove(p);
     }
 
+    public void selectProvince(String name) {
+        Province p = findProvince(name); 
+        if (p == null) return;
+        if (selectedProvince == null) {
+            provinces.remove(p);
+            selectedProvince = p;
+        } else if (selectedProvince.equals(p)) {
+            provinces.add(p);
+            selectedProvince = null;
+        } else {
+            provinces.add(selectedProvince);
+            selectedProvince = p;
+        }
+    }
+
+    public void deselectProvince() {
+        if (selectedProvince == null) return;
+        provinces.add(selectedProvince);
+        selectedProvince = null;
+    }
 
     /**
      * Adds unit to selected units for given province
@@ -138,9 +166,9 @@ public class Faction {
      * @param province Province to add unit to
      * @param unit Unit to add to selection
      */
-    public void addUnitSelection(String province, Long unit) {
-        Province p = findProvince(province);
-        p.selectUnit(unit);
+    public void selectUnit(Long unitID) {
+        if (selectedProvince == null) return;
+        selectedProvince.selectUnit(unitID);
     }
 
 
@@ -151,30 +179,32 @@ public class Faction {
         return db.invade(p, enemyProvince);
     }
 
-    public boolean trainUnit(String province, String unit) throws IOException {
-        Province p = findProvince(province);
-        if (p == null) {
+    public boolean trainUnit(String unit) {
+        if (selectedProvince == null) {
+            System.out.println("Player has not selected a province");
             return false;
         }
-        return p.trainUnit(name);
+        return selectedProvince.trainUnit(unit);
     }
 
-    public boolean moveUnits(String from, String to) throws IOException {
-        Province p1 = findProvince(from);
-        Province p2 = findProvince(to);
-        if (p1 == null || p2 == null) {
+    public boolean moveUnits(String to) {
+        Province pTo = findProvince(to);
+        if (selectedProvince == null || pTo == null) {
             // One or both provinces not owned by faction
             // Use invade to move from owned province to enemy province
             return false;
-        } else if (!db.isAdjacentProvince(p1.getName(), p2.getName())) {
+        } else if (conqueredDuringTurn(pTo)) {
+            // Cant move to a province conquered on turn
+            return false;
+        } else if (!db.isAdjacentProvince(selectedProvince.getName(), pTo.getName())) {
             // Provinces are not adjacent
             return false;
-        } else if (p1.getSelectedUnits().isEmpty()) {
+        } else if (selectedProvince.getSelectedUnits().isEmpty()) {
             // Player has not selected units to move
             return false;
         } else {
-            p2.addUnits(p1.getSelectedUnits());
-            p1.removeAllSelected();
+            pTo.addUnits(selectedProvince.getSelectedUnits());
+            selectedProvince.removeAllSelected();
             return true;
         }
 
@@ -199,13 +229,33 @@ public class Faction {
      * 
      * @throws IOException
      */
-    private void loadFromConfig() throws IOException {
-        String configString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/faction_units_config.json"));
-        JSONObject unitsConfig = new JSONObject(configString);
-        List<Object> config = unitsConfig.getJSONArray(this.name).toList();
+    private void loadFromConfig(JSONObject allowedUnits, JSONObject unitsConfig) {
+        JSONArray config = allowedUnits.getJSONArray(this.name);
         for (Object o : config) {
             String s = (String)o;
             availableUnits.put(s, unitsConfig.getJSONObject(s).getInt("cost"));
         }
     }
+
+
+    public String getStateProvince(String name) {
+        Province p = findProvince(name);
+        if (p != null) return p.getState();
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return name + " (faction)";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+
+        Faction f = (Faction)obj;
+        return name.equals(f.getName());
+    }
+
 }
