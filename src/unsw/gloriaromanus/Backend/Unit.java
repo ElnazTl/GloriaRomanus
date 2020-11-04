@@ -1,10 +1,5 @@
 package unsw.gloriaromanus.Backend;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.io.IOException;
-import java.util.Iterator;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -35,18 +30,13 @@ public class Unit {
 
     public Unit() {}
 
-    public Unit(String name) throws IOException {
-        this.name = name;
-        this.unitID = ID;
-        ID = ID + 1;
-        loadFromConfig(name);
-    }
 
-    public Unit(String name, JSONObject unitConfig) throws IOException {
+
+    public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
         this.name = name;
         this.unitID = ID;
         ID = ID + 1;
-        loadFromConfig(name, unitConfig);
+        loadFromConfig(name, unitConfig, abilityConfig);
     }
 
 
@@ -224,10 +214,9 @@ public class Unit {
      * @return Modified value
      */
     public double getFriendlyModifiedValue(String type) {
-        Iterator<Object> json = modifiers.iterator();
         double val = baseValues.optDouble(type, 0);
-        while (json.hasNext()) {
-            JSONObject mod = (JSONObject)json.next();
+        for (Object o : modifiers) {
+            JSONObject mod = (JSONObject)o;
             if (type.equals(mod.getString(type)) && "friendly".equals(mod.getString("who"))) {
                 if ("add".equals(mod.getString("strategy"))) {
                     val = val + mod.optDouble("value", 0);
@@ -248,10 +237,9 @@ public class Unit {
      * @return Modified value
      */
     public double getEnemyModifiedValue(String type) {
-        Iterator<Object> json = modifiers.iterator();
         double val = baseValues.optDouble(type, 0);
-        while (json.hasNext()) {
-            JSONObject mod = (JSONObject)json.next();
+        for (Object o : modifiers) {
+            JSONObject mod = (JSONObject)o;
             if (type.equals(mod.getString(type)) && "enemy".equals(mod.getString("who"))) {
                 if ("add".equals(mod.getString("strategy"))) {
                     val = val + mod.optDouble("value", 0);
@@ -264,18 +252,18 @@ public class Unit {
     }
 
 
-    /**
-     * Loads base config values for specified unit
-     * from the configs/unit_config.json file
-     * 
-     * @param name
-     * @throws IOException
-     */
-    private void loadFromConfig(String name) throws IOException {
-        String defaultString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/units_config.json"));
-        JSONObject unitsConfig = new JSONObject(defaultString);
-        loadFromConfig(name, unitsConfig);
-    }
+    // /**
+    //  * Loads base config values for specified unit
+    //  * from the configs/unit_config.json file
+    //  * 
+    //  * @param name
+    //  * @throws IOException
+    //  */
+    // private void loadFromConfig(String name) throws IOException {
+    //     String defaultString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/units_config.json"));
+    //     JSONObject unitsConfig = new JSONObject(defaultString);
+    //     loadFromConfig(name, unitsConfig);
+    // }
 
 
     
@@ -287,7 +275,7 @@ public class Unit {
      * @param unitsConfig JSONObject of config file
      * @throws IOException
      */
-    private void loadFromConfig(String name, JSONObject unitsConfig) throws IOException {
+    private void loadFromConfig(String name, JSONObject unitsConfig, JSONObject abilityConfig) {
         JSONObject config = unitsConfig.getJSONObject(this.name);
         
         this.type = config.optString("type", "infantry");
@@ -296,11 +284,12 @@ public class Unit {
         this.cost = config.optInt("cost", 1);
         this.trainTime = config.optInt("trainTime", 1);
         this.attack = config.optDouble("attack", 1);
+        this.speed = config.optDouble("speed", 1);
         this.morale = config.optDouble("morale", 1);
         this.armour = config.optDouble("armour", 1);
         this.shield = config.optDouble("shield", 1);
         this.abilityType = config.optString("ability", "noAbility");
-        this.ability = getAbilityJSON(this.abilityType);
+        this.ability = abilityConfig.getJSONArray(this.abilityType);
         this.charge = "cavalry".equals(this.type) ? config.optDouble("charge", 1) : 0;
         this.defence = isMelee() ? config.optDouble("defence", 1) : 0;
         switch (this.type) {
@@ -321,25 +310,25 @@ public class Unit {
     }
 
 
-    /**
-     * Loads the modifiers JSONObject
-     * for the specified ability
-     * 
-     * @param ability
-     * @return JSONObject of specified ability
-     * @throws IOException
-     */
-    private JSONArray getAbilityJSON(String ability) throws IOException {
-        String configString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/ability_config.json"));
-        JSONObject abilityConfig = new JSONObject(configString);
-        JSONArray config = abilityConfig.getJSONArray(ability);
-        return config;
-    }
+    // /**
+    //  * Loads the modifiers JSONObject
+    //  * for the specified ability
+    //  * 
+    //  * @param ability
+    //  * @return JSONObject of specified ability
+    //  * @throws IOException
+    //  */
+    // private JSONArray getAbilityJSON(String ability) throws IOException {
+    //     String configString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/ability_config.json"));
+    //     JSONObject abilityConfig = new JSONObject(configString);
+    //     JSONArray config = abilityConfig.getJSONArray(ability);
+    //     return config;
+    // }
 
 
     @Override
     public String toString() {
-        return "unit (" + name + ", id: " + unitID + ")";
+        return name + " (unit id: " + unitID + ")";
     }
 
 

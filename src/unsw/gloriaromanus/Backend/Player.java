@@ -1,23 +1,17 @@
 package unsw.gloriaromanus.Backend;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
 
 public class Player {
 
     private Faction faction;
     public String username;
-    Boolean turn;
 
    
     public Player(){}
     public Player(String username) {
         this.username = username;
     }
-
-
-
 
     public void setFaction(Faction faction) {
         this.faction = faction;
@@ -27,23 +21,25 @@ public class Player {
         return faction;
     }
 
-    /**
-     * setting the player turn
-     */
-    public void startTurn() {
-        turn = true;
-    }
 
     public void endTurn() {
-        if (!turn) {
-            // Not player turn, cant end turn
+        if (!isTurn()) {
+            System.out.println("Not your turn");
+            return;
         }
         faction.endTurn();
-        turn = false;
+    }
+
+    public boolean isTurn() {
+        return faction.isTurn();
     }
 
 
     public void invade(String ownedProvince, String enemyProvince) {
+        if (!isTurn()) {
+            System.out.println("Not your turn");
+            return;
+        }
         faction.invade(ownedProvince, enemyProvince);
     }
 
@@ -55,8 +51,12 @@ public class Player {
      * @param unit Unit to train
      * @throws IOException
      */
-    public void trainUnit(String province, String unit) throws IOException {
-        boolean training = faction.trainUnit(province, unit);
+    public void trainUnit(String unit) throws IOException {
+        if (!isTurn()) {
+            System.out.println("Not your turn");
+            return;
+        }
+        boolean training = faction.trainUnit(unit);
         if (training) {
             // Unit is training
             System.out.println("Trained unit successfully");
@@ -76,8 +76,12 @@ public class Player {
      * @return
      */
 
-    public boolean moveUnits(String from, String to) throws IOException {
-        boolean move = faction.moveUnits(from, to);
+    public boolean moveUnits(String to) throws IOException {
+        if (!isTurn()) {
+            System.out.println("Not your turn");
+            return false;
+        }
+        boolean move = faction.moveUnits(to);
         if (move) {
             // Unit moved successfully
             System.out.println("Move units successfully");
@@ -88,12 +92,33 @@ public class Player {
         return move;
     }
 
+
+    public void selectUnit(Long unitID) {
+        if (!isTurn()) {
+            System.out.println("Not your turn");
+            return;
+        }
+        faction.selectUnit(unitID);
+    }
+
+    public String getProvinces() {
+        return faction.getProvinces().toString();
+    }
+
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void selectProvince(String name) {
+        faction.selectProvince(name);
+    }
+
+    public String getStateProvince(String name) {
+        return faction.getStateProvince(name);
     }
 
 

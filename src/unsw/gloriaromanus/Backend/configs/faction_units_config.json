@@ -6,5 +6,61 @@
     "Gaul": [
         "soldier",
         "horseArcher"
+    ],
+    "Carthage": [
+        "soldier",
+        "horseArcher"
+    ],
+    "Celtic Briton": [
+        "soldier",
+        "horseArcher"
+    ],
+    "Spain": [
+        "soldier",
+        "horseArcher"
+    ],
+    "Numidia": [
+        "soldier",
+        "horseArcher"
+    ],
+    "Egpyt": [
+		"soldier",
+		"horseArcher"
+    ],
+    "Seleucid": [
+		"soldier",
+		"horseArcher"
+    ],
+    "Pontus": [
+		"soldier",
+		"horseArcher"
+    ],
+    "Armenia": [
+		"soldier",
+		"horseArcher"
+    ],
+    "Parthian": [
+        "soldier",
+        "horseArcher"
+    ],
+    "Germanic": [
+        "soldier",
+        "horseArcher"
+    ],
+    "Greece": [
+        "soldier",
+        "horseArcher"
+    ],
+    "Macedonia": [
+        "soldier",
+        "horseArcher"
+    ],
+    "Trachia": [
+        "soldier",
+        "horseArcher"
+    ],
+    "Dacia": [
+        "soldier",
+        "horseArcher"
     ]
 }

@@ -1,7 +1,7 @@
 package unsw.gloriaromanus.Backend;
 
 import org.json.*;
-import org.junit.jupiter.api.condition.OS;
+// import org.junit.jupiter.api.condition.OS;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,47 +28,89 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 public class Database {
 
-    private Map<String,List<Unit>> provinceUnit;
-
-    private Map<String,Faction> provinceList;
-
-    private Map<String, ArrayList<Province>> factionList;
-    private String address;
-
+    // private Map<String,List<Unit>> provinceUnit;
+    // private Map<String,Faction> provinceList;
+    // private String address;
+    // private Map<String, ArrayList<Province>> factionList;
     
     
-    private Map<String, Faction> factions;
+
+
+    
+    private List<String> factionsTaken;
+    private List<String> factions;
     private Map<Player, Faction> playerFactions;
+    private Map<String, Player> intermediatePlayerFactions;
     private int numPlayers = 0;
     private int turnNumber = 0;
     private Player currentPlayer = null;
     private String gameYear = (200 + turnNumber) + " BC";
+
+    private String path;
+    
     private JSONObject provinceAdjacencyMatrix;
+    private JSONObject defaultUnitsConfig;
+    private JSONObject initialProvincesConfig;
+    private JSONObject factionAllowedUnits;
+    private JSONObject abilityConfig;
 
 
 
 
-
-    // assign default unit to each province 
-    public Database() throws IOException {
-
-        address = "bin/unsw/gloriaromanus/initial_province_ownership.json";
-        provinceList = setProvinceToOwningFactionMap();
-        provinceUnit = setOwningUnit();
-        factionList = setOwningProvince();
-
-        loadAdjacencyMatrix();
-        
-
-
-        factions = new HashMap<String, Faction>();
+    /**
+     * 
+     * @throws IOException
+     */
+    public Database(boolean test) throws IOException {
+        factionsTaken = new ArrayList<String>();
+        factions = new ArrayList<String>();
         playerFactions = new HashMap<Player, Faction>();
+        intermediatePlayerFactions = new HashMap<String, Player>();
+        loadPath(test);
+        loadDefaultConfigs();
+
         
     }
 
+
+
+    private void loadPath(boolean test) {
+        if (test) {
+            path = "bin/unsw/gloriaromanus/";
+        } else {
+            path = "src/unsw/gloriaromanus/";
+        }
+    }
+
+
+    private void loadDefaultConfigs() throws IOException {
+        // Load initial provinces
+        String initialProvincesString = Files.readString(Paths.get(path + "initial_province_ownership.json"));
+        initialProvincesConfig = new JSONObject(initialProvincesString);
+
+        // Load default units config
+        String defaultUnitsString = Files.readString(Paths.get(path + "Backend/configs/units_config.json"));
+        defaultUnitsConfig = new JSONObject(defaultUnitsString);
+
+        // Load factions allowed units
+        String factionUnitsString = Files.readString(Paths.get(path + "Backend/configs/faction_units_config.json"));
+        factionAllowedUnits = new JSONObject(factionUnitsString);
+
+        // Load adjacency matrix
+        String adjacencyString = Files.readString(Paths.get(path + "province_adjacency_matrix_fully_connected.json"));
+        provinceAdjacencyMatrix = new JSONObject(adjacencyString);
+
+        // Load ability config
+        String abilityString = Files.readString(Paths.get(path + "Backend/configs/ability_config.json"));
+        abilityConfig = new JSONObject(abilityString);
+
+        // Add all Factions to list
+        factions.addAll(initialProvincesConfig.keySet());
+    }
 
     public Player addNewPlayer(String player, String name) {
         for (Player p : playerFactions.keySet()) {
@@ -77,11 +119,10 @@ public class Database {
                 return null;
             }
         }
-        if (factions.containsKey(name)) {
+        if (!factionsTaken.contains(name)) {
             Player p = new Player(player);
-            Faction f = factions.get(name);
-            playerFactions.put(p, f);
-            factions.remove(f.getName());
+            intermediatePlayerFactions.put(name, p);
+            factionsTaken.add(name);
             numPlayers++;
             if (currentPlayer == null) currentPlayer = p;
             return p;
@@ -95,12 +136,53 @@ public class Database {
         if (numPlayers < 2) {
             System.out.println("Not enough players");
             return;
+        } else if (numPlayers > 16) {
+            System.out.println("Too many players");
         }
         assignProvinces();
 
     }
 
 
+    // Assign provinces correctly
+    private void assignProvinces() {
+        List<Province> provincesAvailable = new ArrayList<Province>();
+        for (String faction : initialProvincesConfig.keySet()) {
+            if (!factionsTaken.contains(faction)) {
+                // Faction names not been taken by a player
+                JSONArray provincesJSON = initialProvincesConfig.getJSONArray(faction);
+                for (Object o : provincesJSON) {
+                    provincesAvailable.add(new Province((String)o, defaultUnitsConfig, abilityConfig));
+                }
+
+            }
+        }
+
+        Collections.shuffle(provincesAvailable);
+        int numPerFaction = provincesAvailable.size() / factionsTaken.size();
+        int remainder = provincesAvailable.size() % factionsTaken.size();
+        for (String fString : factionsTaken) {
+            List<Province> list = new ArrayList<Province>();
+            JSONArray initialProvinces = initialProvincesConfig.getJSONArray(fString);
+
+            // Add initial provinces
+            for (Object o : initialProvinces.toList()) {
+                Province p = new Province((String)o, defaultUnitsConfig, abilityConfig);
+                list.add(p);
+            }
+            List<Province> sublist = provincesAvailable.subList(0, numPerFaction);
+            if (remainder != 0) {
+                sublist.add(provincesAvailable.get(numPerFaction));
+                remainder--;
+            }            
+            list.addAll(sublist);
+            provincesAvailable.removeAll(sublist);
+            Faction f = new Faction(this, fString, list, factionAllowedUnits, defaultUnitsConfig);
+            Player p = intermediatePlayerFactions.get(fString);
+            p.setFaction(f);
+            playerFactions.put(p, f);
+        }
+    }
 
 
     public Province findProvince(String name) {
@@ -138,14 +220,8 @@ public class Database {
     }
 
 
-    public boolean isAdjacentProvince(String province1, String province2) throws IOException {
+    public boolean isAdjacentProvince(String province1, String province2) {
         return provinceAdjacencyMatrix.getJSONObject(province1).getBoolean(province2);
-    }
-
-
-    private void loadAdjacencyMatrix() throws IOException {
-        String content = Files.readString(Paths.get("bin/unsw/gloriaromanus/province_adjacency_matrix_fully_connected.json"));
-        provinceAdjacencyMatrix = new JSONObject(content);
     }
 
     private Player getPlayerOfFaction(Faction f) {
@@ -178,247 +254,228 @@ public class Database {
     }
 
 
-
-
-
-
-
-
-
-
-
-    public Map<String,List<Unit>> getProvinceUnit() {
-        return provinceUnit;
-    }
-
-    public Map<String,Faction > getFactionProvince() {
-        return provinceList;
+    public boolean isTurn(Faction f) {
+        return currentPlayer.equals(getPlayerOfFaction(f));
     }
 
 
-    public void addFaction(String faction) throws IOException {
-        addtoFile(faction, "F", " ");
+    public String getGameYear() {
+        return gameYear;
     }
 
-    public void addProvince(String province, String faction) throws IOException {
-        addtoFile(faction, "P", province);
-    }
 
-    /**
-     * adds faction/province to the database
-     * @param faction
-     * @param option
-     * @param province
-     * @throws IOException
-     */
-    public void addtoFile(String faction, String option, String province) throws IOException {
 
-        String content = Files.readString(Paths.get(address));
-        JSONObject ownership = new JSONObject(content);
 
-        if (option.equals("F")) {
-            JSONArray empty = new JSONArray();
-            ownership.put(faction, empty);
-        }
 
-        else {
-            Object object = ownership.get(faction);
-            JSONArray list = (JSONArray) object;
-            list.put(province);
-        }
-            // Files.write(path, bytes, options)
-            Files.writeString(Paths.get(address), ownership.toString());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // public Map<String,List<Unit>> getProvinceUnit() {
+    //     return provinceUnit;
+    // }
+
+    // public Map<String,Faction > getFactionProvince() {
+    //     return provinceList;
+    // }
+
+
+    // public void addFaction(String faction) throws IOException {
+    //     addtoFile(faction, "F", " ");
+    // }
+
+    // public void addProvince(String province, String faction) throws IOException {
+    //     addtoFile(faction, "P", province);
+    // }
+
+    // /**
+    //  * adds faction/province to the database
+    //  * @param faction
+    //  * @param option
+    //  * @param province
+    //  * @throws IOException
+    //  */
+    // public void addtoFile(String faction, String option, String province) throws IOException {
+
+    //     String content = Files.readString(Paths.get(address));
+    //     JSONObject ownership = new JSONObject(content);
+
+    //     if (option.equals("F")) {
+    //         JSONArray empty = new JSONArray();
+    //         ownership.put(faction, empty);
+    //     }
+
+    //     else {
+    //         Object object = ownership.get(faction);
+    //         JSONArray list = (JSONArray) object;
+    //         list.put(province);
+    //     }
+    //         // Files.write(path, bytes, options)
+    //         Files.writeString(Paths.get(address), ownership.toString());
 
 
         
-    }
+    // }
 
-    /**
-     * Function initilises the map of province to faction and set the province list for each faction 
-     * @return map of province to faction 
-     * @throws IOException
-     */
+    // /**
+    //  * Function initilises the map of province to faction and set the province list for each faction 
+    //  * @return map of province to faction 
+    //  * @throws IOException
+    //  */
 
-    private Map<String, List<Unit>> setOwningUnit() {
-        Map<String, List<Unit>> m = new HashMap<String, List<Unit>>();
-        for (String provinceName : provinceList.keySet()) {
-            ArrayList<Unit> u = new ArrayList<Unit> ();
-            m.put(provinceName, u);
-          }
+    // private Map<String, List<Unit>> setOwningUnit() {
+    //     Map<String, List<Unit>> m = new HashMap<String, List<Unit>>();
+    //     for (String provinceName : provinceList.keySet()) {
+    //         ArrayList<Unit> u = new ArrayList<Unit> ();
+    //         m.put(provinceName, u);
+    //       }
 
-          return m;
-    }
+    //       return m;
+    // }
 
-    private Map<String,Faction> setProvinceToOwningFactionMap() throws IOException {
-        ArrayList<Province> ps = new ArrayList<Province> ();
-        Map<String,Faction> m = new HashMap<String,Faction>();
-        String content = Files.readString(Paths.get(address));
-        JSONObject ownership = new JSONObject(content);
-        for (String key : ownership.keySet()) {
-          // key will be the faction name
-          JSONArray ja = ownership.getJSONArray(key);
-          // value is province name
-          for (int i = 0; i < ja.length(); i++) {
-            String value = ja.getString(i);
+    // private Map<String,Faction> setProvinceToOwningFactionMap() throws IOException {
+    //     ArrayList<Province> ps = new ArrayList<Province> ();
+    //     Map<String,Faction> m = new HashMap<String,Faction>();
+    //     String content = Files.readString(Paths.get(address));
+    //     JSONObject ownership = new JSONObject(content);
+    //     for (String key : ownership.keySet()) {
+    //       // key will be the faction name
+    //       JSONArray ja = ownership.getJSONArray(key);
+    //       // value is province name
+    //       for (int i = 0; i < ja.length(); i++) {
+    //         String value = ja.getString(i);
 
-            Faction f = new Faction(key);
-            m.put(value,f);
+    //         Faction f = new Faction(key);
+    //         m.put(value,f);
 
-          }
+    //       }
           
-        }
-        return m;
-      }
+    //     }
+    //     return m;
+    //   }
 
-      private Map<String,ArrayList<Province>> setOwningProvince() throws IOException {
-        Map<String,ArrayList<Province>> m = new HashMap<String,ArrayList<Province>>();
-        String content = Files.readString(Paths.get(address));
-        JSONObject ownership = new JSONObject(content);
-        for (String key : ownership.keySet()) {
-            ArrayList<Province> ps = new ArrayList<Province> ();
+    //   private Map<String,ArrayList<Province>> setOwningProvince() throws IOException {
+    //     Map<String,ArrayList<Province>> m = new HashMap<String,ArrayList<Province>>();
+    //     String content = Files.readString(Paths.get(address));
+    //     JSONObject ownership = new JSONObject(content);
+    //     for (String key : ownership.keySet()) {
+    //         ArrayList<Province> ps = new ArrayList<Province> ();
 
-          // key will be the faction name
-          JSONArray ja = ownership.getJSONArray(key);
-          // value is province name
-          for (int i = 0; i < ja.length(); i++) {
-            String value = ja.getString(i);
+    //       // key will be the faction name
+    //       JSONArray ja = ownership.getJSONArray(key);
+    //       // value is province name
+    //       for (int i = 0; i < ja.length(); i++) {
+    //         String value = ja.getString(i);
 
-            Faction f = new Faction(key);
-            ps.add(new Province(value,this));
+    //         Faction f = new Faction(key);
+    //         ps.add(new Province(value,this));
 
-          }
-          m.put(key,ps);
+    //       }
+    //       m.put(key,ps);
           
-        }
-        return m;
-      }
+    //     }
+    //     return m;
+    //   }
 
 
     
 
-    public void saveGame() throws IOException {
-        OutputStream os = new FileOutputStream("bin/unsw/gloriaromanus/Backend/configs/load.json");
-        ObjectMapper om = new ObjectMapper();
-        OutputStream os1 = new FileOutputStream("bin/unsw/gloriaromanus/Backend/configs/loadPlayer.json");
-        JsonGenerator g = om.getFactory().createGenerator(os);
-        JsonGenerator g1 = om.getFactory().createGenerator(os1);
+    // public void saveGame() throws IOException {
+    //     OutputStream os = new FileOutputStream("bin/unsw/gloriaromanus/Backend/configs/load.json");
+    //     ObjectMapper om = new ObjectMapper();
+    //     OutputStream os1 = new FileOutputStream("bin/unsw/gloriaromanus/Backend/configs/loadPlayer.json");
+    //     JsonGenerator g = om.getFactory().createGenerator(os);
+    //     JsonGenerator g1 = om.getFactory().createGenerator(os1);
 
 
-        for (Player player:players) {
-            om.writeValue(g1,player);
+    //     for (Player player:players) {
+    //         om.writeValue(g1,player);
             
-        }
-        for (String f: factionList.keySet()) {
-            for (Province p: factionList.get(f)) {
-                saveProvince(f,p, om,g);
-            }
-        }
+    //     }
+    //     for (String f: factionList.keySet()) {
+    //         for (Province p: factionList.get(f)) {
+    //             saveProvince(f,p, om,g);
+    //         }
+    //     }
       
-    }
-    public void loadGame() throws IOException {
+    // }
+
+
+
+    // public void loadGame() throws IOException {
+    //     loadPlayer();
+    //     loadProvince();
+    // }
+
+
+
+    // /**
+    //  * Will load the saved players
+    //  */
+
+    // public void loadPlayer() throws IOException {
+    //     FileReader fis = new FileReader("bin/unsw/gloriaromanus/Backend/configs/loadPlayer.json");
+    //     JsonFactory jf = new JsonFactory();
+    //     ObjectMapper mapper = new ObjectMapper();
+    //     Iterator<Player> value = mapper.readValues( jf.createParser(fis), Player.class);
+
+    //     while(value.hasNext()) {
+    //         Player p = value.next();
+    //         p.setDatabase(this);
+    //         addPlayer(p);
+
+    //     }
+
+    // }
+
+    // public void loadProvince() throws IOException {
+
+    //     FileReader fis = new FileReader("bin/unsw/gloriaromanus/Backend/configs/load.json");
+    //     JsonFactory jf = new JsonFactory();
+    //     ObjectMapper mapper = new ObjectMapper();
+    //     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         
-        loadPlayer();
+    //     Iterator<Province> value = mapper.readValues( jf.createParser(fis), Province.class);
+
+    //     while(value.hasNext()) {
+    //         Province p = value.next();
+    //         List<Unit> u = p.getUnits();
+    //         provinceUnit.put(p.getName(), u);
+    //         provinceList.put(p.getName(), new Faction(p.getFaction()));
+    //         factionList.get(p.getFaction()).add(p);
+    //         provinceTraining.put(p.getName(), p.getUnitsTraining());
+    //         // p.setDatabase(this);
+    //         if (!p.getUnits().isEmpty()) System.out.println(p.getUnits().get(0).getCost());
+    //     }
+
+
+    // }
+
        
-        loadProvince();
-        }
-
-    /**
-     * Will load the saved players
-     */
-
-    public void loadPlayer() throws IOException {
-        FileReader fis = new FileReader("bin/unsw/gloriaromanus/Backend/configs/loadPlayer.json");
-        JsonFactory jf = new JsonFactory();
-        ObjectMapper mapper = new ObjectMapper();
-        Iterator<Player> value = mapper.readValues( jf.createParser(fis), Player.class);
-
-        while(value.hasNext()) {
-            Player p = value.next();
-            p.setDatabase(this);
-            addPlayer(p);
-
-        }
-
-    }
-
-    public void loadProvince() throws IOException {
-
-        FileReader fis = new FileReader("bin/unsw/gloriaromanus/Backend/configs/load.json");
-        JsonFactory jf = new JsonFactory();
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        
-        Iterator<Province> value = mapper.readValues( jf.createParser(fis), Province.class);
-
-        while(value.hasNext()) {
-            Province p = value.next();
-            List<Unit> u = p.getUnits();
-            provinceUnit.put(p.getName(), u);
-            provinceList.put(p.getName(), new Faction(p.getFaction()));
-            factionList.get(p.getFaction()).add(p);
-            provinceTraining.put(p.getName(), p.getUnitsTraining());
-            // p.setDatabase(this);
-            if (!p.getUnits().isEmpty()) System.out.println(p.getUnits().get(0).getCost());
-        }
-
-
-    }
-
-    public Player getPlayer(int index) {
-        return players.get(index);
-    }
-
     
+    // public void saveProvince(String f, Province p, ObjectMapper om, JsonGenerator g) throws IOException {
+
+    //     //TODO: save other features of the province in the file 
+    //     om.writeValue(g,p);
 
 
-   
-    
-    public void saveProvince(String f, Province p, ObjectMapper om, JsonGenerator g) throws IOException {
-
-        //TODO: save other features of the province in the file 
-        om.writeValue(g,p);
-
-
-    } 
+    // } 
 
    
    
-  
-
-    public String addUnit(String name, String province) throws IOException {
-
-        var unitJSON = new JSONObject("{\r\n    \"soldier\": {\r\n        \"type\" : \"infantry\",\r\n        \"attackType\" : \"melee\",\r\n        \"numTroops\" : 10,\r\n        \"cost\" : 5,\r\n        \"trainTime\" : 1,\r\n        \"attack\" : 4,\r\n        \"morale\" : 5,\r\n        \"shield\" : 3,\r\n        \"defence\" : 6,\r\n        \"ability\" : \"noAbility\"\r\n\r\n    },\r\n    \"horseArcher\": {\r\n        \"type\" : \"cavalry\",\r\n        \"attackType\" : \"ranged\",\r\n        \"numTroops\" : 8,\r\n        \"cost\" : 5,\r\n        \"trainTime\" : 2,\r\n        \"attack\" : 6,\r\n        \"morale\" : 4,\r\n        \"shield\" : 2,\r\n        \"charge\" : 5,\r\n        \"ability\" : \"noAbility\"\r\n    }\r\n}");
-        var abilityJSON = new JSONObject("{\r\n    \"noAbility\" : {\r\n        \"friendly\" : [],\r\n        \"enemy\" : []\r\n    },\r\n    \"phalanx\" : {\r\n        \"friendly\" : [\r\n            {\r\n                \"type\" : \"defence\",\r\n                \"value\" : 2,\r\n                \"strategy\" : \"multiply\"\r\n                \r\n            },\r\n            {\r\n                \"type\" : \"speed\",\r\n                \"value\" : 0.5,\r\n                \"strategy\" : \"multiply\"\r\n            }\r\n        ],\r\n        \"enemy\" : []\r\n    }\r\n}");
-        Unit u = new Unit(name,unitJSON,abilityJSON);
-        Province p = new Province(province,this);
-        return p.getUnit(u);
-
-    }
-
-
-    /**
-     * This function will keep track of the training time of different troops and add them to the units when training is over
-     */
-    public void update(Unit u, String p) {
-        provinceTraining.get(p).remove(u);
-
-    }
-
-    public void endTurn() {
-        for (Iterator pI = provinceTraining.keySet().iterator(); pI.hasNext();){
-            String p = (String)pI.next();
-            for (Iterator<Unit> iterator =  provinceTraining.get(p).iterator(); iterator.hasNext();) {
-                Unit u = iterator.next();
-                u.endTurn();
-                System.out.println(u.getName());
-
-                if (u.getTrainTime() == 0) {
-                    provinceUnit.get(p).add(u);
-                    iterator.remove();
-                }
-            }
-        }
-    }
     
 }
 

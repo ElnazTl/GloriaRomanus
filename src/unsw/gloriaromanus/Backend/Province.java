@@ -1,7 +1,7 @@
 package unsw.gloriaromanus.Backend;
 
 import java.util.List;
-import java.io.IOException;
+import org.json.JSONObject;
 import java.util.ArrayList;
 
 import unsw.gloriaromanus.Backend.tax.*;
@@ -15,12 +15,29 @@ public class Province {
     List<Unit> selectedUnits;
     TaxRate taxRate;
 
+    // JSON configs used to train troops
+    JSONObject defaultUnitsConfig;
+    JSONObject abilityConfig;
+    
 
-    public Province(String name) {
+
+    public Province(String name, JSONObject unitsConfig, JSONObject abilityConfig) {
         this.name = name;
         this.units = new ArrayList<Unit>();
         this.unitsTraining = new ArrayList<Unit>(2);
         this.selectedUnits = new ArrayList<Unit>();
+        this.defaultUnitsConfig = unitsConfig;
+        this.abilityConfig = abilityConfig;
+        changeTaxRate(LowTax.TYPE);
+    }
+
+    public Province(String name, JSONObject unitsConfig, JSONObject abilityConfig, List<Unit> initialUnits, List<Unit> initialUnitsTaining) {
+        this.name = name;
+        this.units = initialUnits;
+        this.unitsTraining = initialUnitsTaining;
+        this.selectedUnits = new ArrayList<Unit>();
+        this.defaultUnitsConfig = unitsConfig;
+        this.abilityConfig = abilityConfig;
         changeTaxRate(LowTax.TYPE);
     }
 
@@ -40,8 +57,14 @@ public class Province {
         return unitsTraining;
     }
 
-    public TaxRate getTaxRate() {
+    public TaxRate getTax() {
         return taxRate;
+    }
+
+
+
+    public double taxProvince() {
+        return wealth * taxRate.getTaxRate();
     }
 
     /**
@@ -49,17 +72,22 @@ public class Province {
      * Changes anything that needs to be changed at start of a turn
      */
     public void endTurn() {
+        deselectAllUnits();
         for (Unit u : this.units) {
             u.endTurn();
         }
+        List<Unit> completedUnits = new ArrayList<Unit>();
         for (Unit u : this.unitsTraining) {
             u.endTurn();
             if (u.isTrained()) {
-                unitsTraining.remove(u);
-                units.add(u);
+                completedUnits.add(u);
             }
         }
-        wealth = wealth + taxRate.getWealth();
+        units.addAll(completedUnits);
+        unitsTraining.removeAll(completedUnits);
+        wealth += taxRate.getTaxWealth();
+        // Apply tax modifier
+        deselectAllUnits();
     }
 
     
@@ -178,10 +206,10 @@ public class Province {
      * @param name Name of unit to train
      * @return True if training unit, otherwise False
      */
-    public boolean trainUnit(String name) throws IOException {
+    public boolean trainUnit(String name) {
         if (unitsTraining.size() == 2) return false;
         else {
-            Unit u = new Unit(name);
+            Unit u = new Unit(name, defaultUnitsConfig, abilityConfig);
             unitsTraining.add(u);
             // u.applyModifier(taxRate.getMoraleModifier());
 
@@ -205,44 +233,30 @@ public class Province {
     }
 
 
-    // private boolean confirmIfProvincesConnected(String province1, String province2) throws IOException {
-    //     String content = Files
-    //         .readString(Paths.get("bin/unsw/gloriaromanus/province_adjacency_matrix_fully_connected.json"));
-    //     JSONObject provinceAdjacencyMatrix = new JSONObject(content);
-    //     return provinceAdjacencyMatrix.getJSONObject(province1).getBoolean(province2);
-    // }
-   
+    public String getState() {
+        String state = "Province: " + "\"" + name + "\"";
+        state += "\n\t-> wealth: " + wealth;
+        state += "\n\t-> tax rate: " + taxRate.toString();
+        state += "\n\t-> selected units: ";
+        for (Unit u : selectedUnits) {
+            state += ("\n\t\t- " + u.toString());
+        }
+        state += "\n\t-> units: ";
+        for (Unit u : units) {
+            state += ("\n\t\t- " + u.toString());
+        }
+        state += "\n\t-> units training: ";
+        for (Unit u : unitsTraining) {
+            state += ("\n\t\t- " + u.toString());
+        }
+        return state;
+    }
 
-    // public Unit chooseUnit(List<Unit> u) {
-
-    //     Random r = new Random();
-    //     return u.get(r.nextInt(u.size()));
-        
-    // }
-
-
-
-
-
-    // public String moveTroopTo(Province to, Unit u) {
-
-        
-            
-    //         // move from the shortest path
-    //         // movement point
-    //         database.getProvinceUnit().get(this).remove(u);
-    //         database.getProvinceUnit().get(to).remove(u);
-
-    //         return "Successfully moved the unit";
-
-
-       
-    // }
 
 
     @Override
     public String toString() {
-        return "Province: " + this.name;
+        return this.name + " (province)";
     }
 
 
