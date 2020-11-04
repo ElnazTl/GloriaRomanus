@@ -34,7 +34,7 @@ public class BattleResolver {
         attackerArmy.addAll(attacker.getSelectedUnits());
         attacker.removeAllSelected();
         defenderArmy.addAll(defender.getUnits());
-        defender.removeAllSelected();
+        defender.removeAllUnits();
 
 
 

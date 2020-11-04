@@ -9,19 +9,33 @@ public class Player {
 
    
     public Player(){}
+
+    /**
+     * Initialises a player with specified name
+     * @param username
+     */
     public Player(String username) {
         this.username = username;
     }
 
+
+    /**
+     * Sets the faction that the unit owns
+     * @param faction
+     */
     public void setFaction(Faction faction) {
         this.faction = faction;
     }
+
 
     public Faction getFaction() {
         return faction;
     }
 
 
+    /**
+     * Ends the turn of the player
+     */
     public void endTurn() {
         if (!isTurn()) {
             System.out.println("Not your turn");
@@ -30,24 +44,33 @@ public class Player {
         faction.endTurn();
     }
 
+
+    /**
+     * Returns if it is the players turn or not
+     * @return
+     */
     public boolean isTurn() {
         return faction.isTurn();
     }
 
 
-    public void invade(String ownedProvince, String enemyProvince) {
+    /**
+     * Attempts to invade the specified enemy province
+     * from the selected province
+     * @param enemyProvince
+     */
+    public void invade(String enemyProvince) {
         if (!isTurn()) {
             System.out.println("Not your turn");
             return;
         }
-        faction.invade(ownedProvince, enemyProvince);
+        faction.invade(enemyProvince);
     }
 
 
     /**
      * Attempts to train a given unit in a given province
      * 
-     * @param province Province to train unit in
      * @param unit Unit to train
      * @throws IOException
      */
@@ -66,16 +89,14 @@ public class Player {
         }
     }
 
+
     /**
      * given the unit and from and to if the provinces are adjacent the unit will be
      * moved
      * 
-     * @param u
-     * @param from
      * @param to
      * @return
      */
-
     public boolean moveUnits(String to) throws IOException {
         if (!isTurn()) {
             System.out.println("Not your turn");
@@ -93,6 +114,10 @@ public class Player {
     }
 
 
+    /**
+     * Selects unit with given id in selected province
+     * @param unitID
+     */
     public void selectUnit(Long unitID) {
         if (!isTurn()) {
             System.out.println("Not your turn");
@@ -101,6 +126,10 @@ public class Player {
         faction.selectUnit(unitID);
     }
 
+    /**
+     * Returns a list of all provinces owned by the faction
+     * @return
+     */
     public String getProvinces() {
         return faction.getProvinces().toString();
     }
@@ -113,10 +142,22 @@ public class Player {
         this.username = username;
     }
 
+
+    /**
+     * Selects a province with the given name
+     * @param name
+     */
     public void selectProvince(String name) {
         faction.selectProvince(name);
     }
 
+
+    /**
+     * Returns the string representation of 
+     * province specified
+     * @param name
+     * @return
+     */
     public String getStateProvince(String name) {
         return faction.getStateProvince(name);
     }
