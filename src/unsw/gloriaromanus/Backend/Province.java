@@ -261,8 +261,8 @@ public class Province {
      * Returns a string representation of the province state
      * @return
      */
-    public String getState() {
-        String state = "Province: " + "\"" + name + "\"";
+    public String getProvinceState() {
+        String state = "Province: \"" + name + "\"";
         state += "\n\t-> wealth: " + wealth;
         state += "\n\t-> tax rate: " + taxRate.toString();
         state += "\n\t-> selected units: ";
@@ -296,6 +296,50 @@ public class Province {
         Province p = (Province)obj;
         
         return name.equals(p.getName());
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setWealth(int wealth) {
+        this.wealth = wealth;
+    }
+
+    public void setUnits(List<Unit> units) {
+        this.units = units;
+    }
+
+    public void setUnitsTraining(List<Unit> unitsTraining) {
+        this.unitsTraining = unitsTraining;
+    }
+
+    public void setSelectedUnits(List<Unit> selectedUnits) {
+        this.selectedUnits = selectedUnits;
+    }
+
+    public TaxRate getTaxRate() {
+        return taxRate;
+    }
+
+    public void setTaxRate(TaxRate taxRate) {
+        this.taxRate = taxRate;
+    }
+
+    public JSONObject getDefaultUnitsConfig() {
+        return defaultUnitsConfig;
+    }
+
+    public void setDefaultUnitsConfig(JSONObject defaultUnitsConfig) {
+        this.defaultUnitsConfig = defaultUnitsConfig;
+    }
+
+    public JSONObject getAbilityConfig() {
+        return abilityConfig;
+    }
+
+    public void setAbilityConfig(JSONObject abilityConfig) {
+        this.abilityConfig = abilityConfig;
     }
     
 

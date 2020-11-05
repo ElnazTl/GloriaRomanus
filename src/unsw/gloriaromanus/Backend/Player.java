@@ -59,12 +59,12 @@ public class Player {
      * from the selected province
      * @param enemyProvince
      */
-    public void invade(String enemyProvince) {
+    public int invade(String enemyProvince) {
         if (!isTurn()) {
             System.out.println("Not your turn");
-            return;
+            return -1;
         }
-        faction.invade(enemyProvince);
+        return faction.invade(enemyProvince);
     }
 
 
@@ -158,8 +158,8 @@ public class Player {
      * @param name
      * @return
      */
-    public String getStateProvince(String name) {
-        return faction.getStateProvince(name);
+    public String getProvinceState(String name) {
+        return faction.getProvinceState(name);
     }
 
 

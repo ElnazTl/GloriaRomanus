@@ -48,7 +48,7 @@ public class Database {
     private int numPlayers = 0;
     private int turnNumber = 0;
     private Player currentPlayer = null;
-    private String gameYear = (200 + turnNumber) + " BC";
+    private int gameYear = 200 + turnNumber;
 
     private String path;
     
@@ -57,7 +57,6 @@ public class Database {
     private JSONObject initialProvincesConfig;
     private JSONObject factionAllowedUnits;
     private JSONObject abilityConfig;
-
 
 
 
@@ -196,6 +195,10 @@ public class Database {
 
 
     public int invade(Province attacker, String enemy) {
+        if (!isAdjacentProvince(attacker.getName(), enemy)) {
+            System.out.println("Provinces are not adjacent");
+            return -1;
+        }
         Province defender = findProvince(enemy);
         int result = BattleResolver.battle(attacker, defender);
 
@@ -260,7 +263,7 @@ public class Database {
 
 
     public String getGameYear() {
-        return gameYear;
+        return gameYear + " BC";
     }
 
 
@@ -358,8 +361,7 @@ public class Database {
     //       for (int i = 0; i < ja.length(); i++) {
     //         String value = ja.getString(i);
 
-    //         Faction f = new Faction(key);
-    //         m.put(value,f);
+    //         m.put(value,factions.get(key));
 
     //       }
           
@@ -379,8 +381,6 @@ public class Database {
     //       // value is province name
     //       for (int i = 0; i < ja.length(); i++) {
     //         String value = ja.getString(i);
-
-    //         Faction f = new Faction(key);
     //         ps.add(new Province(value,this));
 
     //       }
@@ -389,90 +389,202 @@ public class Database {
     //     }
     //     return m;
     //   }
+    // public Map<String, List<Unit>> setProvinceTraining() {
+    //     Map<String, List<Unit>> m = new HashMap<String,List<Unit>>();
+    //     for (String p: provinceList.keySet()) {
+    //         ArrayList<Unit> u = new ArrayList<Unit>();
+    //         m.put(p,u);
+    //     }
+    //     return m;
 
+    // }
 
     
 
     // public void saveGame() throws IOException {
-    //     OutputStream os = new FileOutputStream("bin/unsw/gloriaromanus/Backend/configs/load.json");
+
+    //     OutputStream os = new FileOutputStream(loadProvince);
     //     ObjectMapper om = new ObjectMapper();
-    //     OutputStream os1 = new FileOutputStream("bin/unsw/gloriaromanus/Backend/configs/loadPlayer.json");
+    //     OutputStream os1 = new FileOutputStream(loadPlayer);
+    //     OutputStream os2 = new FileOutputStream(loadFaction);
+
     //     JsonGenerator g = om.getFactory().createGenerator(os);
     //     JsonGenerator g1 = om.getFactory().createGenerator(os1);
+    //     JsonGenerator g2 = om.getFactory().createGenerator(os2);
 
 
     //     for (Player player:players) {
+
     //         om.writeValue(g1,player);
+
             
     //     }
     //     for (String f: factionList.keySet()) {
     //         for (Province p: factionList.get(f)) {
-    //             saveProvince(f,p, om,g);
+    //             saveProvince(p, om,g);
     //         }
+    //     }
+
+    //     for (String f: factions.keySet()) {
+    //         saveFaction(factions.get(f),om,g2);
     //     }
       
     // }
-
-
-
     // public void loadGame() throws IOException {
+
+    //     loadFaction();
+
     //     loadPlayer();
-    //     loadProvince();
-    // }
-
-
+       
+    //     // loadProvince();
+    //     }
 
     // /**
     //  * Will load the saved players
     //  */
 
+    // public void loadFaction() throws IOException {
+
+    //     FileReader fis = new FileReader(loadFaction);
+    //     JsonFactory jf = new JsonFactory();
+    //     ObjectMapper mapper = new ObjectMapper();
+    //     Iterator<Faction> value = mapper.readValues( jf.createParser(fis), Faction.class);
+
+    //     while(value.hasNext()) {
+    //         Faction f = value.next();
+    //         f.setDatabase(this);
+    //         factions.put(f.getName(),f);
+    //         factionList.put(f.getName(),(ArrayList)f.getProvinces());
+    //         ArrayList<Province> p= (ArrayList<Province>)f.getProvinces();
+    //         for (int i = 0;i < p.size();i++) {
+    //             List<Unit> u = p.get(i).getUnits();
+    //             List<Unit> u1 = p.get(i).getUnitsTraining();
+    //             provinceTraining.put(p.get(i).getName(), u1);
+    //             provinceUnit.put(p.get(i).getName(), u);
+               
+    //             p.get(i).setDatabase(this);
+
+    //         }
+    //         f.setDatabase(this);
+
+    //         // for (Province p: f.getProvinces()) {
+    //         //     List<Unit> u = p.getUnits();
+    //         //     List<Unit> u1 = p.getUnitsTraining();
+    //         //     provinceTraining.put(p.getName(), u1);
+    //         //     provinceUnit.put(p.getName(), u);
+    //         //     p.setDatabase(this);
+
+
+    //         //     provinceList.put(p.getName(), f);
+    //         //     factionList.get(f.getName()).add(p);
+    //         // }
+
+    //     }
+
+    // }
+    
+
     // public void loadPlayer() throws IOException {
-    //     FileReader fis = new FileReader("bin/unsw/gloriaromanus/Backend/configs/loadPlayer.json");
+    //     FileReader fis = new FileReader(loadPlayer);
     //     JsonFactory jf = new JsonFactory();
     //     ObjectMapper mapper = new ObjectMapper();
     //     Iterator<Player> value = mapper.readValues( jf.createParser(fis), Player.class);
 
     //     while(value.hasNext()) {
     //         Player p = value.next();
+    //         p.getFaction().setDatabase(this);
     //         p.setDatabase(this);
     //         addPlayer(p);
 
     //     }
-
     // }
+    // public void loadProvince() {
+    //     for (Faction f: factions.values()) {
+    //         for (Province p: f.getProvinces()) {
+    //             List<Unit> u = p.getUnits();
+    //             List<Unit> u1 = p.getUnitsTraining();
+    //             provinceTraining.put(p.getName(), u1);
+    //             provinceUnit.put(p.getName(), u);
+    //             p.setDatabase(this);
 
-    // public void loadProvince() throws IOException {
 
-    //     FileReader fis = new FileReader("bin/unsw/gloriaromanus/Backend/configs/load.json");
-    //     JsonFactory jf = new JsonFactory();
-    //     ObjectMapper mapper = new ObjectMapper();
-    //     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        
-    //     Iterator<Province> value = mapper.readValues( jf.createParser(fis), Province.class);
-
-    //     while(value.hasNext()) {
-    //         Province p = value.next();
-    //         List<Unit> u = p.getUnits();
-    //         provinceUnit.put(p.getName(), u);
-    //         provinceList.put(p.getName(), new Faction(p.getFaction()));
-    //         factionList.get(p.getFaction()).add(p);
-    //         provinceTraining.put(p.getName(), p.getUnitsTraining());
-    //         // p.setDatabase(this);
-    //         if (!p.getUnits().isEmpty()) System.out.println(p.getUnits().get(0).getCost());
+    //             provinceList.put(p.getName(), f);
+    //             factionList.get(f.getName()).add(p);
+    //         }
     //     }
 
-
     // }
 
-       
-    
-    // public void saveProvince(String f, Province p, ObjectMapper om, JsonGenerator g) throws IOException {
+    // // public void loadProvince() throws IOException {
 
-    //     //TODO: save other features of the province in the file 
+    // //     FileReader fis = new FileReader(loadProvince);
+    // //     JsonFactory jf = new JsonFactory();
+    // //     ObjectMapper mapper = new ObjectMapper();
+    // //     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        
+    // //     Iterator<Province> value = mapper.readValues( jf.createParser(fis), Province.class);
+
+    // //     while(value.hasNext()) {
+    // //         Province p = value.next();
+    // //         List<Unit> u = p.getUnits();
+    // //         provinceUnit.put(p.getName(), u);
+    // //         // System.out.println("heyyyyy"+p.getFaction());
+
+    // //         factionList.get(p.getFaction()).add(p);
+    // //         provinceTraining.put(p.getName(), p.getUnitsTraining());
+    // //         // p.setDatabase(this);
+    // //         p.setDatabase(this);
+    // //         if (!p.getUnits().isEmpty()) System.out.println(p.getUnits().get(0).getCost());
+    // //     }
+
+
+    // // }
+
+    // public Player getPlayer(int index) {
+    //     return players.get(index);
+    // }
+
+    
+
+
+   
+    // public void saveFaction(Faction f,ObjectMapper om, JsonGenerator g ) throws IOException{
+    //     om.writeValue(g,f);
+    // }
+    // public void saveProvince( Province p, ObjectMapper om, JsonGenerator g) throws IOException {
+
     //     om.writeValue(g,p);
 
 
     // } 
+
+   
+   
+  
+
+   
+    // private boolean belongs(Map<String,Faction> li,String faction, String province) {
+    //     Faction f = li.get(province);
+    //     return f.getName().equals(faction);
+    // }
+
+
+    // /**
+    //  * This function will keep track of the training time of different troops and add them to the units when training is over
+    //  */
+    // public void update(Unit u, String p) {
+    //     provinceTraining.get(p).remove(u);
+
+    // }
+
+    
+
+    // public Boolean addUnit(String unit, String faction, String province) throws IOException {
+    //     return factions.get(faction).trainUnit(province, unit);
+    // }
+    // public Map<String,Faction> getFaction() {
+    //     return factions;
+    // }
 
    
    

@@ -202,6 +202,8 @@ public class GloriaRomanusController{
             s = new PictureMarkerSymbol("images/legionary.png");
             break;
           // TODO = handle all faction names, and find a better structure...
+          default:
+            s = new PictureMarkerSymbol("images/legionary.png");
         }
         t.setHaloColor(0xFFFFFFFF);
         t.setHaloWidth(2);

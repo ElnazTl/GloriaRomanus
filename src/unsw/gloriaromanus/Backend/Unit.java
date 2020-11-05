@@ -328,7 +328,7 @@ public class Unit {
 
     @Override
     public String toString() {
-        return name + " (unit id: " + unitID + ")";
+        return name + " (id: " + unitID + ", " + numTroops + " remaining)";
     }
 
 
@@ -423,6 +423,10 @@ public class Unit {
 
     public void setBaseValues(JSONObject baseValues) {
         this.baseValues = baseValues;
+    }
+
+    public void setArmour(double armour) {
+        this.armour = armour;
     }
 
     
