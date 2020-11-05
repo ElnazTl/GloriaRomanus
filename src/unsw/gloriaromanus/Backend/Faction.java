@@ -95,6 +95,12 @@ public class Faction {
                 return p;
             }
         }
+        for (Province p : provincesConqueredOnTurn) {
+            if (name.equals(p.getName())) {
+                return p;
+            }
+        }
+        if (selectedProvince == null) return null;
         if (name.equals(selectedProvince.getName())) return selectedProvince;
         return null;
     }
@@ -180,9 +186,18 @@ public class Faction {
      * @return
      */
     public int invade(String enemyProvince) {
-        if (findProvince(enemyProvince) != null) return -1;        // Enemy province is owned by this faction
-        if (selectedProvince == null) return -1;        // No selected province
-        if (selectedProvince.getSelectedUnits().isEmpty()) return -1;      // No selected units to invade with
+        if (findProvince(enemyProvince) != null) {
+            System.out.println("Cannot invade province owned by attacker");   
+            return -1;
+        }
+        if (selectedProvince == null) {
+            System.out.println("Player has not selected a province to invade from");
+            return -1;
+        }
+        if (selectedProvince.getSelectedUnits().isEmpty()) {
+            System.out.println("Player has not selected any units in selected province to invade with");
+            return -1;
+        }
         return db.invade(selectedProvince, enemyProvince);
     }
 
@@ -197,7 +212,7 @@ public class Faction {
             System.out.println("Player has not selected a province");
             return false;
         }
-        int cost = availableUnits.get(unit);
+        int cost = getUnitCost(unit);
         if (cost > treasury) {
             // Faction does not have enough gold to buy unit
             return false;
@@ -245,6 +260,17 @@ public class Faction {
 
 
     /**
+     * Returns the cost of the specified unit
+     * If unit is not available to the faction,
+     * returns -1
+     */
+    public int getUnitCost(String unit) {
+        if (!availableUnits.containsKey(unit)) return -1;
+        else return availableUnits.get(unit);
+    }
+
+
+    /**
      * Returns True if given province was conquered
      * during the players current turn
      * 
@@ -275,11 +301,31 @@ public class Faction {
      * @param name
      * @return
      */
-    public String getStateProvince(String name) {
+    public String getProvinceState(String name) {
         Province p = findProvince(name);
-        if (p != null) return p.getState();
+        if (p != null) return p.getProvinceState();
         return null;
     }
+
+
+    /**
+     * Returns a string representation of the state of the faction
+     */
+    public String getFactionState() {
+        String state = "Faction: \"" + name + "\"";
+        state += "\n\t-> treasury: " + treasury;
+        state += "\n\t-> selected province: " + selectedProvince;
+        state += "\n\t-> provinces: ";
+        for (Province p : provinces) {
+            state += ("\n\t\t- " + p.toString());
+        }
+        state += "\n\t-> provinces conquered this turn: ";
+        for (Province p : provincesConqueredOnTurn) {
+            state += ("\n\t\t- " + p.toString());
+        }
+        return state;
+    }
+    
 
     @Override
     public String toString() {
@@ -293,6 +339,50 @@ public class Faction {
 
         Faction f = (Faction)obj;
         return name.equals(f.getName());
+    }
+
+    public Database getDb() {
+        return db;
+    }
+
+    public void setDb(Database db) {
+        this.db = db;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setProvinces(List<Province> provinces) {
+        this.provinces = provinces;
+    }
+
+    public List<Province> getProvincesConqueredOnTurn() {
+        return provincesConqueredOnTurn;
+    }
+
+    public void setProvincesConqueredOnTurn(List<Province> provincesConqueredOnTurn) {
+        this.provincesConqueredOnTurn = provincesConqueredOnTurn;
+    }
+
+    public void setAvailableUnits(Map<String, Integer> availableUnits) {
+        this.availableUnits = availableUnits;
+    }
+
+    public int getTreasury() {
+        return treasury;
+    }
+
+    public void setTreasury(int treasury) {
+        this.treasury = treasury;
+    }
+
+    public Province getSelectedProvince() {
+        return selectedProvince;
+    }
+
+    public void setSelectedProvince(Province selectedProvince) {
+        this.selectedProvince = selectedProvince;
     }
 
 }

@@ -47,6 +47,7 @@ public class BattleResolver {
                 battleWinner = -1;
                 attacker.addUnits(attackerRouted);
                 defender.addUnits(defenderRouted);
+                System.out.println("Both armies escaped the battle");
                 break;
 
             } else if (!attackerArmy.isEmpty() && defenderArmy.isEmpty()) {
@@ -55,6 +56,7 @@ public class BattleResolver {
                 attackerArmy.addAll(attackerRouted);
                 defender.conquerProvince(attackerArmy);
                 defenderRouted.removeAll(defenderRouted);
+                System.out.println("Attacking army defeated the defending army");
                 break;
 
             } else if (attackerArmy.isEmpty() && !defenderArmy.isEmpty()) {
@@ -62,6 +64,7 @@ public class BattleResolver {
                 battleWinner = 0;
                 attacker.addUnits(attackerRouted);
                 defenderArmy.addAll(defenderRouted);
+                System.out.println("Defending army defeated the attacking army");
                 break;
             }
 
@@ -70,11 +73,15 @@ public class BattleResolver {
 
             numSkirmishes++;
         }
-        if (numSkirmishes == 200) {
-            attacker.addUnits(attackerArmy);
-            defender.addUnits(defenderArmy);
-        }
+        // if (numSkirmishes == 200) {
+        //     attacker.addUnits(attackerArmy);
+        //     defender.addUnits(defenderArmy);
+        // }
+        attacker.addUnits(attackerArmy);
+        defender.addUnits(defenderArmy);
 
+
+        // Clear armies for next battle
         attackerArmy.removeAll(attackerArmy);
         defenderArmy.removeAll(defenderArmy);
         attackerRouted.removeAll(attackerRouted);
@@ -271,6 +278,13 @@ public class BattleResolver {
     }
 
 
+    /**
+     * Calculates what engagement type the engagement should be
+     * based in the 2 units in the engagement
+     * @param attacker
+     * @param defender
+     * @return
+     */
     private static String engagementType(Unit attacker, Unit defender) {
         if (attacker.isMelee() && defender.isMelee()) {
             return MELEE;
