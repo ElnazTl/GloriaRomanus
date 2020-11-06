@@ -10,11 +10,11 @@ import unsw.gloriaromanus.Backend.*;
 
 public class DatabaseTest {
 
-    public static boolean gradleTest = true;
+    public static boolean gradleTest = false;
     
     @Test
     public void TestInitialiseDatabase() throws IOException {
-        Database db = new Database(!gradleTest);
+        Database db = new Database();
         
         assertEquals("200 BC", db.getGameYear());
 
@@ -22,7 +22,7 @@ public class DatabaseTest {
 
     @Test
     public void TestStartGame() throws IOException {
-        Database db = new Database(!gradleTest);
+        Database db = new Database();
         
         assertEquals("200 BC", db.getGameYear());
         Player A = db.addNewPlayer("A", "Rome");
@@ -55,7 +55,7 @@ public class DatabaseTest {
 
     @Test
     public void TestTrainUnit() throws IOException {
-        Database db = new Database(!gradleTest);
+        Database db = new Database();
         
         assertEquals("200 BC", db.getGameYear());
         Player A = db.addNewPlayer("A", "Spain");
@@ -95,7 +95,7 @@ public class DatabaseTest {
 
     @Test
     public void TestMoveUnit() throws IOException {
-        Database db = new Database(!gradleTest);
+        Database db = new Database();
         
         assertEquals("200 BC", db.getGameYear());
         Player A = db.addNewPlayer("A", "Numidia");
@@ -132,7 +132,7 @@ public class DatabaseTest {
 
     @Test
     public void TestMoveMultipleUnits() throws IOException {
-        Database db = new Database(!gradleTest);
+        Database db = new Database();
         
         assertEquals("200 BC", db.getGameYear());
         Player A = db.addNewPlayer("A", "Numidia");
@@ -169,7 +169,7 @@ public class DatabaseTest {
 
     @Test
     public void TestInvadeNotAdjacent() throws IOException {
-        Database db = new Database(!gradleTest);
+        Database db = new Database();
         
         assertEquals("200 BC", db.getGameYear());
         Player A = db.addNewPlayer("A", "Numidia");
@@ -209,7 +209,7 @@ public class DatabaseTest {
 
     @Test
     public void TestInvadeAdjacentNoEnemy() throws IOException {
-        Database db = new Database(!gradleTest);
+        Database db = new Database();
         
         assertEquals("200 BC", db.getGameYear());
         Player A = db.addNewPlayer("A", "Numidia");
@@ -253,7 +253,7 @@ public class DatabaseTest {
     
     @Test
     public void TestInvadeAdjacentEnemy() throws IOException {
-        Database db = new Database(!gradleTest);
+        Database db = new Database();
         
         assertEquals("200 BC", db.getGameYear());
         Player A = db.addNewPlayer("A", "Numidia");
@@ -306,4 +306,29 @@ public class DatabaseTest {
             System.out.println(B.getProvinceState("V"));
         }
     }
+
+
+    
+    @Test
+    public void TestSaveGame() throws IOException {
+        Database db = new Database();
+        
+        assertEquals("200 BC", db.getGameYear());
+        Player A = db.addNewPlayer("A", "Numidia");
+        Player B = db.addNewPlayer("B", "Spain");
+
+        db.startGame();
+
+        A.selectProvince("VI");
+        A.trainUnit("soldier");
+        A.endTurn();
+        B.endTurn();
+        A.selectProvince("VI");
+        A.trainUnit("soldier");
+
+        db.saveGame();
+        db.loadGame();
+        
+    }
+
 }

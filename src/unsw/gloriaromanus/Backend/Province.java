@@ -1,6 +1,12 @@
 package unsw.gloriaromanus.Backend;
 
 import java.util.List;
+
+import unsw.gloriaromanus.Backend.Database.JSONObjectSerialiser;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import org.json.JSONObject;
 import java.util.ArrayList;
 
@@ -13,12 +19,19 @@ public class Province {
     List<Unit> units;
     List<Unit> unitsTraining;
     List<Unit> selectedUnits;
+    String taxStrategy;
+
+    @JsonIgnore
     TaxRate taxRate;
 
     // JSON configs used to train troops
+    @JsonIgnore
     JSONObject defaultUnitsConfig;
+    @JsonIgnore
     JSONObject abilityConfig;
     
+
+    public Province() {}
 
     /**
      * Initialises a province using the base values
@@ -33,27 +46,27 @@ public class Province {
         this.selectedUnits = new ArrayList<Unit>();
         this.defaultUnitsConfig = unitsConfig;
         this.abilityConfig = abilityConfig;
-        changeTaxRate(LowTax.TYPE);
+        setTaxStrategy(LowTax.TYPE);
     }
 
 
-    /**
-     * Initialises a province from a saved game
-     * @param name
-     * @param unitsConfig
-     * @param abilityConfig
-     * @param initialUnits
-     * @param initialUnitsTaining
-     */
-    public Province(String name, JSONObject unitsConfig, JSONObject abilityConfig, List<Unit> initialUnits, List<Unit> initialUnitsTaining) {
-        this.name = name;
-        this.units = initialUnits;
-        this.unitsTraining = initialUnitsTaining;
-        this.selectedUnits = new ArrayList<Unit>();
-        this.defaultUnitsConfig = unitsConfig;
-        this.abilityConfig = abilityConfig;
-        changeTaxRate(LowTax.TYPE);
-    }
+    // /**
+    //  * Initialises a province from a saved game
+    //  * @param name
+    //  * @param unitsConfig
+    //  * @param abilityConfig
+    //  * @param initialUnits
+    //  * @param initialUnitsTaining
+    //  */
+    // public Province(String name, JSONObject unitsConfig, JSONObject abilityConfig, List<Unit> initialUnits, List<Unit> initialUnitsTaining) {
+    //     this.name = name;
+    //     this.units = initialUnits;
+    //     this.unitsTraining = initialUnitsTaining;
+    //     this.selectedUnits = new ArrayList<Unit>();
+    //     this.defaultUnitsConfig = unitsConfig;
+    //     this.abilityConfig = abilityConfig;
+    //     changeTaxRate(LowTax.TYPE);
+    // }
 
     public String getName() {
         return name;
@@ -71,6 +84,7 @@ public class Province {
         return unitsTraining;
     }
 
+    @JsonIgnore
     public TaxRate getTax() {
         return taxRate;
     }
@@ -257,10 +271,26 @@ public class Province {
     }
 
 
+    public void loadConfigs(JSONObject unitsConfig, JSONObject abilityConfig) {
+        defaultUnitsConfig = unitsConfig;
+        this.abilityConfig = abilityConfig;
+        for (Unit u : selectedUnits) {
+            u.loadConfigs(unitsConfig, abilityConfig);
+        }
+        for (Unit u : units) {
+            u.loadConfigs(unitsConfig, abilityConfig);
+        }
+        for (Unit u : unitsTraining) {
+            u.loadConfigs(unitsConfig, abilityConfig);
+        }
+    }
+
+
     /**
      * Returns a string representation of the province state
      * @return
      */
+    @JsonIgnore
     public String getProvinceState() {
         String state = "Province: \"" + name + "\"";
         state += "\n\t-> wealth: " + wealth;
@@ -340,6 +370,15 @@ public class Province {
 
     public void setAbilityConfig(JSONObject abilityConfig) {
         this.abilityConfig = abilityConfig;
+    }
+
+    public String getTaxStrategy() {
+        return taxStrategy;
+    }
+
+    public void setTaxStrategy(String taxStrategy) {
+        this.taxStrategy = taxStrategy;
+        changeTaxRate(taxStrategy);
     }
     
 

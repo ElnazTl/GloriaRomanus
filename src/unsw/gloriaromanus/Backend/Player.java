@@ -2,6 +2,8 @@ package unsw.gloriaromanus.Backend;
 
 import java.io.IOException;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Player {
 
     private Faction faction;
@@ -49,6 +51,7 @@ public class Player {
      * Returns if it is the players turn or not
      * @return
      */
+    @JsonIgnore
     public boolean isTurn() {
         return faction.isTurn();
     }
@@ -130,6 +133,7 @@ public class Player {
      * Returns a list of all provinces owned by the faction
      * @return
      */
+    @JsonIgnore
     public String getProvinces() {
         return faction.getProvinces().toString();
     }
@@ -158,6 +162,7 @@ public class Player {
      * @param name
      * @return
      */
+    @JsonIgnore
     public String getProvinceState(String name) {
         return faction.getProvinceState(name);
     }

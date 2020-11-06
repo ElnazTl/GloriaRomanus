@@ -1,5 +1,14 @@
 package unsw.gloriaromanus.Backend;
 
+import unsw.gloriaromanus.Backend.Database.JSONObjectSerialiser;
+import unsw.gloriaromanus.Backend.Database.JSONArraySerialiser;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -23,8 +32,9 @@ public class Unit {
     private double defence;  // Melee units only
     private double charge;   // Cavalry units only
     private String abilityType;
-    private JSONArray ability;
-    private JSONArray modifiers;
+
+    private List<JSONObject> ability;
+    private List<JSONObject> modifiers;
     private JSONObject baseValues;
 
 
@@ -36,6 +46,8 @@ public class Unit {
         this.name = name;
         this.unitID = ID;
         ID = ID + 1;
+        ability = new ArrayList<JSONObject>();
+        modifiers = new ArrayList<JSONObject>();
         loadFromConfig(name, unitConfig, abilityConfig);
     }
 
@@ -114,25 +126,26 @@ public class Unit {
     }
 
 
-    public JSONArray getAbility() {
+    public List<JSONObject> getAbility() {
         return ability;
     }
 
 
-    public JSONArray getModifiers() {
+    public List<JSONObject> getModifiers() {
         return modifiers;
     }
     
-
+    @JsonIgnore
     public boolean isMelee() {
         return melee;
     }
 
-
+    @JsonIgnore
     public boolean isRanged() {
         return !isMelee();
     }
 
+    @JsonIgnore
     public boolean isTrained() {
         return trainTime == 0;
     }
@@ -159,6 +172,7 @@ public class Unit {
      * 
      * @return True if unit is alive, otherwise False
      */
+    @JsonIgnore
     public boolean isAlive() {
         return numTroops != 0;
     }
@@ -179,10 +193,9 @@ public class Unit {
      * Adds a new modifier to Unit
      * 
      * @param modifier New modifier object
-     * @param who Apply to friendly of enemy unit
      */
     public void addModifier(JSONObject modifier) {
-        modifiers.put(modifier);
+        modifiers.add(modifier);
     }
 
 
@@ -193,14 +206,7 @@ public class Unit {
      * @param modifier Modifier to remove
      */
     public void removeModifier(JSONObject modifier) {
-        if (!modifiers.isEmpty()) {
-            for (int i = 0; i < modifiers.length(); i++) {
-                JSONObject mod = modifiers.getJSONObject(i);
-                if (mod.equals(modifier)) {
-                    modifiers.remove(i);
-                }
-            }
-        }
+        if (modifiers.contains(modifier)) modifiers.remove(modifier);
     }
 
 
@@ -215,8 +221,7 @@ public class Unit {
      */
     public double getFriendlyModifiedValue(String type) {
         double val = baseValues.optDouble(type, 0);
-        for (Object o : modifiers) {
-            JSONObject mod = (JSONObject)o;
+        for (JSONObject mod : modifiers) {
             if (type.equals(mod.getString(type)) && "friendly".equals(mod.getString("who"))) {
                 if ("add".equals(mod.getString("strategy"))) {
                     val = val + mod.optDouble("value", 0);
@@ -238,8 +243,7 @@ public class Unit {
      */
     public double getEnemyModifiedValue(String type) {
         double val = baseValues.optDouble(type, 0);
-        for (Object o : modifiers) {
-            JSONObject mod = (JSONObject)o;
+        for (JSONObject mod : modifiers) {
             if (type.equals(mod.getString(type)) && "enemy".equals(mod.getString("who"))) {
                 if ("add".equals(mod.getString("strategy"))) {
                     val = val + mod.optDouble("value", 0);
@@ -289,7 +293,7 @@ public class Unit {
         this.armour = config.optDouble("armour", 1);
         this.shield = config.optDouble("shield", 1);
         this.abilityType = config.optString("ability", "noAbility");
-        this.ability = abilityConfig.getJSONArray(this.abilityType);
+        loadJSONArrayToList(this.ability, abilityConfig.getJSONArray(this.abilityType));
         this.charge = "cavalry".equals(this.type) ? config.optDouble("charge", 1) : 0;
         this.defence = isMelee() ? config.optDouble("defence", 1) : 0;
         switch (this.type) {
@@ -305,26 +309,19 @@ public class Unit {
             default:
                 this.movePoints = 1;
         }
-        this.modifiers = new JSONArray();
         this.baseValues = config;
     }
 
+    private void loadJSONArrayToList(List<JSONObject> list, JSONArray json) {
+        for (Object o : json) {
+            list.add((JSONObject)o);
+        }
+    }
 
-    // /**
-    //  * Loads the modifiers JSONObject
-    //  * for the specified ability
-    //  * 
-    //  * @param ability
-    //  * @return JSONObject of specified ability
-    //  * @throws IOException
-    //  */
-    // private JSONArray getAbilityJSON(String ability) throws IOException {
-    //     String configString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/ability_config.json"));
-    //     JSONObject abilityConfig = new JSONObject(configString);
-    //     JSONArray config = abilityConfig.getJSONArray(ability);
-    //     return config;
-    // }
-
+    public void loadConfigs(JSONObject unitsConfig, JSONObject abilityConfig) {
+        baseValues = unitsConfig.getJSONObject(name);
+        loadJSONArrayToList(ability, abilityConfig.getJSONArray(abilityType));
+    }
 
     @Override
     public String toString() {
@@ -409,14 +406,15 @@ public class Unit {
         this.abilityType = abilityType;
     }
 
-    public void setAbility(JSONArray ability) {
+    public void setAbility(List<JSONObject> ability) {
         this.ability = ability;
     }
 
-    public void setModifiers(JSONArray modifiers) {
+    public void setModifiers(List<JSONObject> modifiers) {
         this.modifiers = modifiers;
     }
 
+    @JsonIgnore
     public JSONObject getBaseValues() {
         return baseValues;
     }
@@ -429,5 +427,4 @@ public class Unit {
         this.armour = armour;
     }
 
-    
 }
