@@ -1,7 +1,6 @@
 package unsw.gloriaromanus.Backend;
 
 import java.io.IOException;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Player {
@@ -10,6 +9,9 @@ public class Player {
     public String username;
 
    
+    /**
+     * Default constructor used for deserialisation
+     */
     public Player(){}
 
     /**
@@ -20,11 +22,23 @@ public class Player {
         this.username = username;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
 
     /**
-     * Sets the faction that the unit owns
-     * @param faction
+     * Selects a province with the given name
+     * @param name
      */
+    public void selectProvince(String name) {
+        faction.selectProvince(name);
+    }
+
     public void setFaction(Faction faction) {
         this.faction = faction;
     }
@@ -137,24 +151,6 @@ public class Player {
     public String getProvinces() {
         return faction.getProvinces().toString();
     }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-
-    /**
-     * Selects a province with the given name
-     * @param name
-     */
-    public void selectProvince(String name) {
-        faction.selectProvince(name);
-    }
-
 
     /**
      * Returns the string representation of 

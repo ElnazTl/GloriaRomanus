@@ -1,15 +1,9 @@
 package unsw.gloriaromanus.Backend;
 
 import java.util.List;
-
-import unsw.gloriaromanus.Backend.Database.JSONObjectSerialiser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import org.json.JSONObject;
 import java.util.ArrayList;
-
 import unsw.gloriaromanus.Backend.tax.*;
 
 public class Province {
@@ -31,6 +25,9 @@ public class Province {
     JSONObject abilityConfig;
     
 
+    /**
+     * Default constructor used for deserialisation
+     */
     public Province() {}
 
     /**
@@ -271,6 +268,11 @@ public class Province {
     }
 
 
+    /**
+     * Loads default configs
+     * @param unitsConfig
+     * @param abilityConfig
+     */
     public void loadConfigs(JSONObject unitsConfig, JSONObject abilityConfig) {
         defaultUnitsConfig = unitsConfig;
         this.abilityConfig = abilityConfig;

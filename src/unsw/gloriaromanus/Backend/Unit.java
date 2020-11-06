@@ -1,14 +1,8 @@
 package unsw.gloriaromanus.Backend;
 
-import unsw.gloriaromanus.Backend.Database.JSONObjectSerialiser;
-import unsw.gloriaromanus.Backend.Database.JSONArraySerialiser;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -37,11 +31,18 @@ public class Unit {
     private List<JSONObject> modifiers;
     private JSONObject baseValues;
 
-
+    /**
+     * Default Constructor used for deserialisation
+     */
     public Unit() {}
 
 
-
+    /**
+     * Unit Constructor
+     * @param name
+     * @param unitConfig
+     * @param abilityConfig
+     */
     public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
         this.name = name;
         this.unitID = ID;
@@ -255,21 +256,6 @@ public class Unit {
         return val;
     }
 
-
-    // /**
-    //  * Loads base config values for specified unit
-    //  * from the configs/unit_config.json file
-    //  * 
-    //  * @param name
-    //  * @throws IOException
-    //  */
-    // private void loadFromConfig(String name) throws IOException {
-    //     String defaultString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/units_config.json"));
-    //     JSONObject unitsConfig = new JSONObject(defaultString);
-    //     loadFromConfig(name, unitsConfig);
-    // }
-
-
     
     /**
      * Loads the given config values for the specified unit
@@ -312,12 +298,22 @@ public class Unit {
         this.baseValues = config;
     }
 
+    /**
+     * Converts JSONArray to given list
+     * @param list
+     * @param json
+     */
     private void loadJSONArrayToList(List<JSONObject> list, JSONArray json) {
         for (Object o : json) {
             list.add((JSONObject)o);
         }
     }
 
+    /**
+     * Loads defualt configs
+     * @param unitsConfig
+     * @param abilityConfig
+     */
     public void loadConfigs(JSONObject unitsConfig, JSONObject abilityConfig) {
         baseValues = unitsConfig.getJSONObject(name);
         loadJSONArrayToList(ability, abilityConfig.getJSONArray(abilityType));

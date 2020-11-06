@@ -1,47 +1,24 @@
 package unsw.gloriaromanus.Backend;
 
 import org.json.*;
-// import org.junit.jupiter.api.condition.OS;
-
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.StackWalker.Option;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Optional;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 public class Database {
@@ -290,7 +267,6 @@ public class Database {
         fw.write(json.toString());
         fw.close();
     }
-
 
     public void loadGame() throws IOException {
         ObjectMapper om = new ObjectMapper();
