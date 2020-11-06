@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Faction {
 
+    @JsonIgnore
     private Database db;
     private String name;
     private List<Province> provinces;
@@ -19,6 +22,7 @@ public class Faction {
     private Province selectedProvince;
 
 
+    public Faction() {}
     /**
      * Initialises a faction with the given provinces, allowed units
      * and default config for units
@@ -77,6 +81,7 @@ public class Faction {
      * Returns if it is the players turn
      * @return
      */
+    @JsonIgnore
     public boolean isTurn() {
         return db.isTurn(this);
     }
@@ -295,12 +300,24 @@ public class Faction {
         }
     }
 
+    public void loadConfigs(JSONObject unitsConfig, JSONObject abilityConfig) {
+        for (Province p : provinces) {
+            p.loadConfigs(unitsConfig, abilityConfig);
+        }
+        for (Province p : provincesConqueredOnTurn) {
+            p.loadConfigs(unitsConfig, abilityConfig);
+        }
+        if (selectedProvince != null) {
+            selectedProvince.loadConfigs(unitsConfig, abilityConfig);
+        }
+    }
     
     /**
      * Gets the string representation of the specified province
      * @param name
      * @return
      */
+    @JsonIgnore
     public String getProvinceState(String name) {
         Province p = findProvince(name);
         if (p != null) return p.getProvinceState();
@@ -311,6 +328,7 @@ public class Faction {
     /**
      * Returns a string representation of the state of the faction
      */
+    @JsonIgnore
     public String getFactionState() {
         String state = "Faction: \"" + name + "\"";
         state += "\n\t-> treasury: " + treasury;
