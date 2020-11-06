@@ -2,12 +2,10 @@ package unsw.gloriaromanus.Backend;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Faction {
@@ -22,7 +20,12 @@ public class Faction {
     private Province selectedProvince;
 
 
+    /**
+     * Default constructor used for deserialisation
+     */
     public Faction() {}
+
+
     /**
      * Initialises a faction with the given provinces, allowed units
      * and default config for units
@@ -300,6 +303,11 @@ public class Faction {
         }
     }
 
+    /**
+     * Loads default configs
+     * @param unitsConfig
+     * @param abilityConfig
+     */
     public void loadConfigs(JSONObject unitsConfig, JSONObject abilityConfig) {
         for (Province p : provinces) {
             p.loadConfigs(unitsConfig, abilityConfig);
