@@ -314,20 +314,48 @@ public class DatabaseTest {
         Database db = new Database();
         
         assertEquals("200 BC", db.getGameYear());
-        Player A = db.addNewPlayer("A", "Numidia");
+        Player A = db.addNewPlayer("A", "Rome");
         Player B = db.addNewPlayer("B", "Spain");
 
         db.startGame();
 
-        A.selectProvince("VI");
+        A.selectProvince("I");
         A.trainUnit("soldier");
         A.endTurn();
         B.endTurn();
-        A.selectProvince("VI");
+        A.selectProvince("I");
         A.trainUnit("soldier");
 
         db.saveGame();
         db.loadGame();
+        
+    }
+
+
+    @Test
+    public void TestMoveNonAdjacent() throws IOException {
+        Database db = new Database();
+        
+        Player A = db.addNewPlayer("A", "Rome");
+        Player B = db.addNewPlayer("B", "Trachia");
+
+        db.startGame();
+
+        A.selectProvince("I");
+        A.trainUnit("soldier");
+        A.endTurn();
+        B.endTurn();
+        System.out.println(A.getProvinceState("I"));
+        System.out.println(A.getProvinceState("V"));
+        A.selectProvince("I");
+        A.selectUnit(0L);
+        A.moveUnits("V");
+        System.out.println(A.getProvinceState("I"));
+        System.out.println(A.getProvinceState("V"));
+
+        // Province from = A.getFaction().findProvince("I");
+        // Province to = A.getFaction().findProvince("V");
+        // System.out.println(db.moveUnits(from, to, A.getFaction().getMoveableProvinces(), 4));
         
     }
 
