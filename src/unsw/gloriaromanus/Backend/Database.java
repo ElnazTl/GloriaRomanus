@@ -9,12 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -29,14 +26,14 @@ public class Database {
     private List<String> factions;
     private List<Player> players;
     private Map<String, Player> intermediatePlayerFactions;
+    private List<String> provinceNames;
+    private boolean[][] provAdjMatrix;
 
     private int numPlayers = 0;
     private int turnNumber = 0;
     private String currentPlayer = null;
     private int gameYear = 200 + turnNumber;
- 
-    @JsonIgnore
-    private JSONObject provinceAdjacencyMatrix;
+
     @JsonIgnore
     private JSONObject defaultUnitsConfig;
     @JsonIgnore
@@ -56,6 +53,7 @@ public class Database {
         players = new ArrayList<Player>();
         //playerFactions = new HashMap<Player, Faction>();
         intermediatePlayerFactions = new HashMap<String, Player>();
+        provinceNames = new ArrayList<String>();
         loadDefaultConfigs();
     }
 
@@ -76,7 +74,8 @@ public class Database {
 
         // Load adjacency matrix
         String adjacencyString = Files.readString(Paths.get(path + "province_adjacency_matrix_fully_connected.json"));
-        provinceAdjacencyMatrix = new JSONObject(adjacencyString);
+        JSONObject provMatrixJSON = new JSONObject(adjacencyString);
+        loadProvMatrix(provMatrixJSON);
 
         // Load ability config
         String abilityString = Files.readString(Paths.get(path + "Backend/configs/ability_config.json"));
@@ -198,7 +197,7 @@ public class Database {
     }
 
     public boolean isAdjacentProvince(String province1, String province2) {
-        return provinceAdjacencyMatrix.getJSONObject(province1).getBoolean(province2);
+        return provAdjMatrix[provinceNames.indexOf(province1)][provinceNames.indexOf(province2)];
     }
 
     private Player getPlayerOfFaction(Faction f) {
@@ -247,6 +246,116 @@ public class Database {
     }
 
 
+    private void loadProvMatrix(JSONObject provMatrixJSON) {
+        provinceNames = new ArrayList<String>(provMatrixJSON.keySet());
+        provAdjMatrix = new boolean[provinceNames.size()][provinceNames.size()];
+        for (int i = 0; i < provinceNames.size(); i++) {
+            String provFrom = provinceNames.get(i);
+            JSONObject provFromJSON = provMatrixJSON.getJSONObject(provFrom);
+            for (int j = 0; j < provinceNames.size(); j++) {
+                String provTo = provinceNames.get(j);
+                provAdjMatrix[i][j] = provFromJSON.getBoolean(provTo);
+            }
+        }
+    }
+
+
+    public boolean moveUnits(Province from, Province to, List<String> provinces, int maxPoints) {
+        if (from.getSelectedUnits().isEmpty()) {
+            System.out.println("No units selected to move");
+        }
+        List<Integer> ownedProvinces = new ArrayList<Integer>();
+        for (String p : provinces) {
+            ownedProvinces.add(provinceNames.indexOf(p));
+        }
+        List<String> path = shortestPath(from.getName(), to.getName(), ownedProvinces, maxPoints);
+        if (path == null) return false;
+        System.out.println(path);
+        to.addUnits(from.getSelectedUnits());
+        from.removeAllSelected();
+        return true;
+    }
+
+    public List<String> shortestPath(String from, String to, List<Integer> ownedProvinces, int maxPoints) {
+        // num points used to move between a province = 2
+        int pointsPerProvince = 2;
+
+        List<String> path = new ArrayList<String>();
+        int maxLength = maxPoints / pointsPerProvince;
+        int numProv = provinceNames.size();
+
+        int source = provinceNames.indexOf(from);
+        int target = provinceNames.indexOf(to);
+
+        List<Integer> q = new ArrayList<Integer>();
+        int[] dist = new int[numProv];
+        int[] prev = new int[numProv];
+        
+        for (int i = 0; i < numProv; i++) {
+            dist[i] = Integer.MAX_VALUE;
+            prev[i] = -1;
+            // q.add(i);
+        }
+
+        for (int i : ownedProvinces) {
+            q.add(i);
+        }
+
+        dist[source] = 0;
+
+        while (!q.isEmpty()) {
+            int index = minList(q, dist);
+            if (index == -1) return null;
+            int u = q.remove(index);
+            if (u == target) break;
+            List<Integer> adj = findAdjacent(u, ownedProvinces);
+            for (int i : adj) {
+                if (i == u) continue;
+                int alt = dist[u] + pointsPerProvince;
+                if (alt < dist[i]) {
+                    dist[i] = alt;
+                    prev[i] = u;
+                }
+            }
+        }
+
+        int u = target;
+        if (prev[u] != -1 || u == source) {
+            while (u != -1) {
+                path.add(0, provinceNames.get(u));
+                u = prev[u];
+            }
+        }
+
+        if (path.isEmpty() || path.size() - 1 > maxLength) return null;
+        return path;
+    }
+
+
+
+    private List<Integer> findAdjacent(int u, List<Integer> ownedProvs) {
+        List<Integer> list = new ArrayList<Integer>();
+        boolean[] provs = provAdjMatrix[u];
+        for (int i = 0; i < provinceNames.size(); i++) {
+            if (u == i) continue;
+            if (provs[i] && ownedProvs.contains(i)) list.add(i);
+        }
+        return list;
+    }
+
+    private int minList(List<Integer> list, int[] dist) {
+        int min = Integer.MAX_VALUE;
+        int i = -1;
+        for (int s : list) {
+            if (dist[s] < min) {
+                min = dist[s];
+                i = list.indexOf(s);
+            }
+        }
+        return i;
+    }
+
+
     public void saveGame() throws IOException {
         ObjectMapper om = new ObjectMapper();
         FileOutputStream saveOS = new FileOutputStream(path + "Backend/save/save.json");
@@ -273,7 +382,7 @@ public class Database {
         FileInputStream loadIS = new FileInputStream(path + "Backend/save/save.json");
         JsonFactory jf = new JsonFactory();
         players = om.readValue(jf.createParser(loadIS), new TypeReference<List<Player>>(){});
-        System.out.println(players);
+        // System.out.println(players);
         loadDatabase();
 
     }
@@ -295,22 +404,6 @@ public class Database {
         }
     }
 
-
-    public static class JSONObjectSerialiser extends JsonSerializer<JSONObject> {
-
-        @Override
-        public void serialize(JSONObject jsonObject, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-            jsonGenerator.writeRawValue(jsonObject.toString());
-        }
-    }
-
-    public static class JSONArraySerialiser extends JsonSerializer<JSONArray> {
-
-        @Override
-        public void serialize(JSONArray jsonArray, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-            jsonGenerator.writeRawValue(jsonArray.toString());
-        }
-    }
    
 
 }

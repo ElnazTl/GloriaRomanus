@@ -185,6 +185,15 @@ public class Faction {
         selectedProvince.selectUnit(unitID);
     }
 
+    public List<String> getMoveableProvinces() {
+        List<String> provs = new ArrayList<String>();
+        for (Province p : provinces) {
+            provs.add(p.getName());
+        }
+        if (selectedProvince != null) provs.add(selectedProvince.getName());
+        return provs;
+    }
+
 
     /**
      * Attempts to invade specified enemy province
@@ -242,29 +251,33 @@ public class Faction {
         Province pTo = findProvince(to);
         if (selectedProvince == null) {
             // No selected province to move troops from
+            System.out.println("No selected province to move troops from");
+            return false;
+        } else if (selectedProvince.getSelectedUnits().isEmpty()) {
+            // No units selected
+            System.out.println("No units are selected to move");
             return false;
         } else if (pTo == null) {
             // Province selected to move troops to is not
             // owned by this factions, use invade to move
             // troops from owned province to enemy province
+            System.out.println("Can only move troops between owned provinces");
             return false;
         } else if (conqueredDuringTurn(pTo)) {
             // Cant move to a province conquered on turn
-            return false;
-        } else if (!db.isAdjacentProvince(selectedProvince.getName(), pTo.getName())) {
-            // Provinces are not adjacent
-            return false;
-        } else if (selectedProvince.getSelectedUnits().isEmpty()) {
-            // Player has not selected units to move
+            System.out.println("Cannot move troops into a province conquered this turn");
             return false;
         } else {
-            pTo.addUnits(selectedProvince.getSelectedUnits());
-            selectedProvince.removeAllSelected();
-            return true;
+            // pTo.addUnits(selectedProvince.getSelectedUnits());
+            // selectedProvince.removeAllSelected();
+            int minMovePoints = selectedProvince.minMoveUnits();
+            return db.moveUnits(selectedProvince, pTo, getMoveableProvinces(), minMovePoints);
         }
 
 
     }
+
+
 
 
     /**

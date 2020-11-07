@@ -232,6 +232,18 @@ public class Province {
     // }
 
 
+    public int minMoveUnits() {
+        if (selectedUnits.isEmpty()) return 0;
+        int min = Integer.MAX_VALUE;
+        for (Unit u : selectedUnits) {
+            int unitMovePoints = u.getMovePoints();
+            if (unitMovePoints < min) {
+                min = unitMovePoints;
+            }
+        }
+        return min;
+    }
+
 
     /**
      * Attempts to train a unit

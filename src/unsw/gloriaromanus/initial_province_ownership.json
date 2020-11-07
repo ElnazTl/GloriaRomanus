@@ -1,16 +1,15 @@
 {
   "Rome": [
-    "Lugdunensis",
-    "Lusitania",
-    "Lycia et Pamphylia",
-    "Macedonia"
+    "I",
+    "IV",
+    "V",
+    "VII"
   ],
   "Gaul": [
     "Narbonensis",
     "Noricum",
     "Numidia",
     "Mauretania Caesariensis"
-
   ],
   "Carthage": [
     "Pannonia Inferior",
@@ -27,12 +26,12 @@
   "Spain": [
     "Tarraconensis",
     "Thracia",
-    "V",
+    "Lusitania",
     "Moesia Superior"
   ],
   "Numidia": [
-    "VI",
-    "VII",
+    "Lycia et Pamphylia",
+    "Macedonia",
     "VIII"
   ],
   "Egpyt": [
@@ -76,12 +75,12 @@
     "Germania Superior"
   ],
   "Trachia": [
-    "I",
+    "VI",
     "II",
     "III"
   ],
   "Dacia": [
-    "IV",
+    "Lugdunensis",
     "IX",
     "Iudaea"
   ]
