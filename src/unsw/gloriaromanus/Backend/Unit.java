@@ -1,17 +1,10 @@
 package unsw.gloriaromanus.Backend;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.io.IOException;
-import java.util.Iterator;
-
+import java.util.ArrayList;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONPropertyIgnore;
-//import org.junit.Ignore;
 
 
 public class Unit {
@@ -33,27 +26,30 @@ public class Unit {
     private double defence;  // Melee units only
     private double charge;   // Cavalry units only
     private String abilityType;
-    @JsonIgnoreProperties
-    private JSONArray ability;
-    
-    @JsonIgnoreProperties private JSONArray modifiers;
-    @JsonIgnoreProperties private JSONObject baseValues;
 
+    private List<JSONObject> ability;
+    private List<JSONObject> modifiers;
+    private JSONObject baseValues;
 
+    /**
+     * Default Constructor used for deserialisation
+     */
     public Unit() {}
 
-    public Unit(String name) throws IOException {
-        this.name = name;
-        this.unitID = ID;
-        ID = ID + 1;
-        loadFromConfig(name);
-    }
 
-    public Unit(String name, JSONObject unitConfig) throws IOException {
+    /**
+     * Unit Constructor
+     * @param name
+     * @param unitConfig
+     * @param abilityConfig
+     */
+    public Unit(String name, JSONObject unitConfig, JSONObject abilityConfig) {
         this.name = name;
         this.unitID = ID;
         ID = ID + 1;
-        loadFromConfig(name, unitConfig);
+        ability = new ArrayList<JSONObject>();
+        modifiers = new ArrayList<JSONObject>();
+        loadFromConfig(name, unitConfig, abilityConfig);
     }
 
 
@@ -130,13 +126,13 @@ public class Unit {
         return abilityType;
     }
 
-    @JsonIgnore
-    public JSONArray getAbility() {
+
+    public List<JSONObject> getAbility() {
         return ability;
     }
 
-    @JsonIgnore
-    public JSONArray getModifiers() {
+
+    public List<JSONObject> getModifiers() {
         return modifiers;
     }
     
@@ -149,6 +145,7 @@ public class Unit {
     public boolean isRanged() {
         return !isMelee();
     }
+
     @JsonIgnore
     public boolean isTrained() {
         return trainTime == 0;
@@ -197,10 +194,9 @@ public class Unit {
      * Adds a new modifier to Unit
      * 
      * @param modifier New modifier object
-     * @param who Apply to friendly of enemy unit
      */
     public void addModifier(JSONObject modifier) {
-        modifiers.put(modifier);
+        modifiers.add(modifier);
     }
 
 
@@ -211,14 +207,7 @@ public class Unit {
      * @param modifier Modifier to remove
      */
     public void removeModifier(JSONObject modifier) {
-        if (!modifiers.isEmpty()) {
-            for (int i = 0; i < modifiers.length(); i++) {
-                JSONObject mod = modifiers.getJSONObject(i);
-                if (mod.equals(modifier)) {
-                    modifiers.remove(i);
-                }
-            }
-        }
+        if (modifiers.contains(modifier)) modifiers.remove(modifier);
     }
 
 
@@ -232,10 +221,8 @@ public class Unit {
      * @return Modified value
      */
     public double getFriendlyModifiedValue(String type) {
-        Iterator<Object> json = modifiers.iterator();
         double val = baseValues.optDouble(type, 0);
-        while (json.hasNext()) {
-            JSONObject mod = (JSONObject)json.next();
+        for (JSONObject mod : modifiers) {
             if (type.equals(mod.getString(type)) && "friendly".equals(mod.getString("who"))) {
                 if ("add".equals(mod.getString("strategy"))) {
                     val = val + mod.optDouble("value", 0);
@@ -256,10 +243,8 @@ public class Unit {
      * @return Modified value
      */
     public double getEnemyModifiedValue(String type) {
-        Iterator<Object> json = modifiers.iterator();
         double val = baseValues.optDouble(type, 0);
-        while (json.hasNext()) {
-            JSONObject mod = (JSONObject)json.next();
+        for (JSONObject mod : modifiers) {
             if (type.equals(mod.getString(type)) && "enemy".equals(mod.getString("who"))) {
                 if ("add".equals(mod.getString("strategy"))) {
                     val = val + mod.optDouble("value", 0);
@@ -271,22 +256,6 @@ public class Unit {
         return val;
     }
 
-
-    /**
-     * Loads base config values for specified unit
-     * from the configs/unit_config.json file
-     * 
-     * @param name
-     * @throws IOException
-     */
-    private void loadFromConfig(String name) throws IOException {
-        // String defaultString = "{\r\n    \"soldier\": {\r\n        \"type\" : \"infantry\",\r\n        \"attackType\" : \"melee\",\r\n        \"numTroops\" : 10,\r\n        \"cost\" : 5,\r\n        \"trainTime\" : 1,\r\n        \"attack\" : 4,\r\n        \"speed\" : 4,\r\n        \"morale\" : 5,\r\n        \"armour\" : 3,\r\n        \"shield\" : 5,\r\n        \"defence\" : 6,\r\n        \"ability\" : \"noAbility\"\r\n\r\n    },\r\n    \"horseArcher\": {\r\n        \"type\" : \"cavalry\",\r\n        \"attackType\" : \"ranged\",\r\n        \"numTroops\" : 8,\r\n        \"cost\" : 5,\r\n        \"trainTime\" : 2,\r\n        \"attack\" : 6,\r\n        \"speed\" : 7,\r\n        \"morale\" : 4,\r\n        \"armour\" : 2,\r\n        \"shield\" : 2,\r\n        \"charge\" : 5,\r\n        \"ability\" : \"noAbility\"\r\n    },\r\n    \"hoplite\": {\r\n        \"type\" : \"infantry\",\r\n        \"attackType\" : \"melee\",\r\n        \"numTroops\" : 8,\r\n        \"cost\" : 5,\r\n        \"trainTime\" : 2,\r\n        \"attack\" : 8,\r\n        \"speed\" : 2,\r\n        \"morale\" : 4,\r\n        \"shield\" : 4,\r\n        \"defence\" : 6,\r\n        \"ability\" : \"phalanx\"\r\n    },\r\n    \"artillery\": {\r\n        \"type\" : \"artillery\",\r\n        \"attackType\" : \"ranged\",\r\n        \"numTroops\" : 3,\r\n        \"cost\" : 40,\r\n        \"trainTime\" : 3,\r\n        \"attack\" : 12,\r\n        \"speed\" : 1,\r\n        \"morale\" : 3,\r\n        \"shield\" : 6,\r\n        \"defence\" : 6,\r\n        \"ability\" : \"noAbility\"\r\n    }\r\n}\r\n";
-        String defaultString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/units_config.json"));
-        JSONObject unitsConfig = new JSONObject(defaultString);
-        loadFromConfig(name, unitsConfig);
-    }
-
-
     
     /**
      * Loads the given config values for the specified unit
@@ -296,7 +265,7 @@ public class Unit {
      * @param unitsConfig JSONObject of config file
      * @throws IOException
      */
-    private void loadFromConfig(String name, JSONObject unitsConfig) throws IOException {
+    private void loadFromConfig(String name, JSONObject unitsConfig, JSONObject abilityConfig) {
         JSONObject config = unitsConfig.getJSONObject(this.name);
         
         this.type = config.optString("type", "infantry");
@@ -310,7 +279,7 @@ public class Unit {
         this.armour = config.optDouble("armour", 1);
         this.shield = config.optDouble("shield", 1);
         this.abilityType = config.optString("ability", "noAbility");
-        this.ability = getAbilityJSON(this.abilityType);
+        loadJSONArrayToList(this.ability, abilityConfig.getJSONArray(this.abilityType));
         this.charge = "cavalry".equals(this.type) ? config.optDouble("charge", 1) : 0;
         this.defence = isMelee() ? config.optDouble("defence", 1) : 0;
         switch (this.type) {
@@ -326,30 +295,33 @@ public class Unit {
             default:
                 this.movePoints = 1;
         }
-        this.modifiers = new JSONArray();
         this.baseValues = config;
     }
 
-
     /**
-     * Loads the modifiers JSONObject
-     * for the specified ability
-     * 
-     * @param ability
-     * @return JSONObject of specified ability
-     * @throws IOException
+     * Converts JSONArray to given list
+     * @param list
+     * @param json
      */
-    private JSONArray getAbilityJSON(String ability) throws IOException {
-        String configString = Files.readString(Paths.get("bin/unsw/gloriaromanus/Backend/configs/ability_config.json"));
-        JSONObject abilityConfig = new JSONObject(configString);
-        JSONArray config = abilityConfig.getJSONArray(ability);
-        return config;
+    private void loadJSONArrayToList(List<JSONObject> list, JSONArray json) {
+        for (Object o : json) {
+            list.add((JSONObject)o);
+        }
     }
 
+    /**
+     * Loads defualt configs
+     * @param unitsConfig
+     * @param abilityConfig
+     */
+    public void loadConfigs(JSONObject unitsConfig, JSONObject abilityConfig) {
+        baseValues = unitsConfig.getJSONObject(name);
+        loadJSONArrayToList(ability, abilityConfig.getJSONArray(abilityType));
+    }
 
     @Override
     public String toString() {
-        return "unit (" + name + ", id: " + unitID + ")";
+        return name + " (id: " + unitID + ", " + numTroops + " remaining)";
     }
 
 
@@ -425,26 +397,30 @@ public class Unit {
     public void setCharge(double charge) {
         this.charge = charge;
     }
-    // @Ignore
+
     public void setAbilityType(String abilityType) {
         this.abilityType = abilityType;
     }
 
-    // public void setAbility(JSONArray ability) {
-    //     this.ability = ability;
-    // }
-    // @Ignore
-    // public void setModifiers(JSONArray modifiers) {
-    //     this.modifiers = modifiers;
-    // }
+    public void setAbility(List<JSONObject> ability) {
+        this.ability = ability;
+    }
 
-    // public JSONObject getBaseValues() {
-    //     return baseValues;
-    // }
+    public void setModifiers(List<JSONObject> modifiers) {
+        this.modifiers = modifiers;
+    }
 
-    // public void setBaseValues(JSONObject baseValues) {
-    //     this.baseValues = baseValues;
-    // }
+    @JsonIgnore
+    public JSONObject getBaseValues() {
+        return baseValues;
+    }
 
-    
+    public void setBaseValues(JSONObject baseValues) {
+        this.baseValues = baseValues;
+    }
+
+    public void setArmour(double armour) {
+        this.armour = armour;
+    }
+
 }

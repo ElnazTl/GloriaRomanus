@@ -14,11 +14,11 @@ public class VeryHighTax implements TaxRate {
         taxRate = 0.1;
     }
 
-    public int getWealth() {
+    public int getTaxWealth() {
         return wealth;
     }
 
-    public double getRate() {
+    public double getTaxRate() {
         return taxRate;
     }
 
