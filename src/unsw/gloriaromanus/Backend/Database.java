@@ -1,5 +1,6 @@
 package unsw.gloriaromanus.Backend;
 
+import unsw.gloriaromanus.Backend.victoryCampaign.*;
 import org.json.*;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,6 +30,7 @@ public class Database {
     private List<String> provinceNames;
     private boolean[][] provAdjMatrix;
 
+    private int numProvicnes;
     private int numPlayers = 0;
     private int turnNumber = 0;
     private String currentPlayer = null;
@@ -55,6 +57,7 @@ public class Database {
         intermediatePlayerFactions = new HashMap<String, Player>();
         provinceNames = new ArrayList<String>();
         loadDefaultConfigs();
+        numProvicnes = provinceNames.size();
     }
 
 
@@ -184,6 +187,21 @@ public class Database {
             return 1;
         }
         return result;
+    }
+    /**
+     * sets the number of provinces in the game
+     * @param x
+     */
+    public void setNumProvinces(int x) {
+        numProvicnes = x;
+
+    }
+    /**
+     * Function called after each invasion 
+     * @param p
+     */
+    public int StateOfPlayer(Player p) {
+        return VictoryCampaign.state(p, numProvicnes, 100000);
     }
 
     public Faction getFactionOfProvince(Province p) {

@@ -1,6 +1,8 @@
 package test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -357,6 +359,38 @@ public class DatabaseTest {
         // Province to = A.getFaction().findProvince("V");
         // System.out.println(db.moveUnits(from, to, A.getFaction().getMoveableProvinces(), 4));
         
+    }
+    @Test
+    public void testVictoryConditionConquest() throws IOException{
+
+        Database db = new Database();
+        
+        Player A = db.addNewPlayer("A", "Rome");
+        Player B = db.addNewPlayer("B", "Trachia");
+
+
+        // initially no winner/loser
+        db.startGame();
+        assertEquals(0,db.StateOfPlayer(A));
+
+        //conquring all territories, no treasury/wealth
+        db.setNumProvinces(A.getFaction().getProvinces().size());
+        assertEquals(0,db.StateOfPlayer(A));
+
+        // conqurin all territories and treasury/wealth
+        A.getFaction().setTreasury(100000);
+        assertEquals(1,db.StateOfPlayer(A));
+
+        List<Province> province = new ArrayList<Province>();
+
+
+        // lost all territories
+        A.getFaction().setProvinces(province);
+        assertEquals(-1,db.StateOfPlayer(A));
+
+
+
+
     }
 
 }
