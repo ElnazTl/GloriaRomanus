@@ -1,0 +1,19 @@
+{
+    "goal": "AND",
+    "subgoals": [
+        {
+            "goal": "TREASURY"
+        },
+        {
+            "goal": "OR",
+            "subgoals": [
+                {
+                    "goal": "CONQUEST"
+                },
+                {
+                    "goal": "WEALTH"
+                }
+            ]
+        }
+    ]
+}
