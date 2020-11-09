@@ -5,11 +5,11 @@
         "numTroops" : 10,
         "cost" : 5,
         "trainTime" : 1,
-        "attack" : 4,
+        "attack" : 15,
         "speed" : 4,
         "morale" : 5,
         "armour" : 3,
-        "shield" : 5,
+        "shield" : 2,
         "defence" : 6,
         "ability" : "noAbility"
 
@@ -20,7 +20,7 @@
         "numTroops" : 8,
         "cost" : 5,
         "trainTime" : 2,
-        "attack" : 6,
+        "attack" : 20,
         "speed" : 7,
         "morale" : 4,
         "armour" : 2,
@@ -34,24 +34,12 @@
         "numTroops" : 8,
         "cost" : 5,
         "trainTime" : 2,
-        "attack" : 8,
+        "attack" : 20,
         "speed" : 2,
         "morale" : 4,
+        "armour" : 2,
         "shield" : 4,
         "defence" : 6,
         "ability" : "phalanx"
-    },
-    "artillery": {
-        "type" : "artillery",
-        "attackType" : "ranged",
-        "numTroops" : 3,
-        "cost" : 40,
-        "trainTime" : 3,
-        "attack" : 12,
-        "speed" : 1,
-        "morale" : 3,
-        "shield" : 6,
-        "defence" : 6,
-        "ability" : "noAbility"
     }
 }

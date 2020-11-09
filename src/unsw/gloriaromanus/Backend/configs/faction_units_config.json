@@ -1,13 +1,11 @@
 {
     "Rome": [
         "soldier",
-        "horseArcher",
-        "artillery"
+        "horseArcher"
     ],
     "Gaul": [
         "soldier",
-        "horseArcher",
-        "artillery"
+        "horseArcher"
     ],
     "Carthage": [
         "soldier",
@@ -26,20 +24,20 @@
         "horseArcher"
     ],
     "Egpyt": [
-        "soldier",
-        "horseArcher"
+		"soldier",
+		"horseArcher"
     ],
     "Seleucid": [
-        "soldier",
-        "horseArcher"
+		"soldier",
+		"horseArcher"
     ],
     "Pontus": [
-        "soldier",
-        "horseArcher"
+		"soldier",
+		"horseArcher"
     ],
     "Armenia": [
-        "soldier",
-        "horseArcher"
+		"soldier",
+		"horseArcher"
     ],
     "Parthian": [
         "soldier",

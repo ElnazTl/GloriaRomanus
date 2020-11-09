@@ -1,155 +1,25 @@
 package unsw.gloriaromanus.Backend;
 
 import java.io.IOException;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.util.ArrayList;
 
 public class Player {
 
     private Faction faction;
     public String username;
-    Boolean turn;
-    Database database;
 
    
+    /**
+     * Default constructor used for deserialisation
+     */
     public Player(){}
-    public Player(String username, Database database) throws IOException {
+
+    /**
+     * Initialises a player with specified name
+     * @param username
+     */
+    public Player(String username) {
         this.username = username;
-        this.database = database;
-        registerPlayer();
-        turn = false;
-
-    }
-
-    public Boolean getTurn() {
-        return turn;
-    }
-
-    /**
-     * Player choosing their faction 
-     * 
-     * @param faction
-     */
-    public void setDatabase(Database d) {
-        this.database = d;
-    }
-    public void registerPlayer() throws IOException{
-        database.addPlayer(this);
-    }
-    public void chooseFaction(Faction faction) {
-        // Faction f = new Faction(faction);
-        setFaction(faction);
-    }
-
-    private void setFaction(Faction faction) {
-        this.faction = faction;
-    }
-
-    public Faction getFaction() {
-        return faction;
-    }
-
-    /**
-     * setting the player turn
-     */
-    public String startTurn() {
-        
-        for (Player p: database.getPlayers()) {
-            if (p.getTurn())return "It's another player's turn";
-        }
-        turn = true;
-        return "now it's your turn";
-    }
-
-    public void endTurn() {
-        if (!turn) {
-            // Not player turn, cant end turn
-        }
-        faction.endTurn();
-        turn = false;
-    }
-
-    @JsonIgnore
-    public int getFactionTreasury() {
-        return faction.getTreasury();
-    }
-
-
-    // public void moveUnits() {
-
-    // }
-
-
-    public int invade(String ownedProvince, String enemyProvince) throws IOException {
-        return faction.invade(ownedProvince, enemyProvince);
-    }
-
-    public void selectUnit(String province, Long unit) {
-        faction.selectUnit(province,unit);
-    }
-
-    public List<Unit> getUnitsFromProvince(String province) {
-        return faction.getUnitsFromProvince(province);
-    }
-
-    /**
-     * Attempts to train a given unit in a given province
-     * 
-     * @param province Province to train unit in
-     * @param unit Unit to train
-     * @throws IOException
-     */
-    public boolean trainUnit(String province, String unit) throws IOException {
-        boolean training = faction.trainUnit(province, unit);
-        if (training) {
-            // Unit is training
-            System.out.println("Trained unit successfully");
-        } else {
-            // Unit training failed
-            System.out.println("Could not train unit");
-        }
-        return training;
-    }
-
-    /**
-     * if enough gold, buying the required unit for the given province
-     * 
-     * @param name
-     * @param category
-     * @param province
-     * @return
-     */
-
-    
-    public String getUnit(String name, String province) throws IOException {
-        if (!database.getFactionProvince().get(province).getName().equals(faction.getName())) return "can only get unit for the faction you belong to";
-        if (turn) {
-            if (!database.addUnit(name,faction.getName(),province)) return "can't add unit";
-            return "successfully added the unit";
-        }
-
-        return "It's not your turn";
-    }
-
-
-    /*
-     * given the unit and from and to if the provinces are adjacent the unit will be
-     * moved
-     * 
-     * @param u
-     * @param from
-     * @param to
-     * @return
-     */
-
-    public String moveUnits(String from, String to) throws IOException {
-        String move = faction.moveUnits(from, to);
-        
-        return move;
     }
 
     public String getUsername() {
@@ -158,6 +28,139 @@ public class Player {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+
+    /**
+     * Selects a province with the given name
+     * @param name
+     */
+    public void selectProvince(String name) {
+        faction.selectProvince(name);
+    }
+
+    public void setFaction(Faction faction) {
+        this.faction = faction;
+    }
+
+
+    public Faction getFaction() {
+        return faction;
+    }
+
+
+    /**
+     * Ends the turn of the player
+     */
+    public void endTurn() {
+        if (!isTurn()) {
+            System.out.println("Not your turn");
+            return;
+        }
+        faction.endTurn();
+    }
+
+
+    /**
+     * Returns if it is the players turn or not
+     * @return
+     */
+    @JsonIgnore
+    public boolean isTurn() {
+        return faction.isTurn();
+    }
+
+
+    /**
+     * Attempts to invade the specified enemy province
+     * from the selected province
+     * @param enemyProvince
+     */
+    public int invade(String enemyProvince) {
+        if (!isTurn()) {
+            System.out.println("Not your turn");
+            return -1;
+        }
+        return faction.invade(enemyProvince);
+    }
+
+
+    /**
+     * Attempts to train a given unit in a given province
+     * 
+     * @param unit Unit to train
+     * @throws IOException
+     */
+    public void trainUnit(String unit) throws IOException {
+        if (!isTurn()) {
+            System.out.println("Not your turn");
+            return;
+        }
+        boolean training = faction.trainUnit(unit);
+        if (training) {
+            // Unit is training
+            System.out.println("Trained unit successfully");
+        } else {
+            // Unit training failed
+            System.out.println("Could not train unit");
+        }
+    }
+
+
+    /**
+     * given the unit and from and to if the provinces are adjacent the unit will be
+     * moved
+     * 
+     * @param to
+     * @return
+     */
+    public boolean moveUnits(String to) throws IOException {
+        if (!isTurn()) {
+            System.out.println("Not your turn");
+            return false;
+        }
+        boolean move = faction.moveUnits(to);
+        if (move) {
+            // Unit moved successfully
+            System.out.println("Move units successfully");
+        } else {
+            // Unit could not move
+            System.out.println("Could not move units");
+        }
+        return move;
+    }
+
+
+    /**
+     * Selects unit with given id in selected province
+     * @param unitID
+     */
+    public void selectUnit(Long unitID) {
+        if (!isTurn()) {
+            System.out.println("Not your turn");
+            return;
+        }
+        faction.selectUnit(unitID);
+    }
+
+    /**
+     * Returns a list of all provinces owned by the faction
+     * @return
+     */
+    @JsonIgnore
+    public String getProvinces() {
+        return faction.getProvinces().toString();
+    }
+
+    /**
+     * Returns the string representation of 
+     * province specified
+     * @param name
+     * @return
+     */
+    @JsonIgnore
+    public String getProvinceState(String name) {
+        return faction.getProvinceState(name);
     }
 
 

@@ -1,93 +1,129 @@
 package unsw.gloriaromanus.Backend;
 
 import java.util.List;
-import java.io.IOException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.json.JSONObject;
 import java.util.ArrayList;
-
 import unsw.gloriaromanus.Backend.tax.*;
 
 public class Province {
     
-    // Faction faction;
     String name;
     int wealth;
     List<Unit> units;
     List<Unit> unitsTraining;
     List<Unit> selectedUnits;
+    String taxStrategy;
+
+    @JsonIgnore
     TaxRate taxRate;
-    Database database;
 
+    // JSON configs used to train troops
+    @JsonIgnore
+    JSONObject defaultUnitsConfig;
+    @JsonIgnore
+    JSONObject abilityConfig;
+    
 
-   
-
-
+    /**
+     * Default constructor used for deserialisation
+     */
     public Province() {}
-    public Province(String name, Database database) {
-        this.database = database;
+
+    /**
+     * Initialises a province using the base values
+     * @param name
+     * @param unitsConfig
+     * @param abilityConfig
+     */
+    public Province(String name, JSONObject unitsConfig, JSONObject abilityConfig) {
         this.name = name;
-        this.units = getUnit();
-        this.unitsTraining = getTraining();
-        changeTaxRate(LowTax.TYPE);
+        this.units = new ArrayList<Unit>();
+        this.unitsTraining = new ArrayList<Unit>(2);
         this.selectedUnits = new ArrayList<Unit>();
-
-        // this.faction = setFaction();
-
+        this.defaultUnitsConfig = unitsConfig;
+        this.abilityConfig = abilityConfig;
+        setTaxStrategy(LowTax.TYPE);
     }
 
-   
-    public void addunit(Unit u) {
-        database.provinceUnit.get(name).add(u);
-    }
-    public void endTurn() {
 
-        ArrayList<Unit> rem = new ArrayList<Unit>();
+    // /**
+    //  * Initialises a province from a saved game
+    //  * @param name
+    //  * @param unitsConfig
+    //  * @param abilityConfig
+    //  * @param initialUnits
+    //  * @param initialUnitsTaining
+    //  */
+    // public Province(String name, JSONObject unitsConfig, JSONObject abilityConfig, List<Unit> initialUnits, List<Unit> initialUnitsTaining) {
+    //     this.name = name;
+    //     this.units = initialUnits;
+    //     this.unitsTraining = initialUnitsTaining;
+    //     this.selectedUnits = new ArrayList<Unit>();
+    //     this.defaultUnitsConfig = unitsConfig;
+    //     this.abilityConfig = abilityConfig;
+    //     changeTaxRate(LowTax.TYPE);
+    // }
 
-        for (Unit u : this.database.provinceTraining.get(name)) {
-            u.endTurn();
-            if (u.isTrained()) {
-
-                addunit(u);
-                units =   database.provinceUnit.get(name);
-
-                rem.add(u);
-            }
-        }
-            for (Unit del: rem) {
-                unitsTraining.remove(del);
-                database.getProvinceTraining().get(name).remove(del);
-            }
-
+    public String getName() {
+        return name;
     }
 
-    public double taxProvince() {
-        return wealth * taxRate.getRate();
-    }
-
-    public void setDatabase(Database d) {
-        this.database = d;
-    }
-
-    private List<Unit> getUnit() {
-        return database.getProvinceUnit().get(name);
-    }
-    private List<Unit> getTraining() {
-        // System.out.println("is this the reason for problem"+database.getProvinceTraining().get(name));
-        return database.getProvinceTraining().get(name);
-
+    public int getWealth() {
+        return wealth;
     }
 
     public List<Unit> getUnits() {
         return units;
-
     }
+
+    public List<Unit> getUnitsTraining() {
+        return unitsTraining;
+    }
+
+    @JsonIgnore
+    public TaxRate getTax() {
+        return taxRate;
+    }
+
+
     /**
-     * checks if tow provinces are adjacent for invasion and chooses random units to
-     * battle
-     * 
-     * @param enemy
-     * @param d
+     * Returns the gold value taxed by the faction
      * @return
-     * @throws IOException
+     */
+    public double taxProvince() {
+        return wealth * taxRate.getTaxRate();
+    }
+
+    /**
+     * Called at the end of a turn,
+     * updates the province and units
+     */
+    public void endTurn() {
+        deselectAllUnits();
+        for (Unit u : this.units) {
+            u.endTurn();
+        }
+        List<Unit> completedUnits = new ArrayList<Unit>();
+        for (Unit u : this.unitsTraining) {
+            u.endTurn();
+            if (u.isTrained()) {
+                completedUnits.add(u);
+            }
+        }
+        units.addAll(completedUnits);
+        unitsTraining.removeAll(completedUnits);
+        wealth += taxRate.getTaxWealth();
+        // Apply tax modifier
+        deselectAllUnits();
+    }
+
+    
+    /**
+     * Returns the unit with given id
+     *
+     * @param id 
+     * @return
      */
     public Unit findUnit(Long id) {
         for (Unit u : units) {
@@ -100,22 +136,15 @@ public class Province {
 
 
     /**
-     * Removes specified unit 
+     * Removes all units, only called by battleresolver
+     * when this province is the defending province
      * 
      * @param name
      */
-    public void removeUnit(Long id) {
-        Unit u = findUnit(id);
-        if (u != null) {
-            units.remove(u);
-        }
+    public void removeAllUnits() {
+        units.removeAll(units);
     }
 
-    public void removeUnit(Unit u) {
-        if (u != null) {
-            units.remove(u);
-        }
-    }
 
 
     /**
@@ -129,7 +158,8 @@ public class Province {
         //applyTaxMorale();
     }
 
-     /**
+
+    /**
      * Adds unit with given id to selected units in province
      * 
      * @param id Id of unit to select
@@ -148,7 +178,8 @@ public class Province {
         }
     }
 
-     /**
+
+    /**
      * Removes all units from selection
      * 
      */
@@ -159,25 +190,33 @@ public class Province {
         }
     }
 
-    public void clearAllSelected() {
-        selectedUnits.removeAll(selectedUnits);
-    }
 
-
-    public List<Unit> getSelectedUnits() {
-        return selectedUnits;
-    }
-
-    public void addUnits(List<Unit> unitsList) {
-        database.getProvinceUnit().get(this.name).addAll(unitsList);
-        units = database.getProvinceUnit().get(this.name);
-    }
-
-
+    /**
+     * Removes all selected units, only called by
+     * battleresolver when this province is the
+     * attacking province
+     */
     public void removeAllSelected() {
         selectedUnits.removeAll(selectedUnits);
     }
 
+
+    /**
+     * Returns list of the selected units
+     * @return
+     */
+    public List<Unit> getSelectedUnits() {
+        return selectedUnits;
+    }
+
+
+    /**
+     * Adds all units from a given list to the province
+     * @param unitsList
+     */
+    public void addUnits(List<Unit> unitsList) {
+        units.addAll(unitsList);
+    }
 
 
 
@@ -193,15 +232,20 @@ public class Province {
     // }
 
 
+    public int minMoveUnits() {
+        if (selectedUnits.isEmpty()) return 0;
+        int min = Integer.MAX_VALUE;
+        for (Unit u : selectedUnits) {
+            int unitMovePoints = u.getMovePoints();
+            if (unitMovePoints < min) {
+                min = unitMovePoints;
+            }
+        }
+        return min;
+    }
 
 
     /**
-     * moves troops between provinces, will fail if can't move the troop
-     * 
-     * @param name Name of unit to train
-     * @return True if training unit, otherwise False
-     */
-     /**
      * Attempts to train a unit
      * Returns true if training,
      * otherwise returns false
@@ -209,24 +253,16 @@ public class Province {
      * @param name Name of unit to train
      * @return True if training unit, otherwise False
      */
-    public boolean trainUnit(String name) throws IOException {
-        if (unitsTraining.size() == 2) {
-            System.out.println("Only 2 units can be trained at a time");
-            return false;
-        }
+    public boolean trainUnit(String name) {
+        if (unitsTraining.size() == 2) return false;
         else {
-            Unit u = new Unit(name);
-            database.getProvinceTraining().get(this.name).add(u);
-            unitsTraining =  database.getProvinceTraining().get(this.name);
-
+            Unit u = new Unit(name, defaultUnitsConfig, abilityConfig);
+            unitsTraining.add(u);
             // u.applyModifier(taxRate.getMoraleModifier());
 
             return true;
         }
     }
-
-
-    
 
 
     /**
@@ -243,9 +279,56 @@ public class Province {
         return this;
     }
 
+
+    /**
+     * Loads default configs
+     * @param unitsConfig
+     * @param abilityConfig
+     */
+    public void loadConfigs(JSONObject unitsConfig, JSONObject abilityConfig) {
+        defaultUnitsConfig = unitsConfig;
+        this.abilityConfig = abilityConfig;
+        for (Unit u : selectedUnits) {
+            u.loadConfigs(unitsConfig, abilityConfig);
+        }
+        for (Unit u : units) {
+            u.loadConfigs(unitsConfig, abilityConfig);
+        }
+        for (Unit u : unitsTraining) {
+            u.loadConfigs(unitsConfig, abilityConfig);
+        }
+    }
+
+
+    /**
+     * Returns a string representation of the province state
+     * @return
+     */
+    @JsonIgnore
+    public String getProvinceState() {
+        String state = "Province: \"" + name + "\"";
+        state += "\n\t-> wealth: " + wealth;
+        state += "\n\t-> tax rate: " + taxRate.toString();
+        state += "\n\t-> selected units: ";
+        for (Unit u : selectedUnits) {
+            state += ("\n\t\t- " + u.toString());
+        }
+        state += "\n\t-> units: ";
+        for (Unit u : units) {
+            state += ("\n\t\t- " + u.toString());
+        }
+        state += "\n\t-> units training: ";
+        for (Unit u : unitsTraining) {
+            state += ("\n\t\t- " + u.toString());
+        }
+        return state;
+    }
+
+
+
     @Override
     public String toString() {
-        return "Province: " + this.name;
+        return this.name + " (province)";
     }
 
 
@@ -259,58 +342,6 @@ public class Province {
         return name.equals(p.getName());
     }
 
-
-    // private boolean confirmIfProvincesConnected(String province1, String province2) throws IOException {
-    //     String content = Files
-    //         .readString(Paths.get("bin/unsw/gloriaromanus/province_adjacency_matrix_fully_connected.json"));
-    //     JSONObject provinceAdjacencyMatrix = new JSONObject(content);
-    //     return provinceAdjacencyMatrix.getJSONObject(province1).getBoolean(province2);
-    // }
-   
-
-    // public Unit chooseUnit(List<Unit> u) {
-
-    //     Random r = new Random();
-    //     return u.get(r.nextInt(u.size()));
-        
-    // }
-
-
-
-
-
-    // public String moveTroopTo(Province to, Unit u) {
-
-    // public String getFaction() {
-    //     return faction;
-    // }
-
-
-    public String getName() {
-        return name;
-    }
-
-   
-
-    public int getWealth() {
-        return wealth;
-    }
-
-   
-    // public TaxRate getTaxRate() {
-    //     return taxRate;
-    // }
-
-    
-
-    public List<Unit> getUnitsTraining() {
-        return unitsTraining;
-    }
-
-    // public void setFaction(String faction) {
-    //     this.faction = faction;
-    // }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -323,10 +354,6 @@ public class Province {
         this.units = units;
     }
 
-    // public void setTaxRate(TaxRate taxRate) {
-    //     this.taxRate = taxRate;
-    // }
-
     public void setUnitsTraining(List<Unit> unitsTraining) {
         this.unitsTraining = unitsTraining;
     }
@@ -335,21 +362,38 @@ public class Province {
         this.selectedUnits = selectedUnits;
     }
 
-  
+    public TaxRate getTaxRate() {
+        return taxRate;
+    }
 
-    // public Province desirilise(JSONObject jo) {
-    //     jo.getString("wealth")
-    // }
+    public void setTaxRate(TaxRate taxRate) {
+        this.taxRate = taxRate;
+    }
 
+    public JSONObject getDefaultUnitsConfig() {
+        return defaultUnitsConfig;
+    }
+
+    public void setDefaultUnitsConfig(JSONObject defaultUnitsConfig) {
+        this.defaultUnitsConfig = defaultUnitsConfig;
+    }
+
+    public JSONObject getAbilityConfig() {
+        return abilityConfig;
+    }
+
+    public void setAbilityConfig(JSONObject abilityConfig) {
+        this.abilityConfig = abilityConfig;
+    }
+
+    public String getTaxStrategy() {
+        return taxStrategy;
+    }
+
+    public void setTaxStrategy(String taxStrategy) {
+        this.taxStrategy = taxStrategy;
+        changeTaxRate(taxStrategy);
+    }
     
-
-
-  
-
-       
-    // }
-
-  
-
 
 }
