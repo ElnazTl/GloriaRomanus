@@ -90,6 +90,8 @@ public class GloriaRomanusController{
 
     // TODO = load this from a configuration file you create (user should be able to
     // select in loading screen)
+    // select in loading screen)
+    // TODO = load this from a configuration file you create (user should be able to
     humanFaction = "Rome";
 
     currentlySelectedHumanProvince = null;
