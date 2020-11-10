@@ -15,7 +15,7 @@
             <Image url="@../../../images/startMenu.JPG" />
          </image>
       </ImageView>
-      <Button fx:id="registerButton" layoutX="385.0" layoutY="232.0" mnemonicParsing="false" text="Register" />
+      <Button fx:id="registerButton" layoutX="385.0" layoutY="232.0" mnemonicParsing="false" onAction="#handleRegisterButton" text="Register" />
       <TextField fx:id="registerName" layoutX="201.0" layoutY="232.0" />
       <Label layoutX="132.0" layoutY="232.0" prefHeight="26.0" prefWidth="55.0" text="Name">
          <font>
