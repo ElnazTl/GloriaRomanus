@@ -6,13 +6,13 @@ package unsw.gloriaromanus;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 // import javafx.scene.control.TextArea;
-// import javafx.scene.control.TextField;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 
 
 public class SignupMenuController extends MenuController{
-    // @FXML
-    // private TextField user_name;
+     @FXML
+     private TextField user_name;
     
     // @FXML
     // private TextField user_faction;
@@ -31,6 +31,7 @@ public class SignupMenuController extends MenuController{
 
     @FXML
     void handleRegisterButton(ActionEvent event) {
+        System.out.println(user_name.getText());
         startGameScreen.start();
     }
 
