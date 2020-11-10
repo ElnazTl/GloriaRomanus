@@ -95,6 +95,7 @@ public class Database {
                 return null;
             }
         }
+        if (!factions.contains(name)) return null;
         if (!factionsTaken.contains(name)) {
             Player p = new Player(player);
             intermediatePlayerFactions.put(name, p);

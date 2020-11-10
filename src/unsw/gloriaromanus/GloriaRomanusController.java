@@ -58,6 +58,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javafx.util.Pair;
+import unsw.gloriaromanus.Backend.*;
 
 public class GloriaRomanusController{
 
@@ -83,6 +84,8 @@ public class GloriaRomanusController{
 
   private FeatureLayer featureLayer_provinces;
 
+  private Database db;
+
   @FXML
   private void initialize() throws JsonParseException, JsonMappingException, IOException, InterruptedException {
     // TODO = you should rely on an object oriented design to determine ownership
@@ -96,12 +99,13 @@ public class GloriaRomanusController{
 
     // TODO = load this from a configuration file you create (user should be able to
     // select in loading screen)
+    db = new Database();
     humanFaction = "Rome";
 
     currentlySelectedHumanProvince = null;
     currentlySelectedEnemyProvince = null;
 
-    String []menus = {"invasion_menu.fxml", "basic_menu.fxml"};
+    String []menus = {"signup.fxml","invasion_menu.fxml", "basic_menu.fxml"};
     controllerParentPairs = new ArrayList<Pair<MenuController, VBox>>();
     for (String fxmlName: menus){
       System.out.println(fxmlName);
@@ -222,9 +226,9 @@ public class GloriaRomanusController{
         }
         t.setHaloColor(0xFFFFFFFF);
         t.setHaloWidth(2);
-        Graphic gPic = new Graphic(curPoint, s);
+        // Graphic gPic = new Graphic(curPoint, s);
         Graphic gText = new Graphic(curPoint, t);
-        graphicsOverlay.getGraphics().add(gPic);
+        // graphicsOverlay.getGraphics().add(gPic);
         graphicsOverlay.getGraphics().add(gText);
       } else {
         System.out.println("Non-point geo json object in file");
@@ -291,8 +295,8 @@ public class GloriaRomanusController{
                     featureLayer.unselectFeature(currentlySelectedHumanProvince);
                   }
                   currentlySelectedHumanProvince = f;
-                  if (controllerParentPairs.get(0).getKey() instanceof InvasionMenuController){
-                    ((InvasionMenuController)controllerParentPairs.get(0).getKey()).setInvadingProvince(province);
+                  if (controllerParentPairs.get(1).getKey() instanceof InvasionMenuController){
+                    ((InvasionMenuController)controllerParentPairs.get(1).getKey()).setInvadingProvince(province);
                   }
 
                 }
@@ -301,8 +305,8 @@ public class GloriaRomanusController{
                     featureLayer.unselectFeature(currentlySelectedEnemyProvince);
                   }
                   currentlySelectedEnemyProvince = f;
-                  if (controllerParentPairs.get(0).getKey() instanceof InvasionMenuController){
-                    ((InvasionMenuController)controllerParentPairs.get(0).getKey()).setOpponentProvince(province);
+                  if (controllerParentPairs.get(1).getKey() instanceof InvasionMenuController){
+                    ((InvasionMenuController)controllerParentPairs.get(1).getKey()).setOpponentProvince(province);
                   }
                 }
 
@@ -396,5 +400,16 @@ public class GloriaRomanusController{
     stackPaneMain.getChildren().remove(controllerParentPairs.get(0).getValue());
     Collections.reverse(controllerParentPairs);
     stackPaneMain.getChildren().add(controllerParentPairs.get(0).getValue());
+  }
+
+  public void registerUser (String user_name, String faction) {
+    
+
+    Player p = db.addNewPlayer(user_name, faction);
+    if (p==null) ((SignupMenuController)controllerParentPairs.get(0).getKey()).appendToTerminal("invalid user name or faction");
+    else ((SignupMenuController)controllerParentPairs.get(0).getKey()).appendToTerminal("successfully joined");
+   
+    // if (p.getFaction()==null) printMessageToTerminal("invalid name or faction");
+    // else ((SignupMenuController)controllerParentPairs.get(0).getKey()).appendToTerminal("successfully joined");
   }
 }
