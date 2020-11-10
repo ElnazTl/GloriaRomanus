@@ -34,7 +34,7 @@ public class SignupMenuController extends MenuController{
         startGameScreen.start();
     }
 
-    public void setCountScreen(startGameScreen startGameScreen) {
+    public void setStartGameScreen(startGameScreen startGameScreen) {
         this.startGameScreen = startGameScreen;
     }
 
