@@ -108,15 +108,17 @@ public class Database {
         return null;
     }
 
-    public void startGame() {
+    public String startGame() {
         turnNumber = 1;
         if (numPlayers < 2) {
-            System.out.println("Not enough players");
-            return;
+            // System.out.println("Not enough players");
+            return "Not enough players";
         } else if (numPlayers > 16) {
-            System.out.println("Too many players");
+            // System.out.println("Too many players");
+            return "Not enough players";
         }
         assignProvinces();
+        return "start";
 
     }
 
