@@ -12,7 +12,7 @@
             <Image url="@../../../images/startMenu.JPG" />
          </image>
       </ImageView>
-      <Button layoutX="107.0" layoutY="245.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="102.0" text="New Game" />
-      <Button layoutX="372.0" layoutY="245.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="102.0" text="Load Game" />
+      <Button fx:id="newGameButton" layoutX="107.0" layoutY="245.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="102.0" text="New Game" />
+      <Button fx:id="loadGameButton" layoutX="372.0" layoutY="245.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="102.0" text="Load Game" />
    </children>
 </Pane>
