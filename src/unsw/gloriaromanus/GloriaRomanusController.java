@@ -394,7 +394,7 @@ public class GloriaRomanusController{
       mapView.dispose();
     }
   }
-
+  // test commend
   public void switchMenu() throws JsonParseException, JsonMappingException, IOException {
     System.out.println("trying to switch menu");
     stackPaneMain.getChildren().remove(controllerParentPairs.get(0).getValue());
