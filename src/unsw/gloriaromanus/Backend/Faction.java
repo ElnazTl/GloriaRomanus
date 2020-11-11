@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import java.io.IOException;
 public class Faction {
 
@@ -66,7 +69,7 @@ public class Faction {
      * Updates the faction after the turn,
      * then ends turn for the provinces it owns
      */
-    public void endTurn() {
+    public void endTurn()  throws JsonParseException, JsonMappingException, IOException {
         deselectProvince();
         for (Province p : provincesConqueredOnTurn) {
             provinces.add(p);
