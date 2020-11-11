@@ -9,34 +9,6 @@
       "selectedUnits" : [ ],
       "taxStrategy" : "Low"
     }, {
-      "name" : "V",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "VII",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "VI",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Noricum",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
       "name" : "Sardinia et Corsica",
       "wealth" : 10,
       "units" : [ ],
@@ -44,218 +16,7 @@
       "selectedUnits" : [ ],
       "taxStrategy" : "Low"
     }, {
-      "name" : "Arabia",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "IX",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Africa Proconsularis",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "III",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Macedonia",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Aquitania",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Cyprus",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "VIII",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Dacia",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Sicilia",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Belgica",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Mauretania Caesariensis",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Lycia et Pamphylia",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Alpes Maritimae",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Baetica",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Galatia et Cappadocia",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Creta et Cyrene",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Pannonia Superior",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Iudaea",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "XI",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    } ],
-    "provincesConqueredOnTurn" : [ ],
-    "availableUnits" : {
-      "soldier" : 5,
-      "horseArcher" : 5
-    },
-    "treasury" : 190,
-    "selectedProvince" : {
-      "name" : "I",
-      "wealth" : 10,
-      "units" : [ {
-        "name" : "soldier",
-        "unitID" : 0,
-        "type" : "infantry",
-        "numTroops" : 10,
-        "cost" : 5,
-        "trainTime" : 0,
-        "attack" : 15.0,
-        "speed" : 4.0,
-        "movePoints" : 10,
-        "armour" : 3.0,
-        "morale" : 5.0,
-        "shield" : 2.0,
-        "defence" : 6.0,
-        "charge" : 0.0,
-        "abilityType" : "noAbility",
-        "ability" : [ ],
-        "modifiers" : [ ]
-      } ],
-      "unitsTraining" : [ {
-        "name" : "soldier",
-        "unitID" : 1,
-        "type" : "infantry",
-        "numTroops" : 10,
-        "cost" : 5,
-        "trainTime" : 1,
-        "attack" : 15.0,
-        "speed" : 4.0,
-        "movePoints" : 10,
-        "armour" : 3.0,
-        "morale" : 5.0,
-        "shield" : 2.0,
-        "defence" : 6.0,
-        "charge" : 0.0,
-        "abilityType" : "noAbility",
-        "ability" : [ ],
-        "modifiers" : [ ]
-      } ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    },
-    "moveableProvinces" : [ "IV", "V", "VII", "VI", "Noricum", "Sardinia et Corsica", "Arabia", "IX", "Africa Proconsularis", "III", "Macedonia", "Aquitania", "Cyprus", "VIII", "Dacia", "Sicilia", "Belgica", "Mauretania Caesariensis", "Lycia et Pamphylia", "Alpes Maritimae", "Baetica", "Galatia et Cappadocia", "Creta et Cyrene", "Pannonia Superior", "Iudaea", "XI", "I" ]
-  },
-  "username" : "A"
-}, {
-  "faction" : {
-    "name" : "Spain",
-    "provinces" : [ {
-      "name" : "Tarraconensis",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Thracia",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Lusitania",
+      "name" : "VII",
       "wealth" : 10,
       "units" : [ ],
       "unitsTraining" : [ ],
@@ -276,7 +37,7 @@
       "selectedUnits" : [ ],
       "taxStrategy" : "Low"
     }, {
-      "name" : "Britannia",
+      "name" : "Belgica",
       "wealth" : 10,
       "units" : [ ],
       "unitsTraining" : [ ],
@@ -290,14 +51,21 @@
       "selectedUnits" : [ ],
       "taxStrategy" : "Low"
     }, {
-      "name" : "Syria",
+      "name" : "Pannonia Inferior",
       "wealth" : 10,
       "units" : [ ],
       "unitsTraining" : [ ],
       "selectedUnits" : [ ],
       "taxStrategy" : "Low"
     }, {
-      "name" : "Cilicia",
+      "name" : "IX",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "V",
       "wealth" : 10,
       "units" : [ ],
       "unitsTraining" : [ ],
@@ -311,42 +79,28 @@
       "selectedUnits" : [ ],
       "taxStrategy" : "Low"
     }, {
-      "name" : "Aegyptus",
+      "name" : "Noricum",
       "wealth" : 10,
       "units" : [ ],
       "unitsTraining" : [ ],
       "selectedUnits" : [ ],
       "taxStrategy" : "Low"
     }, {
-      "name" : "Alpes Cottiae",
+      "name" : "Galatia et Cappadocia",
       "wealth" : 10,
       "units" : [ ],
       "unitsTraining" : [ ],
       "selectedUnits" : [ ],
       "taxStrategy" : "Low"
     }, {
-      "name" : "Germania Inferior",
+      "name" : "Syria",
       "wealth" : 10,
       "units" : [ ],
       "unitsTraining" : [ ],
       "selectedUnits" : [ ],
       "taxStrategy" : "Low"
     }, {
-      "name" : "Armenia Mesopotamia",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Achaia",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Germania Superior",
+      "name" : "Pannonia Superior",
       "wealth" : 10,
       "units" : [ ],
       "unitsTraining" : [ ],
@@ -360,7 +114,134 @@
       "selectedUnits" : [ ],
       "taxStrategy" : "Low"
     }, {
+      "name" : "Dacia",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
       "name" : "Mauretania Tingitana",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "VIII",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "XI",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Cilicia",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Lugdunensis",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Africa Proconsularis",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Baetica",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Germania Inferior",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Raetia",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    } ],
+    "provincesConqueredOnTurn" : [ ],
+    "availableUnits" : {
+      "soldier" : 5,
+      "horseArcher" : 5
+    },
+    "treasury" : 190,
+    "selectedProvince" : {
+      "name" : "I",
+      "wealth" : 10,
+      "units" : [ {
+        "name" : "soldier",
+        "unitID" : 4,
+        "type" : "infantry",
+        "numTroops" : 10,
+        "cost" : 5,
+        "trainTime" : 0,
+        "attack" : 15.0,
+        "speed" : 4.0,
+        "movePoints" : 10,
+        "armour" : 3.0,
+        "morale" : 5.0,
+        "shield" : 2.0,
+        "defence" : 6.0,
+        "charge" : 0.0,
+        "abilityType" : "noAbility",
+        "ability" : [ ],
+        "modifiers" : [ ]
+      } ],
+      "unitsTraining" : [ {
+        "name" : "soldier",
+        "unitID" : 5,
+        "type" : "infantry",
+        "numTroops" : 10,
+        "cost" : 5,
+        "trainTime" : 1,
+        "attack" : 15.0,
+        "speed" : 4.0,
+        "movePoints" : 10,
+        "armour" : 3.0,
+        "morale" : 5.0,
+        "shield" : 2.0,
+        "defence" : 6.0,
+        "charge" : 0.0,
+        "abilityType" : "noAbility",
+        "ability" : [ ],
+        "modifiers" : [ ]
+      } ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    },
+    "moveableProvinces" : [ "IV", "Sardinia et Corsica", "VII", "Moesia Superior", "Numidia", "Belgica", "II", "Pannonia Inferior", "IX", "V", "Asia", "Noricum", "Galatia et Cappadocia", "Syria", "Pannonia Superior", "Moesia Inferior", "Dacia", "Mauretania Tingitana", "VIII", "XI", "Cilicia", "Lugdunensis", "Africa Proconsularis", "Baetica", "Germania Inferior", "Raetia", "I" ]
+  },
+  "username" : "A"
+}, {
+  "faction" : {
+    "name" : "Spain",
+    "provinces" : [ {
+      "name" : "Tarraconensis",
       "wealth" : 10,
       "units" : [ ],
       "unitsTraining" : [ ],
@@ -374,6 +255,34 @@
       "selectedUnits" : [ ],
       "taxStrategy" : "Low"
     }, {
+      "name" : "Aquitania",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Lusitania",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Lycia et Pamphylia",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Creta et Cyrene",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
       "name" : "Alpes Graiae et Poeninae",
       "wealth" : 10,
       "units" : [ ],
@@ -381,21 +290,7 @@
       "selectedUnits" : [ ],
       "taxStrategy" : "Low"
     }, {
-      "name" : "Dalmatia",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Raetia",
-      "wealth" : 10,
-      "units" : [ ],
-      "unitsTraining" : [ ],
-      "selectedUnits" : [ ],
-      "taxStrategy" : "Low"
-    }, {
-      "name" : "Bithynia et Pontus",
+      "name" : "Sicilia",
       "wealth" : 10,
       "units" : [ ],
       "unitsTraining" : [ ],
@@ -409,14 +304,119 @@
       "selectedUnits" : [ ],
       "taxStrategy" : "Low"
     }, {
-      "name" : "Pannonia Inferior",
+      "name" : "III",
       "wealth" : 10,
       "units" : [ ],
       "unitsTraining" : [ ],
       "selectedUnits" : [ ],
       "taxStrategy" : "Low"
     }, {
-      "name" : "Lugdunensis",
+      "name" : "Aegyptus",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Bithynia et Pontus",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Thracia",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Arabia",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Germania Superior",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Alpes Cottiae",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Alpes Maritimae",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "VI",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Iudaea",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Britannia",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Cyprus",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Achaia",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Dalmatia",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Mauretania Caesariensis",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Macedonia",
+      "wealth" : 10,
+      "units" : [ ],
+      "unitsTraining" : [ ],
+      "selectedUnits" : [ ],
+      "taxStrategy" : "Low"
+    }, {
+      "name" : "Armenia Mesopotamia",
       "wealth" : 10,
       "units" : [ ],
       "unitsTraining" : [ ],
@@ -430,7 +430,7 @@
     },
     "treasury" : 200,
     "selectedProvince" : null,
-    "moveableProvinces" : [ "Tarraconensis", "Thracia", "Lusitania", "Moesia Superior", "Numidia", "Britannia", "II", "Syria", "Cilicia", "Asia", "Aegyptus", "Alpes Cottiae", "Germania Inferior", "Armenia Mesopotamia", "Achaia", "Germania Superior", "Moesia Inferior", "Mauretania Tingitana", "Narbonensis", "Alpes Graiae et Poeninae", "Dalmatia", "Raetia", "Bithynia et Pontus", "X", "Pannonia Inferior", "Lugdunensis" ]
+    "moveableProvinces" : [ "Tarraconensis", "Narbonensis", "Aquitania", "Lusitania", "Lycia et Pamphylia", "Creta et Cyrene", "Alpes Graiae et Poeninae", "Sicilia", "X", "III", "Aegyptus", "Bithynia et Pontus", "Thracia", "Arabia", "Germania Superior", "Alpes Cottiae", "Alpes Maritimae", "VI", "Iudaea", "Britannia", "Cyprus", "Achaia", "Dalmatia", "Mauretania Caesariensis", "Macedonia", "Armenia Mesopotamia" ]
   },
   "username" : "B"
 } ]

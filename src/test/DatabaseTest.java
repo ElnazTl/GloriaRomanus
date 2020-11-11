@@ -339,34 +339,35 @@ public class DatabaseTest {
         Database db = new Database();
         
         Player A = db.addNewPlayer("A", "Rome");
-        Player B = db.addNewPlayer("B", "Trachia");
+        Player B = db.addNewPlayer("B", "Gaul");
 
         db.startGame();
 
-        A.selectProvince("I");
+        A.selectProvince("Sardinia et Corsica");
         A.trainUnit("soldier");
         A.endTurn();
         B.endTurn();
-        System.out.println(A.getProvinceState("I"));
-        System.out.println(A.getProvinceState("V"));
-        A.selectProvince("I");
+        System.out.println(A.getProvinceState("Sardinia et Corsica"));
+        System.out.println(A.getProvinceState("IV"));
+        A.selectProvince("Sardinia et Corsica");
         A.selectUnit(0L);
-        A.moveUnits("V");
-        System.out.println(A.getProvinceState("I"));
-        System.out.println(A.getProvinceState("V"));
+        A.moveUnits("IV");
+        System.out.println(A.getProvinceState("Sardinia et Corsica"));
+        System.out.println(A.getProvinceState("IV"));
 
         // Province from = A.getFaction().findProvince("I");
         // Province to = A.getFaction().findProvince("V");
         // System.out.println(db.moveUnits(from, to, A.getFaction().getMoveableProvinces(), 4));
         
     }
+
     @Test
     public void testVictoryConditionConquest() throws IOException{
 
         Database db = new Database();
         
         Player A = db.addNewPlayer("A", "Rome");
-        Player B = db.addNewPlayer("B", "Trachia");
+        Player B = db.addNewPlayer("B", "Gaul");
 
 
         // initially no winner/loser
@@ -387,9 +388,6 @@ public class DatabaseTest {
         // lost all territories
         A.getFaction().setProvinces(province);
         assertEquals(-1,db.StateOfPlayer(A));
-
-
-
 
     }
 
