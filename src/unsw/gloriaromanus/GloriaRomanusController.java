@@ -105,7 +105,7 @@ public class GloriaRomanusController{
     currentlySelectedHumanProvince = null;
     currentlySelectedEnemyProvince = null;
 
-    String []menus = {"signup.fxml","invasion_menu.fxml", "basic_menu.fxml"};
+    String []menus = {"basic_menu.fxml","invasion_menu.fxml"};
     controllerParentPairs = new ArrayList<Pair<MenuController, VBox>>();
     for (String fxmlName: menus){
       System.out.println(fxmlName);
@@ -406,8 +406,8 @@ public class GloriaRomanusController{
     
 
     Player p = db.addNewPlayer(user_name, faction);
-    if (p==null) ((SignupMenuController)controllerParentPairs.get(0).getKey()).appendToTerminal("invalid user name or faction");
-    else ((SignupMenuController)controllerParentPairs.get(0).getKey()).appendToTerminal("successfully joined");
+    // if (p==null) ((SignupMenuController)controllerParentPairs.get(0).getKey()).appendToTerminal("invalid user name or faction");
+    // else ((SignupMenuController)controllerParentPairs.get(0).getKey()).appendToTerminal("successfully joined");
    
     // if (p.getFaction()==null) printMessageToTerminal("invalid name or faction");
     // else ((SignupMenuController)controllerParentPairs.get(0).getKey()).appendToTerminal("successfully joined");
