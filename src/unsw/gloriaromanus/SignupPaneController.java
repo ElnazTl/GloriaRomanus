@@ -49,7 +49,6 @@ public class SignupPaneController extends MenuController {
 
     @FXML
     public void clickedStartGame(ActionEvent e) throws IOException {
-        
         getParent().startGame();
     }
 }

@@ -86,6 +86,9 @@ public class GloriaRomanusController{
 
   private Database db;
 
+  private Player player;
+
+  private Map<String,MenuController> menusList;
   @FXML
   private void initialize() throws JsonParseException, JsonMappingException, IOException, InterruptedException {
     // TODO = you should rely on an object oriented design to determine ownership
@@ -100,25 +103,43 @@ public class GloriaRomanusController{
     // TODO = load this from a configuration file you create (user should be able to
     // select in loading screen)
     db = new Database();
-    humanFaction = "Rome";
+
 
     currentlySelectedHumanProvince = null;
     currentlySelectedEnemyProvince = null;
 
-    String []menus = {"signupPane.fxml","invasion_menu.fxml", "basic_menu.fxml"};
+
     controllerParentPairs = new ArrayList<Pair<MenuController, VBox>>();
+
+    menusList = new HashMap<String,MenuController>();
+
+
+    setMenu();
+    stackPaneMain.getChildren().add(controllerParentPairs.get(0).getValue());
+
+    initializeProvinceLayers();
+
+  }
+
+  /**
+   * setting vbox menus
+   * TODO: add more menus 
+   */
+  private void setMenu() throws IOException {
+
+    String []menus = {"signupPane.fxml","invasion_menu.fxml", "basic_menu.fxml"};
+
     for (String fxmlName: menus){
-      System.out.println(fxmlName);
       FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlName));
       VBox root = (VBox)loader.load();
       MenuController menuController = (MenuController)loader.getController();
       menuController.setParent(this);
       controllerParentPairs.add(new Pair<MenuController, VBox>(menuController, root));
+      menusList.put(menuController.getClass().getName(),menuController);
+
     }
 
-    stackPaneMain.getChildren().add(controllerParentPairs.get(0).getValue());
 
-    initializeProvinceLayers();
 
   }
 
@@ -126,33 +147,18 @@ public class GloriaRomanusController{
     if (currentlySelectedHumanProvince != null && currentlySelectedEnemyProvince != null){
       String humanProvince = (String)currentlySelectedHumanProvince.getAttributes().get("name");
       String enemyProvince = (String)currentlySelectedEnemyProvince.getAttributes().get("name");
-      if (confirmIfProvincesConnected(humanProvince, enemyProvince)){
-        // TODO = have better battle resolution than 50% chance of winning
-        Random r = new Random();
-        int choice = r.nextInt(2);
-        if (choice == 0){
-          // human won. Transfer 40% of troops of human over. No casualties by human, but enemy loses all troops
-          int numTroopsToTransfer = provinceToNumberTroopsMap.get(humanProvince)*2/5;
-          provinceToNumberTroopsMap.put(enemyProvince, numTroopsToTransfer);
-          provinceToNumberTroopsMap.put(humanProvince, provinceToNumberTroopsMap.get(humanProvince)-numTroopsToTransfer);
-          provinceToOwningFactionMap.put(enemyProvince, humanFaction);
-          printMessageToTerminal("Won battle!");
-        }
-        else{
-          // enemy won. Human loses 60% of soldiers in the province
-          int numTroopsLost = provinceToNumberTroopsMap.get(humanProvince)*3/5;
-          provinceToNumberTroopsMap.put(humanProvince, provinceToNumberTroopsMap.get(humanProvince)-numTroopsLost);
-          printMessageToTerminal("Lost battle!");
-        }
+      player.selectProvince(humanProvince);
+      if (player.invade(enemyProvince) == -1) printMessageToTerminal("You lost the battle");
+      if (player.invade(enemyProvince) == 0) printMessageToTerminal("It's a tie!");
+      if (player.invade(enemyProvince) == 1) printMessageToTerminal("Congradulation you won the battle");
+     
         resetSelections();  // reset selections in UI
         addAllPointGraphics(); // reset graphics
       }
-      else{
-        printMessageToTerminal("Provinces not adjacent, cannot invade!");
-      }
+     
 
     }
-  }
+  
 
   /**
    * run this initially to update province owner, change feature in each
@@ -402,12 +408,23 @@ public class GloriaRomanusController{
     stackPaneMain.getChildren().add(controllerParentPairs.get(0).getValue());
   }
 
-  public void nextMenu() throws JsonParseException, JsonMappingException, IOException {
+  public void nextMenu(String current, String next) throws JsonParseException, JsonMappingException, IOException {
     System.out.println("trying to switch menu");
     
-    stackPaneMain.getChildren().remove(controllerParentPairs.get(0).getValue());
-    controllerParentPairs.remove(0);
-    stackPaneMain.getChildren().add(controllerParentPairs.get(0).getValue());
+    MenuController mcr = menusList.get(current);
+    MenuController mca = menusList.get(next);
+    int indexRemove = 0;
+    int indexAdd = 0;
+    for (int i  = 0; i < controllerParentPairs.size();i++) {
+      System.out.println(controllerParentPairs.get(i).getKey().equals(mcr)+ controllerParentPairs.get(i).getKey().getClass().getName() );
+      if (controllerParentPairs.get(i).getKey().equals(mcr)) {
+        indexRemove = i;
+        System.out.println("herer"+i);
+      }
+      if (controllerParentPairs.get(i).getKey().equals(mca)) indexAdd = i;
+    }
+    stackPaneMain.getChildren().remove(controllerParentPairs.get(indexRemove).getValue());
+    stackPaneMain.getChildren().add(controllerParentPairs.get(indexAdd).getValue());
   }
 
   /**
@@ -425,13 +442,31 @@ public class GloriaRomanusController{
    
     
   }
+  /**
+   * starting the game and assigning the current player of the game 
+   */
   public void startGame() throws IOException {
-    //TODO: create the game set up to get unit move tropp and invade
-
+    //TODO: add UI feature for this event handler 
+    System.out.println("start game");
     if (db.startGame().equals("start")) {
-      nextMenu();
+      nextMenu("unsw.gloriaromanus.SignupPaneController","unsw.gloriaromanus.InvasionMenuController");
+      player = db.getCurrentPlayer();
+      humanFaction = player.getFaction().getName();
+      ((SignupPaneController)controllerParentPairs.get(0).getKey()).appendToTerminal("successfully started the game");
 
     }
     else ((SignupPaneController)controllerParentPairs.get(0).getKey()).appendToTerminal(db.startGame());
   }
+
+  /**
+   * player finishing their turn
+   */
+  public void endTurn() {
+    player.endTurn();
+    player = db.getCurrentPlayer();
+    humanFaction = player.getFaction().getName();
+
+  }
+
+  
 }
