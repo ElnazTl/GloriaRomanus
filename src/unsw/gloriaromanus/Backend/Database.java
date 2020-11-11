@@ -61,7 +61,6 @@ public class Database {
     }
 
 
-
     private void loadDefaultConfigs() throws IOException {
         // Load initial provinces
         String initialProvincesString = Files.readString(Paths.get(path + "initial_province_ownership.json"));
@@ -216,7 +215,9 @@ public class Database {
         }
         return null;
     }
-
+    public List<Player> getPlayers() {
+        return this.players;
+    }
     public boolean isAdjacentProvince(String province1, String province2) {
         return provAdjMatrix[provinceNames.indexOf(province1)][provinceNames.indexOf(province2)];
     }
@@ -425,7 +426,7 @@ public class Database {
         }
     }
 
-   
+ 
 
 }
 

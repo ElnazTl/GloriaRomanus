@@ -95,13 +95,15 @@ public class GloriaRomanusController{
     provinceToOwningFactionMap = getProvinceToOwningFactionMap();
 
     provinceToNumberTroopsMap = new HashMap<String, Integer>();
-    Random r = new Random();
-    for (String provinceName : provinceToOwningFactionMap.keySet()) {
-      provinceToNumberTroopsMap.put(provinceName, r.nextInt(500));
-    }
 
-    // TODO = load this from a configuration file you create (user should be able to
-    // select in loading screen)
+    // Random r = new Random();
+    for (String provinceName : provinceToOwningFactionMap.keySet()) {
+      provinceToNumberTroopsMap.put(provinceName, 0);
+    }
+    /**
+     * set up list of observers in provinces
+     */
+   
     db = new Database();
 
 
@@ -115,6 +117,7 @@ public class GloriaRomanusController{
 
 
     setMenu();
+
     stackPaneMain.getChildren().add(controllerParentPairs.get(0).getValue());
 
     initializeProvinceLayers();
@@ -142,7 +145,9 @@ public class GloriaRomanusController{
 
 
   }
-
+  /**
+   * TODO: Player selecting units in the province to attack
+   */
   public void clickedInvadeButton(ActionEvent e) throws IOException {
     if (currentlySelectedHumanProvince != null && currentlySelectedEnemyProvince != null){
       String humanProvince = (String)currentlySelectedHumanProvince.getAttributes().get("name");
@@ -447,21 +452,38 @@ public class GloriaRomanusController{
    */
   public void startGame() throws IOException {
     //TODO: add UI feature for this event handler 
-    System.out.println("start game");
     if (db.startGame().equals("start")) {
       nextMenu("unsw.gloriaromanus.SignupPaneController","unsw.gloriaromanus.InvasionMenuController");
       player = db.getCurrentPlayer();
       humanFaction = player.getFaction().getName();
       ((SignupPaneController)controllerParentPairs.get(0).getKey()).appendToTerminal("successfully started the game");
-
+      subscribe();
     }
     else ((SignupPaneController)controllerParentPairs.get(0).getKey()).appendToTerminal(db.startGame());
+  }
+
+  private Observer observer;
+  public void subscribe() throws JsonParseException, JsonMappingException, IOException{
+    observer = (province) -> {
+      provinceToNumberTroopsMap.put(province.getName(),province.getNTroops());
+      addAllPointGraphics();
+    };
+    for (Player p: db.getPlayers()) {
+      for (Province pro: p.getFaction().getProvinces()) {
+        pro.subscribe(observer);
+      }
+    }
+  }
+ 
+  public void trainUnit() throws IOException {
+    player.selectProvince("V");
+    player.trainUnit("soldier");
   }
 
   /**
    * player finishing their turn
    */
-  public void endTurn() {
+  public void endTurn()  throws JsonParseException, JsonMappingException, IOException {
     player.endTurn();
     player = db.getCurrentPlayer();
     humanFaction = player.getFaction().getName();

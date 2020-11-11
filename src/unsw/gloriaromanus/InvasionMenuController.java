@@ -36,4 +36,12 @@ public class InvasionMenuController extends MenuController{
     public void clickedInvadeButton(ActionEvent e) throws IOException {
         getParent().clickedInvadeButton(e);
     }
+    @FXML
+    public void trainUnit(ActionEvent e) throws IOException {
+        getParent().trainUnit();
+    }
+    @FXML
+    public void endTurn(ActionEvent e) throws IOException {
+        getParent().endTurn();
+    }
 }
