@@ -105,7 +105,7 @@ public class GloriaRomanusController{
     currentlySelectedHumanProvince = null;
     currentlySelectedEnemyProvince = null;
 
-    String []menus = {"basic_menu.fxml","invasion_menu.fxml"};
+    String []menus = {"signupPane.fxml","invasion_menu.fxml", "basic_menu.fxml"};
     controllerParentPairs = new ArrayList<Pair<MenuController, VBox>>();
     for (String fxmlName: menus){
       System.out.println(fxmlName);
@@ -389,7 +389,6 @@ public class GloriaRomanusController{
    * Stops and releases all resources used in application.
    */
   void terminate() {
-
     if (mapView != null) {
       mapView.dispose();
     }
@@ -402,14 +401,36 @@ public class GloriaRomanusController{
     stackPaneMain.getChildren().add(controllerParentPairs.get(0).getValue());
   }
 
+  public void nextMenu() throws JsonParseException, JsonMappingException, IOException {
+    System.out.println("trying to switch menu");
+    
+    stackPaneMain.getChildren().remove(controllerParentPairs.get(0).getValue());
+    controllerParentPairs.remove(0);
+    stackPaneMain.getChildren().add(controllerParentPairs.get(0).getValue());
+  }
+
+  /**
+   * register user and add it to the database
+   * @param user_name
+   * @param faction
+   */
+
   public void registerUser (String user_name, String faction) {
     
 
     Player p = db.addNewPlayer(user_name, faction);
-    // if (p==null) ((SignupMenuController)controllerParentPairs.get(0).getKey()).appendToTerminal("invalid user name or faction");
-    // else ((SignupMenuController)controllerParentPairs.get(0).getKey()).appendToTerminal("successfully joined");
+    if (p==null) ((SignupPaneController)controllerParentPairs.get(0).getKey()).appendToTerminal("invalid user name or faction");
+    else ((SignupPaneController)controllerParentPairs.get(0).getKey()).appendToTerminal("successfully joined");
    
-    // if (p.getFaction()==null) printMessageToTerminal("invalid name or faction");
-    // else ((SignupMenuController)controllerParentPairs.get(0).getKey()).appendToTerminal("successfully joined");
+    
+  }
+  public void startGame() throws IOException {
+    //TODO: create the game set up to get unit move tropp and invade
+
+    if (db.startGame().equals("start")) {
+      nextMenu();
+
+    }
+    else ((SignupPaneController)controllerParentPairs.get(0).getKey()).appendToTerminal(db.startGame());
   }
 }
