@@ -8,18 +8,24 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class GloriaRomanusApplication extends Application {
+public class GloriaRomanusApplication  {
 
   private static GloriaRomanusController controller;
 
-  @Override
-  public void start(Stage stage) throws IOException {
+  private Stage stage;
+  private Scene scene;
+
+  
+  public GloriaRomanusApplication(Stage stage) throws IOException {
+    this.stage = stage;
     // set up the scene
     FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
     Parent root = loader.load();
     controller = loader.getController();
-    Scene scene = new Scene(root);
-
+    scene = new Scene(root);
+  }
+  
+  public void start() {
     // set up the stage
     stage.setTitle("Gloria Romanus");
     stage.setWidth(800);

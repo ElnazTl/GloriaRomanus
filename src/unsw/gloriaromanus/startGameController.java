@@ -6,6 +6,7 @@ package unsw.gloriaromanus;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import unsw.gloriaromanus.*;
 // import javafx.scene.control.TextArea;
 // import javafx.scene.control.TextField;
 
@@ -15,6 +16,8 @@ public class startGameController {
 
     private signupScreen signupScreen;
 
+    private GloriaRomanusApplication gra;
+
     @FXML
     public void handleBackButton(ActionEvent event) {
         signupScreen.start();
@@ -22,6 +25,17 @@ public class startGameController {
 
     public void setSignupScreen(signupScreen signupScreen) {
         this.signupScreen = signupScreen;
+    }
+
+    public void setGra(GloriaRomanusApplication gra) {
+        this.gra = gra;
+    }
+    //going to the map page and asking for the user faction
+    @FXML
+    public void clickedNewGame(){
+
+        gra.start();
+
     }
 
     
