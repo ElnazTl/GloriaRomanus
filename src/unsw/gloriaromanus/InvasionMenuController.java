@@ -38,7 +38,7 @@ public class InvasionMenuController extends MenuController{
     }
     @FXML
     public void trainUnit(ActionEvent e) throws IOException {
-        getParent().trainUnit();
+        getParent().trainUnit("soldier");
     }
     @FXML
     public void endTurn(ActionEvent e) throws IOException {

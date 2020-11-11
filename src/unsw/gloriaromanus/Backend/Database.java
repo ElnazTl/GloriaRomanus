@@ -88,9 +88,13 @@ public class Database {
     }
 
     public Player addNewPlayer(String player, String name) {
-        for (Player p : players) {
+        System.out.println("player "+players.size());
+
+        for (Player p : intermediatePlayerFactions.values()) {
+            System.out.println("player "+p.getUsername() +" " + player);
+
             if (player.equals(p.getUsername())) {
-                // Username taken
+                System.out.println("name taken");
                 return null;
             }
         }
