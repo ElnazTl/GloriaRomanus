@@ -153,9 +153,12 @@ public class GloriaRomanusController{
       String humanProvince = (String)currentlySelectedHumanProvince.getAttributes().get("name");
       String enemyProvince = (String)currentlySelectedEnemyProvince.getAttributes().get("name");
       player.selectProvince(humanProvince);
-      if (player.invade(enemyProvince) == -1) printMessageToTerminal("You lost the battle");
-      if (player.invade(enemyProvince) == 0) printMessageToTerminal("It's a tie!");
-      if (player.invade(enemyProvince) == 1) printMessageToTerminal("Congradulation you won the battle");
+      player.trainUnit("soldier");
+      player.selectUnit(0L);
+      int result = player.invade(enemyProvince);
+      if ( result == -1) printMessageToTerminal("You lost the battle");
+      if (result == 0) printMessageToTerminal("It's a tie!");
+      if (result == 1) printMessageToTerminal("Congradulation you won the battle");
      
         resetSelections();  // reset selections in UI
         addAllPointGraphics(); // reset graphics
@@ -463,26 +466,51 @@ public class GloriaRomanusController{
   }
 
   private Observer observer;
+  private FactionObserver factionObserver;
+  /**
+   * subscribing to provinces that the players are playing with
+   */
   public void subscribe() throws JsonParseException, JsonMappingException, IOException{
     observer = (province) -> {
       provinceToNumberTroopsMap.put(province.getName(),province.getNTroops());
       addAllPointGraphics();
     };
+
+    factionObserver = (faction) -> {
+      List<Province> pro = faction.getProvinces();
+      for (Province p: pro) {
+        provinceToOwningFactionMap.put(p.getName(),faction.getName());
+      
+      }
+      addAllPointGraphics();
+
+    };
     for (Player p: db.getPlayers()) {
+      p.getFaction().subscribe(factionObserver);
       for (Province pro: p.getFaction().getProvinces()) {
         pro.subscribe(observer);
       }
     }
   }
- 
-  public void trainUnit() throws IOException {
-    player.selectProvince("V");
-    player.trainUnit("soldier");
+ /**
+  * given the unit, train the unit for selected province
+  * TODO: price implementation
+  * TODO: fix the messages for display --> UI
+  * @param unit
+  */
+  public void trainUnit(String unit) throws IOException {
+
+    String humanProvince = (String)currentlySelectedHumanProvince.getAttributes().get("name");
+    player.selectProvince(humanProvince);
+    if(player.trainUnit(unit) == -1) System.out.println("could not add the unit you alraedy have two units training");
+    else System.out.println("successfull! currently training the units they will be available from the next round");
+
   }
 
   /**
    * player finishing their turn
    */
+
   public void endTurn()  throws JsonParseException, JsonMappingException, IOException {
     player.endTurn();
     player = db.getCurrentPlayer();
