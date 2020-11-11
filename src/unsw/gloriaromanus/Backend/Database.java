@@ -30,7 +30,7 @@ public class Database {
     private List<String> provinceNames;
     private boolean[][] provAdjMatrix;
 
-
+    private int numProvinces;
     private int numPlayers = 0;
     private int turnNumber = 0;
     private String currentPlayer = null;
@@ -57,6 +57,7 @@ public class Database {
         intermediatePlayerFactions = new HashMap<String, Player>();
         provinceNames = new ArrayList<String>();
         loadDefaultConfigs();
+        numProvinces = provinceNames.size();
     }
 
 
@@ -187,14 +188,20 @@ public class Database {
         }
         return result;
     }
+    /**
+     * sets the number of provinces in the game
+     * @param x
+     */
+    public void setNumProvinces(int x) {
+        numProvinces = x;
 
-    
+    }
     /**
      * Function called after each invasion 
      * @param p
      */
     public int StateOfPlayer(Player p) {
-        return VictoryCampaign.state(p, provinceNames.size(), 100000);
+        return VictoryCampaign.state(p, numProvinces, 100000);
     }
 
     public Faction getFactionOfProvince(Province p) {
