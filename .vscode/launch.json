@@ -15,9 +15,11 @@
         {
             "type": "java",
             "name": "CodeLens (Launch) - startGameApplication",
+
             "request": "launch",
             "mainClass": "unsw.gloriaromanus.startGameApplication",
             "vmArgs": "--module-path \"./lib\" --add-modules javafx.controls,javafx.fxml"
+        
         }
     ]
 }

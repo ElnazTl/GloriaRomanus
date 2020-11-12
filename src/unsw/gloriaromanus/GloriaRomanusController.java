@@ -112,7 +112,7 @@ public class GloriaRomanusController{
     currentlySelectedHumanProvince = null;
     currentlySelectedEnemyProvince = null;
 
-
+    String []menus = {"signupPane.fxml","currentStatus.fxml","invasion_menu.fxml", "basic_menu.fxml"};
     controllerParentPairs = new ArrayList<Pair<MenuController, VBox>>();
 
     menusList = new HashMap<String,MenuController>();
@@ -414,7 +414,6 @@ public class GloriaRomanusController{
    * Stops and releases all resources used in application.
    */
   void terminate() {
-
     if (mapView != null) {
       mapView.dispose();
     }
