@@ -86,35 +86,37 @@ public class GloriaRomanusController{
 
   private Database db;
 
+  private Player player;
+
+  private Map<String,MenuController> menusList;
   @FXML
   private void initialize() throws JsonParseException, JsonMappingException, IOException, InterruptedException {
     // TODO = you should rely on an object oriented design to determine ownership
     provinceToOwningFactionMap = getProvinceToOwningFactionMap();
 
     provinceToNumberTroopsMap = new HashMap<String, Integer>();
-    Random r = new Random();
-    for (String provinceName : provinceToOwningFactionMap.keySet()) {
-      provinceToNumberTroopsMap.put(provinceName, r.nextInt(500));
-    }
 
-    // TODO = load this from a configuration file you create (user should be able to
-    // select in loading screen)
+    // Random r = new Random();
+    for (String provinceName : provinceToOwningFactionMap.keySet()) {
+      provinceToNumberTroopsMap.put(provinceName, 0);
+    }
+    /**
+     * set up list of observers in provinces
+     */
+   
     db = new Database();
-    humanFaction = "Rome";
+
 
     currentlySelectedHumanProvince = null;
     currentlySelectedEnemyProvince = null;
 
     String []menus = {"signupPane.fxml","currentStatus.fxml","invasion_menu.fxml", "basic_menu.fxml"};
     controllerParentPairs = new ArrayList<Pair<MenuController, VBox>>();
-    for (String fxmlName: menus){
-      System.out.println(fxmlName);
-      FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlName));
-      VBox root = (VBox)loader.load();
-      MenuController menuController = (MenuController)loader.getController();
-      menuController.setParent(this);
-      controllerParentPairs.add(new Pair<MenuController, VBox>(menuController, root));
-    }
+
+    menusList = new HashMap<String,MenuController>();
+
+
+    setMenu();
 
     stackPaneMain.getChildren().add(controllerParentPairs.get(0).getValue());
 
@@ -122,37 +124,56 @@ public class GloriaRomanusController{
 
   }
 
+  /**
+   * setting vbox menus
+   * TODO: add more menus 
+   */
+  private void setMenu() throws IOException {
+
+    String []menus = {"signupPane.fxml","currentStatus.fxml","invasion_menu.fxml", "basic_menu.fxml"};
+
+    for (String fxmlName: menus){
+      FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlName));
+      VBox root = (VBox)loader.load();
+      MenuController menuController = (MenuController)loader.getController();
+      menuController.setParent(this);
+      controllerParentPairs.add(new Pair<MenuController, VBox>(menuController, root));
+      menusList.put(menuController.getClass().getName(),menuController);
+
+    }
+
+
+
+  }
+  /**
+   * TODO: Player selecting units in the province to attack
+   */
   public void clickedInvadeButton(ActionEvent e) throws IOException {
     if (currentlySelectedHumanProvince != null && currentlySelectedEnemyProvince != null){
       String humanProvince = (String)currentlySelectedHumanProvince.getAttributes().get("name");
       String enemyProvince = (String)currentlySelectedEnemyProvince.getAttributes().get("name");
-      if (confirmIfProvincesConnected(humanProvince, enemyProvince)){
-        // TODO = have better battle resolution than 50% chance of winning
-        Random r = new Random();
-        int choice = r.nextInt(2);
-        if (choice == 0){
-          // human won. Transfer 40% of troops of human over. No casualties by human, but enemy loses all troops
-          int numTroopsToTransfer = provinceToNumberTroopsMap.get(humanProvince)*2/5;
-          provinceToNumberTroopsMap.put(enemyProvince, numTroopsToTransfer);
-          provinceToNumberTroopsMap.put(humanProvince, provinceToNumberTroopsMap.get(humanProvince)-numTroopsToTransfer);
-          provinceToOwningFactionMap.put(enemyProvince, humanFaction);
-          printMessageToTerminal("Won battle!");
-        }
-        else{
-          // enemy won. Human loses 60% of soldiers in the province
-          int numTroopsLost = provinceToNumberTroopsMap.get(humanProvince)*3/5;
-          provinceToNumberTroopsMap.put(humanProvince, provinceToNumberTroopsMap.get(humanProvince)-numTroopsLost);
-          printMessageToTerminal("Lost battle!");
-        }
+      player.selectProvince(humanProvince);
+      player.trainUnit("soldier");
+      player.selectUnit(0L);
+      int result = player.invade(enemyProvince);
+      if ( result == -1) printMessageToTerminal("You lost the battle");
+      if (result == 0) printMessageToTerminal("It's a tie!");
+      if (result == 1) printMessageToTerminal("Congradulation you won the battle");
+     
         resetSelections();  // reset selections in UI
         addAllPointGraphics(); // reset graphics
       }
-      else{
-        printMessageToTerminal("Provinces not adjacent, cannot invade!");
-      }
+     
 
     }
-  }
+    //selecting to provinces from the same faction to move too
+    public void MoveUnit(ActionEvent e) throws IOException {
+      if (currentlySelectedHumanProvince != null && currentlySelectedEnemyProvince != null){
+        String humanProvince = (String)currentlySelectedHumanProvince.getAttributes().get("name");
+        String enemyProvince = (String)currentlySelectedEnemyProvince.getAttributes().get("name");
+      }
+    }
+  
 
   /**
    * run this initially to update province owner, change feature in each
@@ -401,12 +422,23 @@ public class GloriaRomanusController{
     stackPaneMain.getChildren().add(controllerParentPairs.get(0).getValue());
   }
 
-  public void nextMenu() throws JsonParseException, JsonMappingException, IOException {
+  public void nextMenu(String current, String next) throws JsonParseException, JsonMappingException, IOException {
     System.out.println("trying to switch menu");
     
-    stackPaneMain.getChildren().remove(controllerParentPairs.get(0).getValue());
-    controllerParentPairs.remove(0);
-    stackPaneMain.getChildren().add(controllerParentPairs.get(0).getValue());
+    MenuController mcr = menusList.get(current);
+    MenuController mca = menusList.get(next);
+    int indexRemove = 0;
+    int indexAdd = 0;
+    for (int i  = 0; i < controllerParentPairs.size();i++) {
+      System.out.println(controllerParentPairs.get(i).getKey().equals(mca)+ controllerParentPairs.get(i).getKey().getClass().getName() );
+      if (controllerParentPairs.get(i).getKey().equals(mcr)) {
+        indexRemove = i;
+        System.out.println("herer"+i);
+      }
+      if (controllerParentPairs.get(i).getKey().equals(mca)) indexAdd = i;
+    }
+    stackPaneMain.getChildren().remove(controllerParentPairs.get(indexRemove).getValue());
+    stackPaneMain.getChildren().add(controllerParentPairs.get(indexAdd).getValue());
   }
 
   /**
@@ -424,13 +456,73 @@ public class GloriaRomanusController{
    
     
   }
+  /**
+   * starting the game and assigning the current player of the game 
+   */
   public void startGame() throws IOException {
-    //TODO: create the game set up to get unit move tropp and invade
-
+    //TODO: add UI feature for this event handler 
     if (db.startGame().equals("start")) {
-      nextMenu();
-
+      nextMenu("unsw.gloriaromanus.SignupPaneController","unsw.gloriaromanus.currentStatus.fxml");
+      player = db.getCurrentPlayer();
+      humanFaction = player.getFaction().getName();
+      ((SignupPaneController)controllerParentPairs.get(0).getKey()).appendToTerminal("successfully started the game");
+      subscribe();
     }
     else ((SignupPaneController)controllerParentPairs.get(0).getKey()).appendToTerminal(db.startGame());
   }
+
+  private Observer observer;
+  private FactionObserver factionObserver;
+  /**
+   * subscribing to provinces that the players are playing with
+   */
+  public void subscribe() throws JsonParseException, JsonMappingException, IOException{
+    observer = (province) -> {
+      provinceToNumberTroopsMap.put(province.getName(),province.getNTroops());
+      addAllPointGraphics();
+    };
+
+    factionObserver = (faction) -> {
+      List<Province> pro = faction.getProvinces();
+      for (Province p: pro) {
+        provinceToOwningFactionMap.put(p.getName(),faction.getName());
+      
+      }
+      addAllPointGraphics();
+
+    };
+    for (Player p: db.getPlayers()) {
+      p.getFaction().subscribe(factionObserver);
+      for (Province pro: p.getFaction().getProvinces()) {
+        pro.subscribe(observer);
+      }
+    }
+  }
+ /**
+  * given the unit, train the unit for selected province
+  * TODO: price implementation
+  * TODO: fix the messages for display --> UI
+  * @param unit
+  */
+  public void trainUnit(String unit) throws IOException {
+
+    String humanProvince = (String)currentlySelectedHumanProvince.getAttributes().get("name");
+    player.selectProvince(humanProvince);
+    if(player.trainUnit(unit) == -1) System.out.println("could not add the unit you alraedy have two units training");
+    else System.out.println("successfull! currently training the units they will be available from the next round");
+
+  }
+
+  /**
+   * player finishing their turn
+   */
+
+  public void endTurn()  throws JsonParseException, JsonMappingException, IOException {
+    player.endTurn();
+    player = db.getCurrentPlayer();
+    humanFaction = player.getFaction().getName();
+
+  }
+
+  
 }
