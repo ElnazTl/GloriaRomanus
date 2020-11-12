@@ -470,6 +470,7 @@ public class GloriaRomanusController{
       ((SignupPaneController)controllerParentPairs.get(0).getKey()).appendToTerminal("successfully started the game");
       subscribe();
       status.setName(player.getUsername());
+      status.setYear(db.getGameYear());
       
     }
     else ((SignupPaneController)controllerParentPairs.get(0).getKey()).appendToTerminal(db.startGame());
@@ -526,7 +527,7 @@ public class GloriaRomanusController{
     player = db.getCurrentPlayer();
     humanFaction = player.getFaction().getName();
     status.setName(player.getUsername());
-
+    status.setYear(db.getGameYear());
   }
   public String setName() {
     return player.getUsername();
