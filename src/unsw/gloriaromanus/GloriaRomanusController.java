@@ -91,6 +91,7 @@ public class GloriaRomanusController{
   private currentStatusController status;
 
   private Map<String,MenuController> menusList;
+
   @FXML
   private void initialize() throws JsonParseException, JsonMappingException, IOException, InterruptedException {
     // TODO = you should rely on an object oriented design to determine ownership
@@ -112,7 +113,7 @@ public class GloriaRomanusController{
     currentlySelectedHumanProvince = null;
     currentlySelectedEnemyProvince = null;
 
-    String []menus = {"signupPane.fxml","currentStatus.fxml","invasion_menu.fxml", "basic_menu.fxml"};
+    String []menus = {"signupPane.fxml","currentStatusController","Action.fxml","invasion_menu.fxml", "basic_menu.fxml"};
     controllerParentPairs = new ArrayList<Pair<MenuController, VBox>>();
 
     menusList = new HashMap<String,MenuController>();
@@ -132,7 +133,7 @@ public class GloriaRomanusController{
    */
   private void setMenu() throws IOException {
 
-    String []menus = {"signupPane.fxml","currentStatus.fxml","invasion_menu.fxml", "basic_menu.fxml"};
+    String []menus = {"signupPane.fxml","currentStatus.fxml","Action.fxml","invasion_menu.fxml", "basic_menu.fxml"};
 
     for (String fxmlName: menus){
       FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlName));
@@ -440,7 +441,7 @@ public class GloriaRomanusController{
       if (controllerParentPairs.get(i).getKey().equals(mca)) indexAdd = i;
     }
     stackPaneMain.getChildren().remove(controllerParentPairs.get(indexRemove).getValue());
-    stackPaneMain.getChildren().add(controllerParentPairs.get(indexAdd).getValue());
+    stackPaneMain.getChildren().addAll(controllerParentPairs.get(indexAdd).getValue(),controllerParentPairs.get(1).getValue());
   }
 
   /**
@@ -464,12 +465,13 @@ public class GloriaRomanusController{
   public void startGame() throws IOException {
     //TODO: add UI feature for this event handler 
     if (db.startGame().equals("start")) {
-      nextMenu("unsw.gloriaromanus.SignupPaneController","unsw.gloriaromanus.currentStatusController");
+      nextMenu("unsw.gloriaromanus.SignupPaneController","unsw.gloriaromanus.ActionController");
       player = db.getCurrentPlayer();
       humanFaction = player.getFaction().getName();
       ((SignupPaneController)controllerParentPairs.get(0).getKey()).appendToTerminal("successfully started the game");
       subscribe();
       status.setName(player.getUsername());
+      status.setYear(db.getGameYear());
       
     }
     else ((SignupPaneController)controllerParentPairs.get(0).getKey()).appendToTerminal(db.startGame());
@@ -526,7 +528,7 @@ public class GloriaRomanusController{
     player = db.getCurrentPlayer();
     humanFaction = player.getFaction().getName();
     status.setName(player.getUsername());
-
+    status.setYear(db.getGameYear());
   }
   public String setName() {
     return player.getUsername();
