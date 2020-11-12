@@ -12,7 +12,8 @@ public abstract class MenuController {
             System.out.println("GOT NULL");
         }
         this.parent = parent;
-    }
+        
+    } 
 
     public GloriaRomanusController getParent(){
         return parent;
