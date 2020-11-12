@@ -166,6 +166,7 @@ public class Faction {
      * @param name
      */
     public void selectProvince(String name) {
+        System.out.println("selecting province");
         Province p = findProvince(name); 
         if (p == null) return;
         if (selectedProvince == null) {
