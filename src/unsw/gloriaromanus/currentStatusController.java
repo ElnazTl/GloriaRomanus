@@ -1,6 +1,11 @@
 
 package unsw.gloriaromanus;
 
+import java.io.IOException;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 // import java.io.IOException;
 // import java.net.URL;
 
@@ -41,6 +46,22 @@ public class currentStatusController extends MenuController{
     public void conqueredInitialize() {
         conqueredBox.setText("1");
     }
+    
+
+    @FXML
+    public void setName(String name) {
+        userNameBox.setText(name);
+
+    }
+    @FXML
+    public void endTurn() throws JsonParseException, JsonMappingException, IOException {
+        getParent().endTurn();
+    }
+    @FXML 
+    public void saveGame() {
+        System.out.println("end");
+    }
+
 
 
     // @FXML

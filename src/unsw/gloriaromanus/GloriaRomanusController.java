@@ -88,6 +88,8 @@ public class GloriaRomanusController{
 
   private Player player;
 
+  private currentStatusController status;
+
   private Map<String,MenuController> menusList;
   @FXML
   private void initialize() throws JsonParseException, JsonMappingException, IOException, InterruptedException {
@@ -138,9 +140,11 @@ public class GloriaRomanusController{
       MenuController menuController = (MenuController)loader.getController();
       menuController.setParent(this);
       controllerParentPairs.add(new Pair<MenuController, VBox>(menuController, root));
+
       menusList.put(menuController.getClass().getName(),menuController);
 
     }
+    status = (currentStatusController)controllerParentPairs.get(1).getKey();
 
 
 
@@ -424,17 +428,15 @@ public class GloriaRomanusController{
   }
 
   public void nextMenu(String current, String next) throws JsonParseException, JsonMappingException, IOException {
-    System.out.println("trying to switch menu");
     
     MenuController mcr = menusList.get(current);
     MenuController mca = menusList.get(next);
     int indexRemove = 0;
     int indexAdd = 0;
     for (int i  = 0; i < controllerParentPairs.size();i++) {
-      System.out.println(controllerParentPairs.get(i).getKey().equals(mca)+ controllerParentPairs.get(i).getKey().getClass().getName() );
+      System.out.println(next + controllerParentPairs.get(i).getKey().getClass().getName() );
       if (controllerParentPairs.get(i).getKey().equals(mcr)) {
         indexRemove = i;
-        System.out.println("herer"+i);
       }
       if (controllerParentPairs.get(i).getKey().equals(mca)) indexAdd = i;
     }
@@ -463,11 +465,13 @@ public class GloriaRomanusController{
   public void startGame() throws IOException {
     //TODO: add UI feature for this event handler 
     if (db.startGame().equals("start")) {
-      nextMenu("unsw.gloriaromanus.SignupPaneController","unsw.gloriaromanus.currentStatus.fxml");
+      nextMenu("unsw.gloriaromanus.SignupPaneController","unsw.gloriaromanus.currentStatusController");
       player = db.getCurrentPlayer();
       humanFaction = player.getFaction().getName();
       ((SignupPaneController)controllerParentPairs.get(0).getKey()).appendToTerminal("successfully started the game");
       subscribe();
+      status.setName(player.getUsername());
+      
     }
     else ((SignupPaneController)controllerParentPairs.get(0).getKey()).appendToTerminal(db.startGame());
   }
@@ -522,7 +526,11 @@ public class GloriaRomanusController{
     player.endTurn();
     player = db.getCurrentPlayer();
     humanFaction = player.getFaction().getName();
+    status.setName(player.getUsername());
 
+  }
+  public String setName() {
+    return player.getUsername();
   }
 
   
