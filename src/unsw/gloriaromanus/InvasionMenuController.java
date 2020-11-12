@@ -32,6 +32,7 @@ public class InvasionMenuController extends MenuController{
     }
 
     public void appendToTerminal(String message) {
+        output_terminal.clear();
         output_terminal.appendText(message + "\n");
     }
 
@@ -39,7 +40,7 @@ public class InvasionMenuController extends MenuController{
 
     @FXML
     public void clickedInvadeButton(ActionEvent e) throws IOException {
-        getParent().clickedInvadeButton(e);
+        getParent().clickedInvadeButton(invading_province.getText(),opponent_province.getText(),"soldier");
     }
     @FXML
     public void clickedBackButton(ActionEvent e) throws IOException {
