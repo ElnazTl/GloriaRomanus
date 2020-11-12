@@ -10,8 +10,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.Button?>
 
-<VBox maxWidth="250" spacing="10" styleClass="panel-region" stylesheets="/unsw/gloriaromanus/style.css" StackPane.alignment="TOP_RIGHT" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="unsw.gloriaromanus.SignupPaneController">
+<VBox maxWidth="250" spacing="10" styleClass="panel-region" stylesheets="/unsw/gloriaromanus/style.css" StackPane.alignment="TOP_RIGHT" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="unsw.gloriaromanus.currentStatusController">
     <padding>
         <Insets topRightBottomLeft="10" />
     </padding>
@@ -34,11 +35,11 @@
     <HBox>
         <VBox>
             <Label text="User Name" />
-            <TextField fx:id="userNameBox" editable="true" text="" />
+            <TextField fx:id="userNameBox" editable="false" text="" />
         </VBox>
         <VBox>
             <Label text="Current Year" />
-            <TextField fx:id="currentYearBox" editable="true" text="" />
+            <TextField fx:id="currentYearBox" editable="false" text="" />
         </VBox>
     </HBox>
      <!-- onAction="#clickedRegisterButton"/> -->
@@ -57,6 +58,10 @@
                <TextField fx:id="conqueredBox" editable="true" text="" />
             </children>
          </VBox>
+        <Button text="end turn" onAction="#endTurn"/>
+        <Button text="save Game" onAction="#saveGame"/>
+
+
       </children>
    </HBox>
 </VBox>
