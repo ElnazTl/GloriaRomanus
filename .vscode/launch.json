@@ -18,8 +18,7 @@
 
             "request": "launch",
             "mainClass": "unsw.gloriaromanus.startGameApplication",
-            "vmArgs": "--module-path \"./lib\" --add-modules javafx.controls,javafx.fxml"
-        
+            "vmArgs": "--module-path \"./lib/symlink_javafx:./lib/symlink_arcgis\" --add-modules javafx.controls,javafx.fxml",
         }
     ]
 }
