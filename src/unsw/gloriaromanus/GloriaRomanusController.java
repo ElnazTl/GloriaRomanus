@@ -521,7 +521,6 @@ public class GloriaRomanusController{
     player.endTurn();
     player = db.getCurrentPlayer();
     humanFaction = player.getFaction().getName();
-
   }
 
   
