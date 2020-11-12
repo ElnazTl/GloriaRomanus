@@ -19,7 +19,7 @@ public class startGameApplication extends Application {
         startGameScreen.getController().setSignupScreen(signupScreen);
         startGameScreen.getController().setGra(gloriaRomanusApplication);
 
-        signupScreen.start();
+        startGameScreen.start();
     }
 
     public static void main(String[] args) {
