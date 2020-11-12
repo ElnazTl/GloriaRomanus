@@ -33,10 +33,7 @@ public class startGameController {
     //going to the map page and asking for the user faction
     @FXML
     public void clickedNewGame(){
-
         gra.start();
-
     }
 
-    
 }

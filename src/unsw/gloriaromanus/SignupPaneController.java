@@ -1,4 +1,3 @@
-
 package unsw.gloriaromanus;
 
 import java.io.IOException;
@@ -10,10 +9,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 public class SignupPaneController extends MenuController {
-    
-
-
-
 
     @FXML
     private TextField user_name;
@@ -50,6 +45,7 @@ public class SignupPaneController extends MenuController {
     @FXML
     public void clickedStartGame(ActionEvent e) throws IOException {
         getParent().startGame();
+        getParent().nextMenu();
     }
 }
 
