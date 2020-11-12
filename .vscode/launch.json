@@ -5,12 +5,19 @@
     "version": "0.2.0",
     "cwd": "${workspaceRoot}",
     "configurations": [
+        // {
+        //     "type": "java",
+        //     "name": "CodeLens (Launch) - GloriaRomanusLauncher",
+        //     "request": "launch",
+        //     "mainClass": "unsw.gloriaromanus.GloriaRomanusLauncher",
+        //     "projectName": "t13a-oop_81b484e9"
+        // },
         {
             "type": "java",
-            "name": "CodeLens (Launch) - GloriaRomanusLauncher",
+            "name": "CodeLens (Launch) - startGameApplication",
             "request": "launch",
-            "mainClass": "unsw.gloriaromanus.GloriaRomanusLauncher",
-			"vmArgs": "--module-path \"./lib/symlink_javafx:./lib/symlink_arcgis\" --add-modules javafx.controls,javafx.fxml",
-        },
+            "mainClass": "unsw.gloriaromanus.startGameApplication",
+            "vmArgs": "--module-path \"./lib\" --add-modules javafx.controls,javafx.fxml"
+        }
     ]
 }
