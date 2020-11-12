@@ -52,6 +52,11 @@ public class currentStatusController extends MenuController{
         userNameBox.setText(name);
 
     }
+
+    @FXML
+    public void setYear(String year) {
+        currentYearBox.setText(year);
+    }
     @FXML
     public void endTurn() throws JsonParseException, JsonMappingException, IOException {
         getParent().endTurn();
@@ -64,9 +69,9 @@ public class currentStatusController extends MenuController{
 
 
     // @FXML
-    // public void clickedEndGame(ActionEvent e) throws IOException {
-    //     getParent().endTurn();
-    //     getParent().nextMenu();
+    // public void clickedSaveGame(ActionEvent e) throws IOException {
+    //     getParent().saveGame();
+    //     // getParent().nextMenu();
     // }
 
 }

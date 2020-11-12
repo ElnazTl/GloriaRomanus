@@ -2,10 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<<<<<<< HEAD
-=======
 <?import javafx.scene.control.ChoiceBox?>
->>>>>>> b3a6be68b15fc98fbd50f4097ff3a74562bec7db
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -15,10 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
-<<<<<<< HEAD
-=======
 <?import javafx.scene.text.Font?>
->>>>>>> b3a6be68b15fc98fbd50f4097ff3a74562bec7db
 
 <VBox maxWidth="250" spacing="10" styleClass="panel-region" stylesheets="/unsw/gloriaromanus/style.css" StackPane.alignment="TOP_LEFT" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="unsw.gloriaromanus.InvasionMenuController">
     <padding>
@@ -37,41 +31,33 @@
     </background>
     <HBox>
         <VBox>
-            <Label text="Your province" />
+            <Label text="From" />
             <TextField fx:id="invading_province" editable="false" text="" />
         </VBox>
         <VBox>
-            <Label text="Enemy province" />
+            <Label text="To" />
             <TextField fx:id="opponent_province" editable="false" text="" />
         </VBox>
     </HBox>
-<<<<<<< HEAD
-    <Button onAction="#clickedInvadeButton" text="Invade" />
-=======
    <Label text="Choose Unit" />
-   <ChoiceBox prefHeight="26.0" prefWidth="229.0" />
->>>>>>> b3a6be68b15fc98fbd50f4097ff3a74562bec7db
+   <ChoiceBox prefHeight="26.0" prefWidth="227.0" />
     <VBox>
         <Label text="Output from interactions" />
         <TextArea fx:id="output_terminal" editable="false" text="" />
     </VBox>
-<<<<<<< HEAD
-    <Button onAction="#clickedSwitchMenu" text="Switch Menus" />
-=======
-   <HBox prefHeight="27.0" prefWidth="230.0">
+   <HBox prefHeight="0.0" prefWidth="230.0">
       <children>
-          <Button onAction="#clickedInvadeButton" text="Invade">
+          <Button onAction="#clickedMoveButton" text="Move">
             <font>
-               <Font size="16.0" />
+               <Font size="15.0" />
             </font>
          </Button>
-         <Button fx:id="backButton" onAction="#clickedBackButton" text="Back">
+         <Button fx:id="backButton" alignment="CENTER_RIGHT" onAction="#clickedBackButton" text="Back">
             <font>
-               <Font size="16.0" />
+               <Font size="15.0" />
             </font>
          </Button>
       </children>
    </HBox>
 
->>>>>>> b3a6be68b15fc98fbd50f4097ff3a74562bec7db
 </VBox>

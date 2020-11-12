@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.Background?>
 <?import javafx.scene.layout.BackgroundFill?>
@@ -29,15 +28,26 @@
     </background>
     <HBox>
         <VBox>
-            <Label text="Select a Province on the Map ">
+            <Label text="Choose Action">
             <font>
-               <Font size="15.0" />
+               <Font size="19.0" />
             </font></Label>
         </VBox>
     </HBox>
      <!-- onAction="#clickedRegisterButton"/> -->
     <VBox />
-   <Label text="Choose unit to train" />
-   <ChoiceBox prefHeight="26.0" prefWidth="220.0" />
-    <Button contentDisplay="RIGHT" onAction="#clickedStartGame" text="Train Unit" textAlignment="RIGHT" />
+    <Button contentDisplay="RIGHT" onAction="#clickedStartGame" text="Get Unit" textAlignment="RIGHT">
+      <font>
+         <Font size="21.0" />
+      </font></Button>
+   <Button contentDisplay="RIGHT" onAction="#clickedStartGame" text="Move Unit" textAlignment="RIGHT">
+      <font>
+         <Font size="21.0" />
+      </font>
+   </Button>
+   <Button contentDisplay="RIGHT" onAction="#clickedStartGame" text="Invade" textAlignment="RIGHT">
+      <font>
+         <Font size="21.0" />
+      </font>
+   </Button>
 </VBox>
