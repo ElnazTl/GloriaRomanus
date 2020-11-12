@@ -13,16 +13,16 @@
 <?import javafx.geometry.Insets?>
 
 
-<VBox StackPane.alignment="TOP_LEFT" spacing="10" maxWidth="250" styleClass="panel-region" fx:controller="unsw.gloriaromanus.SignupPaneController" xmlns:fx="http://javafx.com/fxml" stylesheets="/unsw/gloriaromanus/style.css">
+<VBox alignment="BOTTOM_LEFT" maxWidth="250" spacing="10" styleClass="panel-region" stylesheets="/unsw/gloriaromanus/style.css" StackPane.alignment="TOP_LEFT" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="unsw.gloriaromanus.SignupPaneController">
     <padding>
-        <Insets topRightBottomLeft="10"/>
+        <Insets topRightBottomLeft="10" />
     </padding>
     <background>
         <Background>
             <fills>
                 <BackgroundFill>
                     <fill>
-                        <Color opacity="0.3"/>
+                        <Color opacity="0.3" />
                     </fill>
                 </BackgroundFill>
             </fills>
@@ -30,19 +30,19 @@
     </background>
     <HBox>
         <VBox>
-            <Label text="user name"/>
-            <TextField fx:id="user_name" text="" editable="true"/>
+            <Label text="user name" />
+            <TextField fx:id="user_name" editable="true" text="" />
         </VBox>
         <VBox>
-            <Label text="faction"/>
-            <TextField fx:id="user_faction" text="" editable="true"/>
+            <Label text="faction" />
+            <TextField fx:id="user_faction" editable="true" text="" />
         </VBox>
     </HBox>
-    <Button text="register" onAction="#clickedRegisterButton"/>
+    <Button onAction="#clickedRegisterButton" text="register" />
      <!-- onAction="#clickedRegisterButton"/> -->
     <VBox>
-        <Label text="Output from interactions"/>
-        <TextArea fx:id="output_terminal" text="" editable="false"/>
+        <Label text="Output from interactions" />
+        <TextArea fx:id="output_terminal" editable="false" text="" />
     </VBox>
-    <Button text="Start Game" onAction="#clickedStartGame"/>
+    <Button onAction="#clickedStartGame" text="Start Game" />
 </VBox>
