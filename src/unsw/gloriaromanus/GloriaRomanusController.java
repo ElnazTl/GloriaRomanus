@@ -130,7 +130,7 @@ public class GloriaRomanusController{
    */
   private void setMenu() throws IOException {
 
-    String []menus = {"signupPane.fxml","invasion_menu.fxml", "basic_menu.fxml"};
+    String []menus = {"signupPane.fxml","currentStatus.fxml","invasion_menu.fxml", "basic_menu.fxml"};
 
     for (String fxmlName: menus){
       FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlName));
@@ -165,6 +165,13 @@ public class GloriaRomanusController{
       }
      
 
+    }
+    //selecting to provinces from the same faction to move too
+    public void MoveUnit(ActionEvent e) throws IOException {
+      if (currentlySelectedHumanProvince != null && currentlySelectedEnemyProvince != null){
+        String humanProvince = (String)currentlySelectedHumanProvince.getAttributes().get("name");
+        String enemyProvince = (String)currentlySelectedEnemyProvince.getAttributes().get("name");
+      }
     }
   
 
@@ -424,7 +431,7 @@ public class GloriaRomanusController{
     int indexRemove = 0;
     int indexAdd = 0;
     for (int i  = 0; i < controllerParentPairs.size();i++) {
-      System.out.println(controllerParentPairs.get(i).getKey().equals(mcr)+ controllerParentPairs.get(i).getKey().getClass().getName() );
+      System.out.println(controllerParentPairs.get(i).getKey().equals(mca)+ controllerParentPairs.get(i).getKey().getClass().getName() );
       if (controllerParentPairs.get(i).getKey().equals(mcr)) {
         indexRemove = i;
         System.out.println("herer"+i);
@@ -456,7 +463,7 @@ public class GloriaRomanusController{
   public void startGame() throws IOException {
     //TODO: add UI feature for this event handler 
     if (db.startGame().equals("start")) {
-      nextMenu("unsw.gloriaromanus.SignupPaneController","unsw.gloriaromanus.InvasionMenuController");
+      nextMenu("unsw.gloriaromanus.SignupPaneController","unsw.gloriaromanus.currentStatus.fxml");
       player = db.getCurrentPlayer();
       humanFaction = player.getFaction().getName();
       ((SignupPaneController)controllerParentPairs.get(0).getKey()).appendToTerminal("successfully started the game");
