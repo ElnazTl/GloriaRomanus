@@ -43,9 +43,9 @@ public class currentStatusController extends MenuController{
 
 
     // @FXML
-    // public void clickedEndGame(ActionEvent e) throws IOException {
-    //     getParent().endTurn();
-    //     getParent().nextMenu();
+    // public void clickedSaveGame(ActionEvent e) throws IOException {
+    //     getParent().saveGame();
+    //     // getParent().nextMenu();
     // }
 
 }
