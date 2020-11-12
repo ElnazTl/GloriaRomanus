@@ -38,8 +38,9 @@ public class InvasionMenuController extends MenuController{
     }
     @FXML
     public void clickedBackButton(ActionEvent e) throws IOException {
-        getParent().nextMenu("unsw.gloriaromanus.invasionMenuController", "unsw.gloriaromanus.ActionController");
+        getParent().nextMenu("unsw.gloriaromanus.InvasionMenuController", "unsw.gloriaromanus.ActionController");
         // getParent().trainUnit("soldier");
+        
     }
     @FXML
     public void endTurn(ActionEvent e) throws IOException {

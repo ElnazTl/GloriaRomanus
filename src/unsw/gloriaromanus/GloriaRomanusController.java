@@ -143,7 +143,6 @@ public class GloriaRomanusController{
       controllerParentPairs.add(new Pair<MenuController, VBox>(menuController, root));
 
       menusList.put(menuController.getClass().getName(),menuController);
-
     }
     status = (currentStatusController)controllerParentPairs.get(1).getKey();
 
@@ -434,13 +433,15 @@ public class GloriaRomanusController{
     int indexRemove = 0;
     int indexAdd = 0;
     for (int i  = 0; i < controllerParentPairs.size();i++) {
-      System.out.println(next + controllerParentPairs.get(i).getKey().getClass().getName() );
+
       if (controllerParentPairs.get(i).getKey().equals(mcr)) {
         indexRemove = i;
       }
       if (controllerParentPairs.get(i).getKey().equals(mca)) indexAdd = i;
     }
-    stackPaneMain.getChildren().remove(controllerParentPairs.get(indexRemove).getValue());
+    System.out.println("loooooook"+ controllerParentPairs.get(indexAdd).getKey().getClass().getName()+" "+mca.getClass().getName() +" ");
+
+    stackPaneMain.getChildren().removeAll(controllerParentPairs.get(indexRemove).getValue(),controllerParentPairs.get(1).getValue());
     stackPaneMain.getChildren().addAll(controllerParentPairs.get(indexAdd).getValue(),controllerParentPairs.get(1).getValue());
   }
 
