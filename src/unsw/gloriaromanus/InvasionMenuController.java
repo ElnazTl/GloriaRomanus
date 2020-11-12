@@ -20,10 +20,13 @@ public class InvasionMenuController extends MenuController{
     @FXML
     private URL location; // has to be called location
 
+    @FXML
     public void setInvadingProvince(String p) {
+
+        System.out.println("helpppppppppppp");
         invading_province.setText(p);
     }
-
+    @FXML
     public void setOpponentProvince(String p) {
         opponent_province.setText(p);
     }
@@ -31,6 +34,8 @@ public class InvasionMenuController extends MenuController{
     public void appendToTerminal(String message) {
         output_terminal.appendText(message + "\n");
     }
+
+   
 
     @FXML
     public void clickedInvadeButton(ActionEvent e) throws IOException {

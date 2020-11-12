@@ -92,6 +92,8 @@ public class GloriaRomanusController{
 
   private Map<String,MenuController> menusList;
 
+  private String currentMenu;
+
   @FXML
   private void initialize() throws JsonParseException, JsonMappingException, IOException, InterruptedException {
     // TODO = you should rely on an object oriented design to determine ownership
@@ -320,8 +322,8 @@ public class GloriaRomanusController{
                     featureLayer.unselectFeature(currentlySelectedHumanProvince);
                   }
                   currentlySelectedHumanProvince = f;
-                  if (controllerParentPairs.get(1).getKey() instanceof InvasionMenuController){
-                    ((InvasionMenuController)controllerParentPairs.get(1).getKey()).setInvadingProvince(province);
+                  if (controllerParentPairs.get(3).getKey() instanceof InvasionMenuController){
+                    ((InvasionMenuController)controllerParentPairs.get(3).getKey()).setInvadingProvince(province);
                   }
 
                 }
@@ -330,8 +332,9 @@ public class GloriaRomanusController{
                     featureLayer.unselectFeature(currentlySelectedEnemyProvince);
                   }
                   currentlySelectedEnemyProvince = f;
-                  if (controllerParentPairs.get(1).getKey() instanceof InvasionMenuController){
-                    ((InvasionMenuController)controllerParentPairs.get(1).getKey()).setOpponentProvince(province);
+                  if (controllerParentPairs.get(3).getKey() instanceof InvasionMenuController){
+                    System.out.println("hellllo we are here the index is wrong");
+                    ((InvasionMenuController)controllerParentPairs.get(3).getKey()).setOpponentProvince(province);
                   }
                 }
 
@@ -427,7 +430,7 @@ public class GloriaRomanusController{
   }
 
   public void nextMenu(String current, String next) throws JsonParseException, JsonMappingException, IOException {
-    
+    currentMenu = next;
     MenuController mcr = menusList.get(current);
     MenuController mca = menusList.get(next);
     int indexRemove = 0;
