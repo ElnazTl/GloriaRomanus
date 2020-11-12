@@ -9,7 +9,7 @@ import javafx.fxml.FXML;
 public class ActionController extends MenuController {
     @FXML
     public void trainUnit() {
-        System.out.println("x");
+        getPar
     }
     @FXML
     public void moveTroop() {
