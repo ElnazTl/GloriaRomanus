@@ -15,9 +15,9 @@ public class ActionController extends MenuController {
         System.out.println("x");
     }
     @FXML
-    public void moveTroop() {
+    public void moveTroop() throws JsonParseException, JsonMappingException, IOException{
         
-        System.out.println("x");
+        getParent().nextMenu("unsw.gloriaromanus.ActionController", "unsw.gloriaromanus.moveMenuController");
     }
     @FXML
     public void invade() throws JsonParseException, JsonMappingException, IOException {
