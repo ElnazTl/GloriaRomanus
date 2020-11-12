@@ -1,4 +1,3 @@
-
 package unsw.gloriaromanus;
 
 import java.io.IOException;
@@ -46,6 +45,7 @@ public class SignupPaneController extends MenuController {
     @FXML
     public void clickedStartGame(ActionEvent e) throws IOException {
         getParent().startGame();
+        getParent().nextMenu();
     }
 }
 
