@@ -66,11 +66,11 @@
    </HBox>
    <HBox prefHeight="38.0" prefWidth="230.0">
       <children>
-        <Button onAction="#endTurn" text="End turn">
+        <Button fx:id="endTurnButton" onAction="#endTurn" text="End turn">
             <font>
                <Font size="16.0" />
             </font></Button>
-        <Button onAction="#saveGame" text="Save Game">
+        <Button fx:id="saveGameButton" onAction="#saveGame" text="Save Game">
             <font>
                <Font size="16.0" />
             </font></Button>
