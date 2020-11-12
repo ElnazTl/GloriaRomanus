@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Background?>
@@ -11,7 +12,9 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxWidth="250" spacing="10" styleClass="panel-region" stylesheets="/unsw/gloriaromanus/style.css" StackPane.alignment="TOP_LEFT" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="unsw.gloriaromanus.SignupPaneController">
+<VBox maxWidth="250" spacing="10" styleClass="panel-region" stylesheets="/unsw/gloriaromanus/style.css" StackPane.alignment="TOP_RIGHT" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="unsw.gloriaromanus.currentStatusController">
+
+
     <padding>
         <Insets topRightBottomLeft="10" />
     </padding>
@@ -34,11 +37,11 @@
     <HBox>
         <VBox>
             <Label text="User Name" />
-            <TextField fx:id="userNameBox" editable="true" text="" />
+            <TextField fx:id="userNameBox" editable="false" text="" />
         </VBox>
         <VBox>
             <Label text="Current Year" />
-            <TextField fx:id="currentYearBox" editable="true" text="" />
+            <TextField fx:id="currentYearBox" editable="false" text="" />
         </VBox>
     </HBox>
      <!-- onAction="#clickedRegisterButton"/> -->
@@ -57,6 +60,20 @@
                <TextField fx:id="conqueredBox" editable="true" text="" />
             </children>
          </VBox>
+
+
+      </children>
+   </HBox>
+   <HBox prefHeight="38.0" prefWidth="230.0">
+      <children>
+        <Button fx:id="endTurnButton" onAction="#endTurn" text="End turn">
+            <font>
+               <Font size="16.0" />
+            </font></Button>
+        <Button fx:id="saveGameButton" onAction="#saveGame" text="Save Game">
+            <font>
+               <Font size="16.0" />
+            </font></Button>
       </children>
    </HBox>
 </VBox>
