@@ -40,8 +40,8 @@ public class moveMenuController extends MenuController {
    
 
     @FXML
-    public void clickedMoveButton(ActionEvent e) throws IOException {
-        getParent().clickedInvadeButton(e);
+    public void clickedMoveButton() throws IOException {
+        getParent().MoveUnit(to.getText(), from.getText(), "soldier");
     }
     @FXML
     public void clickedBackButton(ActionEvent e) throws IOException {
