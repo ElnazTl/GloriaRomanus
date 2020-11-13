@@ -3,6 +3,7 @@ package unsw.gloriaromanus;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -24,6 +25,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -59,7 +61,7 @@ import org.json.JSONObject;
 import javafx.util.Pair;
 import unsw.gloriaromanus.Backend.*;
 
-public class GloriaRomanusController {
+public class GloriaRomanusController extends MenuController {
 
   @FXML
   private MapView mapView;
@@ -107,6 +109,7 @@ public class GloriaRomanusController {
     /**
      * set up list of observers in provinces
      */
+    // parent();
 
     db = new Database();
 
@@ -121,6 +124,9 @@ public class GloriaRomanusController {
 
     stackPaneMain.getChildren().add(controllerParentPairs.get(0).getValue());
 
+    checkLoad();
+
+
     initializeProvinceLayers();
 
   }
@@ -128,6 +134,54 @@ public class GloriaRomanusController {
   /**
    * setting vbox menus TODO: add more menus
    */
+  // private void parent() throws IOException {
+  //   FXMLLoader loader = new FXMLLoader(getClass().getResource("startGame.fxml"));
+  //  System.out.println( loader.getController());
+  //   startGameController controller = (startGameController) loader.getController();
+
+  //   controller.setChild(this);
+  // }
+  
+  private void checkLoad() throws IOException {
+    String content = Files.readString(Paths.get("src/unsw/gloriaromanus/load.json"));
+    JSONObject ownership = new JSONObject(content);
+    System.out.println(ownership.get("load").toString()+"loading the data");
+    if (ownership.get("load").toString().equals("true")) {
+      load();
+      System.out.println("this is current menu"+currentMenu);
+      nextMenu("unsw.gloriaromanus.SignupPaneController","unsw.gloriaromanus.ActionController");
+
+    }
+  }
+  
+
+  private void load() throws IOException {
+    db.loadGame();
+    JSONObject jo = new JSONObject();
+    jo.put("load",false);
+    try (FileWriter file = new FileWriter("src/unsw/gloriaromanus/load.json")) {
+
+        file.write(jo.toString());
+        file.flush();
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+
+    player = db.getCurrentPlayer();
+    subscribe();
+    for (Player p: db.getPlayers()) {
+      for (Province pp: p.getFaction().getProvinces()) {
+        provinceToNumberTroopsMap.put(pp.getName(), pp.getNTroops());
+
+      }
+    }
+    System.out.println( player.getUsername());
+    status.setName(player.getUsername());
+    status.setYear(db.getGameYear());
+
+
+  }
   private void setMenu() throws IOException {
 
     String[] menus = { "signupPane.fxml", "currentStatus.fxml", "Action.fxml", "invasion_menu.fxml", "moveMenu.fxml",
@@ -137,6 +191,7 @@ public class GloriaRomanusController {
       FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlName));
       VBox root = (VBox) loader.load();
       MenuController menuController = (MenuController) loader.getController();
+      System.out.println( (MenuController) loader.getController());
       menuController.setParent(this);
       controllerParentPairs.add(new Pair<MenuController, VBox>(menuController, root));
 
@@ -201,9 +256,12 @@ public class GloriaRomanusController {
       if (u.getName().equals(unit))
         x = u;
     }
+    String message;
     player.selectUnit(x.getUnitID());
-
-    player.moveUnits(to);
+    boolean result = player.moveUnits(to);
+     if (result) message = "successfully moved units";
+    else message = "can't move uni";
+   ((moveMenuController)controllerParentPairs.get(4).getKey()).appendToTerminal( message);
     featureLayer_provinces.unselectFeature(currentlySelectedHumanProvince);
     featureLayer_provinces.unselectFeature(currentlySelectedEnemyProvince);
 
@@ -529,6 +587,7 @@ public class GloriaRomanusController {
 
       if (controllerParentPairs.get(i).getKey().equals(mcr)) {
         indexRemove = i;
+
       }
       if (controllerParentPairs.get(i).getKey().equals(mca))
         indexAdd = i;
@@ -536,8 +595,11 @@ public class GloriaRomanusController {
 
     stackPaneMain.getChildren().removeAll(controllerParentPairs.get(indexRemove).getValue(),
         controllerParentPairs.get(1).getValue());
+
+
     stackPaneMain.getChildren().addAll(controllerParentPairs.get(indexAdd).getValue(),
         controllerParentPairs.get(1).getValue());
+
   }
 
   /**
@@ -626,6 +688,7 @@ public class GloriaRomanusController {
    */
 
   public void endTurn() throws JsonParseException, JsonMappingException, IOException {
+    System.out.println(player.getUsername());
     player.endTurn();
     player = db.getCurrentPlayer();
     humanFaction = player.getFaction().getName();
@@ -653,5 +716,16 @@ public class GloriaRomanusController {
   public void saveGame() throws IOException {
     System.out.println("you saved game");
     db.saveGame();
+    JSONObject jo = new JSONObject();
+
+    jo.put("load",true);
+        try (FileWriter file = new FileWriter("src/unsw/gloriaromanus/load.json")) {
+ 
+            file.write(jo.toString());
+            file.flush();
+ 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
   }
 }
