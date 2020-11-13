@@ -12,29 +12,40 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ChoiceBox;
 
 public class getUnitController extends MenuController{
-    ObservableList<String> units = FXCollections.observableArrayList("soldier","archier");
-
+    ObservableList<String> getUnits = FXCollections.observableArrayList("soldier","horseArcher","hoplite","pikemen","romanLegionary","berserker","javelinSkirmisher","elephant","druid");
+    
     @FXML
     private TextField province;
   
     @FXML
     private TextArea output_terminal;
-
-    @FXML
-    private ChoiceBox<String> box;
     
     // https://stackoverflow.com/a/30171444
     @FXML
     private URL location; // has to be called location
 
+    @FXML
+    private ChoiceBox<String> getUnitChoice;
+
+
+//     // Background color of the control itself
+// .choice-box {
+//     -fx-background-color: black;
+//     -fx-mark-color: orange; // arrow color
+//   }
+  
+//   // Selected item text color on the control itself
+//   .choice-box > .label { -fx-text-fill: white; }
   
 
     @FXML
     private void initialize(){
-        box.setValue("soldier");
-        box.setItems(units);
-    }
+        getUnitChoice.setItems(getUnits);
+        getUnitChoice.setStyle("-fx-background-color: black; -fx-text-color: Red;");
+        getUnitChoice.setValue("soldier");
+    };
 
+    @FXML
     public void appendToTerminal(String message) {
         output_terminal.clear();
         output_terminal.appendText(message + "\n");
@@ -44,9 +55,7 @@ public class getUnitController extends MenuController{
 
     @FXML
     public void clickedGetUnit() throws IOException {
-        getParent().getUnit(province.getText(), box.getValue());
-        getParent().clean();
-        clean();
+        getParent().getUnit(province.getText(), getUnitChoice.getValue());
     }
     @FXML
     public void clickedBackButton(ActionEvent e) throws IOException {
@@ -61,11 +70,5 @@ public class getUnitController extends MenuController{
     public void setProvince(String p) {
         province.setText(p);
     }
-    private void clean() {
-        province.setText("");
-    }
    
 }
-
-
-

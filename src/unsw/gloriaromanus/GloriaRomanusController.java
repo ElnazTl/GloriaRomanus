@@ -196,10 +196,13 @@ public class GloriaRomanusController {
    */
   public void MoveUnit(String to, String from, String unit) throws IOException {
     player.selectProvince(from);
+    Unit x = null;
     for (Unit u : player.getFaction().getSelectedProvince().getUnits()) {
       if (u.getName().equals(unit))
-        player.selectUnit(u.getUnitID());
+        x = u;
     }
+    player.selectUnit(x.getUnitID());
+
     player.moveUnits(to);
     featureLayer_provinces.unselectFeature(currentlySelectedHumanProvince);
     featureLayer_provinces.unselectFeature(currentlySelectedEnemyProvince);
