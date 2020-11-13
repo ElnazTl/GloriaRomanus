@@ -423,7 +423,8 @@ public class GloriaRomanusController {
       currentlySelectedHumanProvince = f;
 
       featureLayer_provinces.selectFeature(f);
-      ((getUnitController) controllerParentPairs.get(5).getKey()).setProvince(province);;
+      ((getUnitController) controllerParentPairs.get(5).getKey()).setProvince(province);
+      ;
 
     }
   }
@@ -639,17 +640,18 @@ public class GloriaRomanusController {
   public List<String> getAvailableUnit(String p) {
     List<Unit> u;
     List<String> name = new ArrayList<String>();
-    for (Province pp: player.getFaction().getProvinces()) {
-      if(pp.getName().equals(p)) {
+    for (Province pp : player.getFaction().getProvinces()) {
+      if (pp.getName().equals(p)) {
         u = pp.getUnits();
-        for (Unit unit: u) {
+        for (Unit unit : u) {
           name.add(unit.getName());
         }
       }
     }
     return name;
   }
-
-
-
+  public void saveGame() throws IOException {
+    System.out.println("you saved game");
+    db.saveGame();
+  }
 }
