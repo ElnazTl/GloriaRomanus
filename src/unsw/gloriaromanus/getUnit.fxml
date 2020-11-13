@@ -37,7 +37,7 @@
         <VBox />
     </HBox>
    <Label text="Choose Unit" />
-   <ChoiceBox prefHeight="26.0" prefWidth="227.0" />
+   <ChoiceBox fx:id="getUnitChoice" prefHeight="26.0" prefWidth="227.0" />
     <VBox>
         <Label text="Output from interactions" />
         <TextArea fx:id="output_terminal" editable="false" text="" />
