@@ -11,8 +11,9 @@ import javafx.fxml.FXML;
 
 public class ActionController extends MenuController {
     @FXML
-    public void trainUnit() {
-        System.out.println("x");
+    public void trainUnit() throws JsonParseException, JsonMappingException, IOException {
+        getParent().nextMenu("unsw.gloriaromanus.ActionController", "unsw.gloriaromanus.getUnitController");
+
     }
     @FXML
     public void moveTroop() throws JsonParseException, JsonMappingException, IOException{
@@ -23,5 +24,5 @@ public class ActionController extends MenuController {
     public void invade() throws JsonParseException, JsonMappingException, IOException {
         getParent().nextMenu("unsw.gloriaromanus.ActionController", "unsw.gloriaromanus.InvasionMenuController");
     }
-    
+   
 }

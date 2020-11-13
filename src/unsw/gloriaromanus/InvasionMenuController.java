@@ -11,8 +11,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ChoiceBox;
 
-public class InvasionMenuController extends MenuController {
-    ObservableList<String> units = FXCollections.observableArrayList("soliders","archier");
+public class InvasionMenuController extends MenuController{
+    ObservableList<String> units = FXCollections.observableArrayList("0L","1L");
 
     @FXML
     private TextField invading_province;
@@ -20,16 +20,16 @@ public class InvasionMenuController extends MenuController {
     private TextField opponent_province;
     @FXML
     private TextArea output_terminal;
-
+    
     @FXML
     private ChoiceBox<String> unitChoice;
 
     @FXML
-    private void initialize(){
-        unitChoice.setValue("soliders");
+    private void unitInitialize(){
+        unitChoice.setValue("0L");
         unitChoice.setItems(units);
     }
-
+    
     // https://stackoverflow.com/a/30171444
     @FXML
     private URL location; // has to be called location
@@ -37,8 +37,8 @@ public class InvasionMenuController extends MenuController {
     @FXML
     public void setInvadingProvince(String p) {
 
-        System.out.println("helpppppppppppp");
         invading_province.setText(p);
+            // box.setItem;
     }
     @FXML
     public void setOpponentProvince(String p) {
@@ -58,6 +58,7 @@ public class InvasionMenuController extends MenuController {
     }
     @FXML
     public void clickedBackButton(ActionEvent e) throws IOException {
+        getParent().clean();
         getParent().nextMenu("unsw.gloriaromanus.InvasionMenuController", "unsw.gloriaromanus.ActionController");
         // getParent().trainUnit("soldier");
         

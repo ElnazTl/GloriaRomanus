@@ -16,7 +16,7 @@ import javafx.scene.control.TextField;
 public class currentStatusController extends MenuController{
 
     @FXML
-    private Button endGameButton;
+    private Button province;
 
     @FXML
     private TextField userNameBox;
