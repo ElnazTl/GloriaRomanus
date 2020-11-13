@@ -11,7 +11,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ChoiceBox;
 
-public class InvasionMenuController extends MenuController{
+
+public class InvasionMenuController extends MenuController {
+    ObservableList<String> units = FXCollections.observableArrayList("");
 
     @FXML
     private TextField invading_province;
@@ -23,15 +25,23 @@ public class InvasionMenuController extends MenuController{
     @FXML
     private ChoiceBox<String> unitChoice;
 
-    ObservableList<String> units;
-
+    
     @FXML
-    private void unitInitialize() throws IOException{
-        getParent().trainUnit("soldier");
-        unitChoice.setValue("0L");
-        units = FXCollections.observableArrayList(getParent().getAvailableUnit(invading_province.getText()));
+    private void initialize(){
+
+
         unitChoice.setItems(units);
+        unitChoice.setOnMouseClicked(e -> {
+            units = FXCollections.observableArrayList(getParent().getAvailableUnit(invading_province.getText()));
+            unitChoice.setItems(units);
+
+        });
+        System.out.println(units);
+       
+
     }
+
+
     
     // https://stackoverflow.com/a/30171444
     @FXML
@@ -55,14 +65,19 @@ public class InvasionMenuController extends MenuController{
 
    
 
+    
     @FXML
     public void clickedInvadeButton(ActionEvent e) throws IOException {
-        getParent().clickedInvadeButton(invading_province.getText(),opponent_province.getText(),"soldier");
+        getParent().clickedInvadeButton(invading_province.getText(),opponent_province.getText(),unitChoice.getValue());
+        getParent().clean();
+        clean();
     }
     @FXML
     public void clickedBackButton(ActionEvent e) throws IOException {
+        clean();
         getParent().clean();
         getParent().nextMenu("unsw.gloriaromanus.InvasionMenuController", "unsw.gloriaromanus.ActionController");
+        
         // getParent().trainUnit("soldier");
         
     }
@@ -70,4 +85,9 @@ public class InvasionMenuController extends MenuController{
     public void endTurn(ActionEvent e) throws IOException {
         getParent().endTurn();
     }
+    private void clean() {
+        invading_province.setText("");
+        opponent_province.setText("");
+    }
 }
+

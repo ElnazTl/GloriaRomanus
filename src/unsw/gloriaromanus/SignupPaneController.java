@@ -40,11 +40,17 @@ public class SignupPaneController extends MenuController {
         if (user_name.getText().isEmpty()) appendToTerminal("error: name can't be empty");
         if (user_faction.getText().isEmpty()) appendToTerminal("error: faction can't be empty");
         getParent().registerUser(user_name.getText(),user_faction.getText());
+        clean();
+
     }
 
     @FXML
     public void clickedStartGame(ActionEvent e) throws IOException {
         getParent().startGame();
+    }
+    private void clean() {
+        user_faction.setText("");
+        user_name.setText("");
     }
 }
 
