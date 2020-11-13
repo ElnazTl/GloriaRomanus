@@ -7,3 +7,4 @@
            stylesheets="/unsw/gloriaromanus/style.css" fx:id="stackPaneMain">
     <MapView fx:id="mapView"/>
 </StackPane>
+

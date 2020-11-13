@@ -14,7 +14,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxWidth="250" spacing="10" styleClass="panel-region" stylesheets="/unsw/gloriaromanus/style.css" StackPane.alignment="TOP_LEFT" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="unsw.gloriaromanus.InvasionMenuController">
+<VBox maxWidth="250" spacing="10" styleClass="panel-region" stylesheets="/unsw/gloriaromanus/style.css" StackPane.alignment="TOP_LEFT" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="unsw.gloriaromanus.moveMenuController">
     <padding>
         <Insets topRightBottomLeft="10" />
     </padding>
@@ -31,32 +31,30 @@
     </background>
     <HBox>
         <VBox>
-            <Label text="Your province" />
-            <TextField fx:id="invading_province" editable="false" text="" />
+            <Label text="From" />
+            <TextField fx:id="from" editable="false" text="" />
         </VBox>
         <VBox>
-            <Label text="Enemy province" />
-            <TextField fx:id="opponent_province" editable="false" text="" />
+            <Label text="To" />
+            <TextField fx:id="to" editable="false" text="" />
         </VBox>
     </HBox>
-
    <Label text="Choose Unit" />
-   <ChoiceBox fx:id="unitChoice" prefHeight="26.0" prefWidth="229.0" />
+   <ChoiceBox prefHeight="26.0" prefWidth="227.0" />
     <VBox>
         <Label text="Output from interactions" />
         <TextArea fx:id="output_terminal" editable="false" text="" />
     </VBox>
-
-   <HBox prefHeight="27.0" prefWidth="230.0">
+   <HBox prefHeight="0.0" prefWidth="230.0">
       <children>
-          <Button onAction="#clickedInvadeButton" text="Invade">
+          <Button onAction="#clickedMoveButton" text="Move">
             <font>
-               <Font size="16.0" />
+               <Font size="15.0" />
             </font>
          </Button>
-         <Button fx:id="backButton" onAction="#clickedBackButton" text="Back">
+         <Button fx:id="backButton" alignment="CENTER_RIGHT" onAction="#clickedBackButton" text="Back">
             <font>
-               <Font size="16.0" />
+               <Font size="15.0" />
             </font>
          </Button>
       </children>
