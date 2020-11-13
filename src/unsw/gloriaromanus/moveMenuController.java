@@ -56,10 +56,13 @@ public class moveMenuController extends MenuController {
     @FXML
     public void clickedMoveButton() throws IOException {
         getParent().MoveUnit(to.getText(), from.getText(), "soldier");
+        getParent().clean();
+        clean();
     }
     @FXML
     public void clickedBackButton(ActionEvent e) throws IOException {
         getParent().clean();
+        clean();
         getParent().nextMenu("unsw.gloriaromanus.moveMenuController", "unsw.gloriaromanus.ActionController");
         // getParent().trainUnit("soldier");
         
@@ -67,6 +70,10 @@ public class moveMenuController extends MenuController {
     @FXML
     public void endTurn(ActionEvent e) throws IOException {
         getParent().endTurn();
+    }
+    private void clean() {
+        from.setText("");
+        to.setText("");
     }
     
 }

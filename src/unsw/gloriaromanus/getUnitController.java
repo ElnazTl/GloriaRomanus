@@ -3,6 +3,8 @@ package unsw.gloriaromanus;
 import java.io.IOException;
 import java.net.URL;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -10,6 +12,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ChoiceBox;
 
 public class getUnitController extends MenuController{
+    ObservableList<String> units = FXCollections.observableArrayList("soldier","archier");
+
     @FXML
     private TextField province;
   
@@ -17,13 +21,19 @@ public class getUnitController extends MenuController{
     private TextArea output_terminal;
 
     @FXML
-    private ChoiceBox box;
+    private ChoiceBox<String> box;
     
     // https://stackoverflow.com/a/30171444
     @FXML
     private URL location; // has to be called location
 
-   
+  
+
+    @FXML
+    private void initialize(){
+        box.setValue("soldier");
+        box.setItems(units);
+    }
 
     public void appendToTerminal(String message) {
         output_terminal.clear();
@@ -34,7 +44,7 @@ public class getUnitController extends MenuController{
 
     @FXML
     public void clickedGetUnit() throws IOException {
-        getParent().getUnit(province.getText(), "soldier");
+        getParent().getUnit(province.getText(), box.getValue());
     }
     @FXML
     public void clickedBackButton(ActionEvent e) throws IOException {
