@@ -27,7 +27,9 @@
     </background>
    <Label text="Choose Action">
       <font>
-         <Font size="16.0" />
+
+         <Font size="15.0" />
+
       </font>
    </Label>
    

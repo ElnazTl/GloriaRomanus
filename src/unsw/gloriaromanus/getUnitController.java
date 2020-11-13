@@ -40,9 +40,11 @@ public class getUnitController extends MenuController{
 
     @FXML
     private void initialize(){
-        getUnitChoice.setStyle("-fx-background-color: darkslateblue; -fx-text-fill: white;");
-        getUnitChoice.setValue("soldier");
+
         getUnitChoice.setItems(getUnits);
+        getUnitChoice.setStyle("-fx-background-color: black; -fx-text-color: Red;");
+        getUnitChoice.setValue("soldier");
+
     };
 
     @FXML
@@ -55,7 +57,9 @@ public class getUnitController extends MenuController{
 
     @FXML
     public void clickedGetUnit() throws IOException {
-        getParent().getUnit(province.getText(), "soldier");
+
+        getParent().getUnit(province.getText(), getUnitChoice.getValue());
+
     }
     @FXML
     public void clickedBackButton(ActionEvent e) throws IOException {
@@ -67,11 +71,11 @@ public class getUnitController extends MenuController{
     }
 
     @FXML
-    public void setUnit(String p) {
+
+    public void setProvince(String p) {
+
         province.setText(p);
     }
    
 }
-
-
 

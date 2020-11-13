@@ -16,7 +16,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ChoiceBox;
 
 public class moveMenuController extends MenuController {
-    ObservableList<String> unitsMove = FXCollections.observableArrayList("0L","1L");
+
+    ObservableList<String> unitsMove = FXCollections.observableArrayList("");
+
 
     @FXML
     private TextField from;
@@ -33,9 +35,16 @@ public class moveMenuController extends MenuController {
     private ChoiceBox<String> unitMoveChoice;
 
     @FXML
-    private void unitMoveInitialize(){
-        unitMoveChoice.setValue("0L");
+
+    private void initialize(){
+        
         unitMoveChoice.setItems(unitsMove);
+        unitMoveChoice.setOnMouseClicked(e -> {
+            unitsMove = FXCollections.observableArrayList(getParent().getAvailableUnit(from.getText()));
+            unitMoveChoice.setItems(unitsMove);
+
+        });
+
     }
 
     @FXML
@@ -56,10 +65,17 @@ public class moveMenuController extends MenuController {
     @FXML
     public void clickedMoveButton() throws IOException {
         getParent().MoveUnit(to.getText(), from.getText(), "soldier");
+
+        getParent().clean();
+        clean();
+
     }
     @FXML
     public void clickedBackButton(ActionEvent e) throws IOException {
         getParent().clean();
+
+        clean();
+
         getParent().nextMenu("unsw.gloriaromanus.moveMenuController", "unsw.gloriaromanus.ActionController");
         // getParent().trainUnit("soldier");
         
@@ -68,5 +84,11 @@ public class moveMenuController extends MenuController {
     public void endTurn(ActionEvent e) throws IOException {
         getParent().endTurn();
     }
+
+    private void clean() {
+        from.setText("");
+        to.setText("");
+    }
+
     
 }
