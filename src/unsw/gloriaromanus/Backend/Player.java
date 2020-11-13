@@ -2,6 +2,8 @@ package unsw.gloriaromanus.Backend;
 
 import java.io.IOException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class Player {
 
@@ -52,7 +54,7 @@ public class Player {
     /**
      * Ends the turn of the player
      */
-    public void endTurn() {
+    public void endTurn()  throws JsonParseException, JsonMappingException, IOException {
         if (!isTurn()) {
             System.out.println("Not your turn");
             return;
@@ -91,18 +93,17 @@ public class Player {
      * @param unit Unit to train
      * @throws IOException
      */
-    public void trainUnit(String unit) throws IOException {
+    public int trainUnit(String unit) throws IOException {
         if (!isTurn()) {
-            System.out.println("Not your turn");
-            return;
+            return (0);
         }
         boolean training = faction.trainUnit(unit);
         if (training) {
             // Unit is training
-            System.out.println("Trained unit successfully");
+            return 1;
         } else {
             // Unit training failed
-            System.out.println("Could not train unit");
+            return -1;
         }
     }
 

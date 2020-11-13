@@ -61,7 +61,6 @@ public class Database {
     }
 
 
-
     private void loadDefaultConfigs() throws IOException {
         // Load initial provinces
         String initialProvincesString = Files.readString(Paths.get(path + "initial_province_ownership.json"));
@@ -89,9 +88,13 @@ public class Database {
     }
 
     public Player addNewPlayer(String player, String name) {
-        for (Player p : players) {
+        System.out.println("player "+players.size());
+
+        for (Player p : intermediatePlayerFactions.values()) {
+            System.out.println("player "+p.getUsername() +" " + player);
+
             if (player.equals(p.getUsername())) {
-                // Username taken
+                System.out.println("name taken");
                 return null;
             }
         }
@@ -108,15 +111,17 @@ public class Database {
         return null;
     }
 
-    public void startGame() {
+    public String startGame() {
         turnNumber = 1;
         if (numPlayers < 2) {
-            System.out.println("Not enough players");
-            return;
+            // System.out.println("Not enough players");
+            return "Not enough players";
         } else if (numPlayers > 16) {
-            System.out.println("Too many players");
+            // System.out.println("Too many players");
+            return "Not enough players";
         }
         assignProvinces();
+        return "start";
 
     }
 
@@ -214,7 +219,9 @@ public class Database {
         }
         return null;
     }
-
+    public List<Player> getPlayers() {
+        return this.players;
+    }
     public boolean isAdjacentProvince(String province1, String province2) {
         return provAdjMatrix[provinceNames.indexOf(province1)][provinceNames.indexOf(province2)];
     }
@@ -423,7 +430,7 @@ public class Database {
         }
     }
 
-   
+ 
 
 }
 
