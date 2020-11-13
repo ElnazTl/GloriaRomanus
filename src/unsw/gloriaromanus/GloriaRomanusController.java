@@ -342,15 +342,15 @@ public class GloriaRomanusController {
                     }
 
                   }
-                  currentlySelectedHumanProvince = f;
+                  else  {
+                    currentlySelectedHumanProvince = f;
+                    ((moveMenuController) controllerParentPairs.get(4).getKey()).setFromProvince(humanFaction);
+                  }
                   System.out.println(currentMenu);
                   if (currentMenu.equals("unsw.gloriaromanus.InvasionMenuController")) {
                     
                     ((InvasionMenuController) controllerParentPairs.get(3).getKey()).setInvadingProvince(province);
-                  } else {
-                    ((moveMenuController) controllerParentPairs.get(4).getKey()).setFromProvince(province);
-
-                  }
+                  } 
 
                 } else {
                   if (currentlySelectedEnemyProvince != null) {

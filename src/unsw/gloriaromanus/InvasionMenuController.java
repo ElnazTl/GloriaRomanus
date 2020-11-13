@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ChoiceBox;
 
 public class InvasionMenuController extends MenuController{
     @FXML
@@ -16,6 +17,9 @@ public class InvasionMenuController extends MenuController{
     @FXML
     private TextArea output_terminal;
 
+    @FXML
+    private ChoiceBox box;
+    
     // https://stackoverflow.com/a/30171444
     @FXML
     private URL location; // has to be called location
@@ -23,8 +27,8 @@ public class InvasionMenuController extends MenuController{
     @FXML
     public void setInvadingProvince(String p) {
 
-        System.out.println("helpppppppppppp");
         invading_province.setText(p);
+            // box.setItem;
     }
     @FXML
     public void setOpponentProvince(String p) {
