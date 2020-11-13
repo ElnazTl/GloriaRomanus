@@ -11,8 +11,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ChoiceBox;
 
 public class moveMenuController extends MenuController {
+    ObservableList<String> unitsMove = FXCollections.observableArrayList("0L","1L");
+
     @FXML
     private TextField from;
     @FXML
@@ -23,6 +28,15 @@ public class moveMenuController extends MenuController {
     // https://stackoverflow.com/a/30171444
     @FXML
     private URL location; // has to be called location
+
+    @FXML
+    private ChoiceBox<String> unitMoveChoice;
+
+    @FXML
+    private void unitMoveInitialize(){
+        unitMoveChoice.setValue("0L");
+        unitMoveChoice.setItems(unitsMove);
+    }
 
     @FXML
     public void setFromProvince(String p) {
