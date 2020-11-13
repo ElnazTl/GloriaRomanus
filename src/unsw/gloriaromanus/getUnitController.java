@@ -38,6 +38,8 @@ public class getUnitController extends MenuController{
     }
     @FXML
     public void clickedBackButton(ActionEvent e) throws IOException {
+        getParent().clean();
+
         getParent().nextMenu("unsw.gloriaromanus.getUnitController", "unsw.gloriaromanus.ActionController");
         // getParent().trainUnit("soldier");
         
