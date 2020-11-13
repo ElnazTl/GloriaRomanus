@@ -3,6 +3,8 @@ package unsw.gloriaromanus;
 import java.io.IOException;
 import java.net.URL;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -10,15 +12,23 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ChoiceBox;
 
 public class InvasionMenuController extends MenuController{
+    ObservableList<String> units = FXCollections.observableArrayList("0L","1L");
+
     @FXML
     private TextField invading_province;
     @FXML
     private TextField opponent_province;
     @FXML
     private TextArea output_terminal;
+    
+    @FXML
+    private ChoiceBox<String> unitChoice;
 
     @FXML
-    private ChoiceBox box;
+    private void unitInitialize(){
+        unitChoice.setValue("0L");
+        unitChoice.setItems(units);
+    }
     
     // https://stackoverflow.com/a/30171444
     @FXML
