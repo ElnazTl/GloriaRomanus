@@ -33,7 +33,7 @@ public class moveMenuController extends MenuController {
     private ChoiceBox<String> unitMoveChoice;
 
     @FXML
-    private void initialize(){
+    private void unitMoveInitialize(){
         unitMoveChoice.setValue("0L");
         unitMoveChoice.setItems(unitsMove);
     }

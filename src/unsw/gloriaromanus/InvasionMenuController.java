@@ -25,7 +25,7 @@ public class InvasionMenuController extends MenuController{
     private ChoiceBox<String> unitChoice;
 
     @FXML
-    private void initialize(){
+    private void unitInitialize(){
         unitChoice.setValue("0L");
         unitChoice.setItems(units);
     }
