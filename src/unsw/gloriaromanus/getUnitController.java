@@ -17,7 +17,7 @@ public class getUnitController extends MenuController{
     private TextArea output_terminal;
 
     @FXML
-    private ChoiceBox box;
+    private ChoiceBox<String> box;
     
     // https://stackoverflow.com/a/30171444
     @FXML
