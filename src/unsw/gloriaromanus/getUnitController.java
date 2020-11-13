@@ -45,6 +45,8 @@ public class getUnitController extends MenuController{
     @FXML
     public void clickedGetUnit() throws IOException {
         getParent().getUnit(province.getText(), box.getValue());
+        getParent().clean();
+        clean();
     }
     @FXML
     public void clickedBackButton(ActionEvent e) throws IOException {
@@ -58,6 +60,9 @@ public class getUnitController extends MenuController{
     @FXML
     public void setProvince(String p) {
         province.setText(p);
+    }
+    private void clean() {
+        province.setText("");
     }
    
 }
