@@ -395,7 +395,11 @@ public class GloriaRomanusController {
     });
     return flp;
   }
+  public void clean() {
+    if (currentlySelectedEnemyProvince!= null) featureLayer_provinces.unselectFeature(currentlySelectedEnemyProvince);
+    if (currentlySelectedHumanProvince!=null) featureLayer_provinces.unselectFeature(currentlySelectedHumanProvince);
 
+  }
   private Map<String, String> getProvinceToOwningFactionMap() throws IOException {
     String content = Files.readString(Paths.get("src/unsw/gloriaromanus/initial_province_ownership.json"));
     JSONObject ownership = new JSONObject(content);

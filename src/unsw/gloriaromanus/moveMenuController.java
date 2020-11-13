@@ -59,6 +59,7 @@ public class moveMenuController extends MenuController {
     }
     @FXML
     public void clickedBackButton(ActionEvent e) throws IOException {
+        getParent().clean();
         getParent().nextMenu("unsw.gloriaromanus.moveMenuController", "unsw.gloriaromanus.ActionController");
         // getParent().trainUnit("soldier");
         
