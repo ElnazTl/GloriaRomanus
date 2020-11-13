@@ -359,7 +359,7 @@ public class GloriaRomanusController {
                     currentlySelectedHumanProvince = f;
                     System.out.println(currentMenu);
                     if (currentMenu.equals("unsw.gloriaromanus.InvasionMenuController")) {
-                      
+                      System.out.println("here invading");
                       ((InvasionMenuController) controllerParentPairs.get(3).getKey()).setInvadingProvince(province);
                     } 
                     else if (currentMenu.equals("unsw.gloriaromanus.moveMenuController")) {
