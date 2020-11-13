@@ -24,7 +24,7 @@ public class startGameScreen {
 
         // load into a Parent node called root
         Parent root = loader.load();
-        scene = new Scene(root, 500, 300);
+        scene = new Scene(root, 800, 500);
     }
 
     public void start() {
