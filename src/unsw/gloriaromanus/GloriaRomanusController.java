@@ -130,7 +130,7 @@ public class GloriaRomanusController {
    */
   private void setMenu() throws IOException {
 
-    String[] menus = { "signupPane.fxml", "currentStatus.fxml", "Action.fxml", "invasion_menu.fxml", "moveMenu.fxml" };
+    String[] menus = { "signupPane.fxml", "currentStatus.fxml", "Action.fxml", "invasion_menu.fxml", "moveMenu.fxml" ,"getUnit.fxml"};
 
     for (String fxmlName : menus) {
       FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlName));
@@ -172,6 +172,11 @@ public class GloriaRomanusController {
       
     }
 
+    public void getUnit(String province, String unit) throws IOException {
+      player.selectProvince(province);
+      player.trainUnit(unit);
+    }
+
   
  
   /**
@@ -189,6 +194,9 @@ public class GloriaRomanusController {
         player.selectUnit(u.getUnitID());
     }
     player.moveUnits(to);
+    featureLayer_provinces.unselectFeature(currentlySelectedHumanProvince);
+    featureLayer_provinces.unselectFeature(currentlySelectedEnemyProvince);
+
   }
 
 
@@ -332,6 +340,11 @@ public class GloriaRomanusController {
 
                 if (provinceToOwningFactionMap.get(province).equals(humanFaction)) {
                   // province owned by human
+                  if (currentlySelectedHumanProvince != null && currentlySelectedEnemyProvince != null) {
+                    featureLayer.unselectFeature(currentlySelectedEnemyProvince);
+
+
+                  }
                   if (currentlySelectedHumanProvince != null) {
                     if (currentMenu.equals("unsw.gloriaromanus.moveMenuController")) {
                       currentlySelectedEnemyProvince = f;
@@ -344,13 +357,19 @@ public class GloriaRomanusController {
                   }
                   else  {
                     currentlySelectedHumanProvince = f;
-                    ((moveMenuController) controllerParentPairs.get(4).getKey()).setFromProvince(humanFaction);
+                    System.out.println(currentMenu);
+                    if (currentMenu.equals("unsw.gloriaromanus.InvasionMenuController")) {
+                      
+                      ((InvasionMenuController) controllerParentPairs.get(3).getKey()).setInvadingProvince(province);
+                    } 
+                    else if (currentMenu.equals("unsw.gloriaromanus.moveMenuController")) {
+                      ((moveMenuController) controllerParentPairs.get(4).getKey()).setFromProvince(province);
+
+                    }
+                    else {
+                      ((getUnitController)controllerParentPairs.get(5).getKey()).setUnit(province);
+                    }
                   }
-                  System.out.println(currentMenu);
-                  if (currentMenu.equals("unsw.gloriaromanus.InvasionMenuController")) {
-                    
-                    ((InvasionMenuController) controllerParentPairs.get(3).getKey()).setInvadingProvince(province);
-                  } 
 
                 } else {
                   if (currentlySelectedEnemyProvince != null) {
