@@ -6,13 +6,17 @@ package unsw.gloriaromanus;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import unsw.gloriaromanus.*;
+import javafx.scene.image.ImageView;
+// import unsw.gloriaromanus.*;
 // import javafx.scene.control.TextArea;
 // import javafx.scene.control.TextField;
 
 public class startGameController {
     @FXML
     private Button backButton;
+
+    @FXML
+    private ImageView titleImage;
 
     private signupScreen signupScreen;
 

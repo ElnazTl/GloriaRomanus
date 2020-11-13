@@ -27,9 +27,9 @@
             </Button>
          </children>
       </VBox>
-      <ImageView fitHeight="189.0" fitWidth="546.0" layoutX="128.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="titleImage" fitHeight="189.0" fitWidth="546.0" layoutX="129.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../images/ExampleLegion.png" />
+            <Image url="@ExampleLegion.png" />
          </image>
       </ImageView>
       <Label layoutX="256.0" layoutY="236.0" text="GloriaRomanus">
