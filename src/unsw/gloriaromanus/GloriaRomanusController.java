@@ -130,7 +130,8 @@ public class GloriaRomanusController {
    */
   private void setMenu() throws IOException {
 
-    String[] menus = { "signupPane.fxml", "currentStatus.fxml", "Action.fxml", "invasion_menu.fxml", "moveMenu.fxml" ,"getUnit.fxml"};
+    String[] menus = { "signupPane.fxml", "currentStatus.fxml", "Action.fxml", "invasion_menu.fxml", "moveMenu.fxml",
+        "getUnit.fxml" };
 
     for (String fxmlName : menus) {
       FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlName));
@@ -150,39 +151,41 @@ public class GloriaRomanusController {
    * TODO: Player selecting units in the province to attack
    */
   public void clickedInvadeButton(String human, String enemy, String unit) throws IOException {
-      System.out.println("this is the province "+human);
-      player.selectProvince(human);
-      player.trainUnit("soldier");
-      Unit select = null;
-      for (Unit u: player.getFaction().getSelectedProvince().getUnits()) {
-        if (u.getName().equals(unit)) {
-          select = u;
-          break;
-        }
+    System.out.println("this is the province " + human);
+    player.selectProvince(human);
+    player.trainUnit("soldier");
+    Unit select = null;
+    for (Unit u : player.getFaction().getSelectedProvince().getUnits()) {
+      if (u.getName().equals(unit)) {
+        select = u;
+        break;
       }
-      if (select!=null) player.selectUnit(select.getUnitID());
-      InvasionMenuController men = (InvasionMenuController)controllerParentPairs.get(3).getKey();
-      int result = player.invade(enemy);
-      if (result == -1)
-        men.appendToTerminal("You lost the battle");
-      if (result == 0)
-        men.appendToTerminal("It's a tie!");
-      if (result == 1) men.appendToTerminal("Congradulation you won the battle");
-      featureLayer_provinces.unselectFeatures(Arrays.asList(currentlySelectedEnemyProvince, currentlySelectedHumanProvince));
-
-      
     }
+    if (select != null)
+      player.selectUnit(select.getUnitID());
+    InvasionMenuController men = (InvasionMenuController) controllerParentPairs.get(3).getKey();
+    int result = player.invade(enemy);
+    if (result == -1)
+      men.appendToTerminal("You lost the battle");
+    if (result == 0)
+      men.appendToTerminal("It's a tie!");
+    if (result == 1)
+      men.appendToTerminal("Congradulation you won the battle");
+    featureLayer_provinces
+        .unselectFeatures(Arrays.asList(currentlySelectedEnemyProvince, currentlySelectedHumanProvince));
 
-    public void getUnit(String province, String unit) throws IOException {
-      String message;
-      player.selectProvince(province);
-      if (player.trainUnit(unit)==1) message = "successfully added the unit to be trained";
-      else message = "cant train the unit currently";
-      ((getUnitController) controllerParentPairs.get(5).getKey()).appendToTerminal(message);
-    }
+  }
 
-  
- 
+  public void getUnit(String province, String unit) throws IOException {
+    String message;
+    player.selectProvince(province);
+    if (player.trainUnit(unit) == 1)
+      message = "successfully added the unit to be trained";
+    else
+      message = "cant train the unit currently";
+    ((getUnitController) controllerParentPairs.get(5).getKey()).appendToTerminal(message);
+  }
+
   /**
    * moves the troop / TODO: check if getID or getUNItId
    * 
@@ -202,7 +205,6 @@ public class GloriaRomanusController {
     featureLayer_provinces.unselectFeature(currentlySelectedEnemyProvince);
 
   }
-
 
   /**
    * run this initially to update province owner, change feature in each
@@ -343,50 +345,12 @@ public class GloriaRomanusController {
                 String province = (String) f.getAttributes().get("name");
 
                 System.out.println(currentMenu);
-                if (currentMenu.equals("unsw.gloriaromanus.moveMenuController")) addMoveProvinces(f, province);
-                if (currentMenu.equals("unsw.gloriaromanus.InvasionMenuController")) addInvadeProvinces(f, province);
-                // if (provinceToOwningFactionMap.get(province).equals(humanFaction)) {
-                //   // province owned by human
-                //   if (currentlySelectedHumanProvince != null && currentlySelectedEnemyProvince != null) {
-                //     clean();
-
-
-                //   }
-                //   if (currentlySelectedHumanProvince != null) {
-                //     if (currentMenu.equals("unsw.gloriaromanus.moveMenuController")) {
-                //       currentlySelectedEnemyProvince = f;
-                //       ((moveMenuController) controllerParentPairs.get(4).getKey()).setToProvince(province);
-
-                //     } else {
-                //       featureLayer.unselectFeature(currentlySelectedHumanProvince);
-                //     }
-
-                //   }
-                //   else  {
-                //     currentlySelectedHumanProvince = f;
-                //     System.out.println(currentMenu);
-                //     if (currentMenu.equals("unsw.gloriaromanus.InvasionMenuController")) {
-                //       System.out.println("here invading");
-                //       ((InvasionMenuController) controllerParentPairs.get(3).getKey()).setInvadingProvince(province);
-                //     } 
-                //     else if (currentMenu.equals("unsw.gloriaromanus.moveMenuController")) {
-                //       ((moveMenuController) controllerParentPairs.get(4).getKey()).setFromProvince(province);
-
-                //     }
-                //     else {
-                //       ((getUnitController)controllerParentPairs.get(5).getKey()).setUnit(province);
-                //     }
-                //   }
-
-                // } else {
-                //   if (currentlySelectedEnemyProvince != null) {
-                //     featureLayer.unselectFeature(currentlySelectedEnemyProvince);
-                //   }
-                //   currentlySelectedEnemyProvince = f;
-                //   if (controllerParentPairs.get(3).getKey() instanceof InvasionMenuController) {
-                //     ((InvasionMenuController) controllerParentPairs.get(3).getKey()).setOpponentProvince(province);
-                //   }
-                // }
+                if (currentMenu.equals("unsw.gloriaromanus.moveMenuController"))
+                  addMoveProvinces(f, province);
+                if (currentMenu.equals("unsw.gloriaromanus.InvasionMenuController"))
+                  addInvadeProvinces(f, province);
+                else
+                  addUnitProvince(f, province);
 
               }
 
@@ -406,12 +370,12 @@ public class GloriaRomanusController {
     if (provinceToOwningFactionMap.get(province).equals(humanFaction)) {
 
       if (currentlySelectedHumanProvince != null) {
-        if (currentlySelectedEnemyProvince!= null) featureLayer_provinces.unselectFeature(currentlySelectedEnemyProvince);
+        if (currentlySelectedEnemyProvince != null)
+          featureLayer_provinces.unselectFeature(currentlySelectedEnemyProvince);
         currentlySelectedEnemyProvince = f;
         ((moveMenuController) controllerParentPairs.get(4).getKey()).setToProvince(province);
 
-      }
-      else {
+      } else {
         currentlySelectedHumanProvince = f;
         ((moveMenuController) controllerParentPairs.get(4).getKey()).setFromProvince(province);
 
@@ -432,8 +396,7 @@ public class GloriaRomanusController {
       currentlySelectedHumanProvince = f;
       ((InvasionMenuController) controllerParentPairs.get(3).getKey()).setInvadingProvince(province);
 
-    }
-    else {
+    } else {
       if (currentlySelectedEnemyProvince != null) {
         featureLayer_provinces.unselectFeature(currentlySelectedEnemyProvince);
       }
@@ -441,24 +404,40 @@ public class GloriaRomanusController {
       if (controllerParentPairs.get(3).getKey() instanceof InvasionMenuController) {
         ((InvasionMenuController) controllerParentPairs.get(3).getKey()).setOpponentProvince(province);
 
+      }
     }
-  }
-    
-   
-  featureLayer_provinces.selectFeature(f);
+
+    featureLayer_provinces.selectFeature(f);
 
   }
+
+  public void addUnitProvince(Feature f, String province) {
+
+    if (provinceToOwningFactionMap.get(province).equals(humanFaction)) {
+
+      if (currentlySelectedHumanProvince != null) {
+        featureLayer_provinces.unselectFeature(currentlySelectedHumanProvince);
+      }
+      currentlySelectedHumanProvince = f;
+
+      featureLayer_provinces.selectFeature(f);
+      ((getUnitController) controllerParentPairs.get(5).getKey()).setProvince(province);;
+
+    }
+  }
+
   public void clean() {
-    if (currentlySelectedEnemyProvince!= null) {
+    if (currentlySelectedEnemyProvince != null) {
       featureLayer_provinces.unselectFeature(currentlySelectedEnemyProvince);
       currentlySelectedEnemyProvince = null;
     }
-    if (currentlySelectedHumanProvince!=null) {
+    if (currentlySelectedHumanProvince != null) {
       featureLayer_provinces.unselectFeature(currentlySelectedHumanProvince);
       currentlySelectedHumanProvince = null;
     }
 
   }
+
   private Map<String, String> getProvinceToOwningFactionMap() throws IOException {
     String content = Files.readString(Paths.get("src/unsw/gloriaromanus/initial_province_ownership.json"));
     JSONObject ownership = new JSONObject(content);

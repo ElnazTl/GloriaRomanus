@@ -56,7 +56,7 @@ public class getUnitController extends MenuController{
     }
 
     @FXML
-    public void setUnit(String p) {
+    public void setProvince(String p) {
         province.setText(p);
     }
    
