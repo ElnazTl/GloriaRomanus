@@ -20,6 +20,7 @@ public class startGameScreen {
 
         controller = new startGameController();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("startGame.fxml"));
+        // controller= loader.getController();
         loader.setController(controller);
 
         // load into a Parent node called root

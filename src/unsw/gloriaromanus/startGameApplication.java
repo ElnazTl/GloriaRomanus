@@ -16,7 +16,7 @@ public class startGameApplication extends Application {
         // Both controllers need to know about the other screen.
 
         signupScreen.getController().setStartGameScreen(startGameScreen);
-        startGameScreen.getController().setSignupScreen(signupScreen);
+        // startGameScreen.getController().setSignupScreen(signupScreen);
         startGameScreen.getController().setGra(gloriaRomanusApplication);
 
         startGameScreen.start();

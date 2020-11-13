@@ -3,6 +3,9 @@ package unsw.gloriaromanus;
 import java.io.IOException;
 import java.net.URL;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -21,13 +24,11 @@ public class SignupPaneController extends MenuController {
     @FXML
     private URL location; // has to be called location
 
-    // public void setInvadingProvince(String p) {
-    //     invading_province.setText(p);
-    // }
+   @FXML
 
-    // public void setOpponentProvince(String p) {
-    //     opponent_province.setText(p);
-    // }
+    public void change() throws JsonParseException, JsonMappingException, IOException {
+        getParent().nextMenu("unsw.gloriaromanus.SignupPaneController","unsw.gloriaromanus.ActionController");
+    }
 
     public void appendToTerminal(String message) {
         output_terminal.clear();

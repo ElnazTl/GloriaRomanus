@@ -19,9 +19,13 @@ public class Province {
     List<Unit> unitsTraining;
     List<Unit> selectedUnits;
     String taxStrategy;
+
+    @JsonIgnore
     List<Observer> unitOvserver;
     @JsonIgnore
     TaxRate taxRate;
+    @JsonIgnore
+    int ntroops;
 
     // JSON configs used to train troops
     @JsonIgnore
@@ -72,6 +76,7 @@ public class Province {
     // }
 
     public void subscribe(Observer o) {
+        if (unitOvserver == null) unitOvserver= new ArrayList<Observer>();
         unitOvserver.add(o);
     }
     public void notifysub() throws JsonParseException, JsonMappingException, IOException{
@@ -417,6 +422,14 @@ public class Province {
         this.taxStrategy = taxStrategy;
         changeTaxRate(taxStrategy);
     }
-    
 
+    public List<Observer> getUnitOvserver() {
+        return unitOvserver;
+    }
+
+    public void setUnitOvserver(List<Observer> unitOvserver) {
+        this.unitOvserver = unitOvserver;
+    }
+    
+    
 }
