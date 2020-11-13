@@ -16,7 +16,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ChoiceBox;
 
 public class moveMenuController extends MenuController {
-    ObservableList<String> unitsMove = FXCollections.observableArrayList("0L","1L",);
+    ObservableList<String> unitsMove = FXCollections.observableArrayList("0L","1L");
 
     @FXML
     private TextField from;
