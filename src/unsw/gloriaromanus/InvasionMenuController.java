@@ -31,7 +31,6 @@ public class InvasionMenuController extends MenuController {
 
         unitChoice.setItems(units);
         unitChoice.setOnMouseClicked(e -> {
-            System.out.println("What time is it? SHOW TIME" );
             units = FXCollections.observableArrayList(getParent().getAvailableUnit(invading_province.getText()));
             unitChoice.setItems(units);
 
