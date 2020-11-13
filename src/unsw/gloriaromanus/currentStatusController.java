@@ -67,8 +67,9 @@ public class currentStatusController extends MenuController{
         getParent().endTurn();
     }
     @FXML 
-    public void saveGame() {
+    public void saveGameButton() throws IOException {
         System.out.println("end");
+        getParent().saveGame();
     }
 
 
