@@ -12,7 +12,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ChoiceBox;
 
 public class InvasionMenuController extends MenuController {
-    ObservableList<String> units = FXCollections.observableArrayList("soliders","archier");
+    ObservableList<String> units 
+    = FXCollections.observableArrayList("");
 
     @FXML
     private TextField invading_province;
@@ -26,8 +27,18 @@ public class InvasionMenuController extends MenuController {
 
     @FXML
     private void initialize(){
-        unitChoice.setValue("soliders");
+
+
         unitChoice.setItems(units);
+        unitChoice.setOnMouseClicked(e -> {
+            System.out.println("What time is it? SHOW TIME" );
+            units = FXCollections.observableArrayList(getParent().getAvailableUnit(invading_province.getText()));
+            unitChoice.setItems(units);
+
+        });
+        System.out.println(units);
+       
+
     }
 
     

@@ -344,7 +344,6 @@ public class GloriaRomanusController {
                 Feature f = features.get(0);
                 String province = (String) f.getAttributes().get("name");
 
-                System.out.println(currentMenu);
                 if (currentMenu.equals("unsw.gloriaromanus.moveMenuController"))
                   addMoveProvinces(f, province);
                 if (currentMenu.equals("unsw.gloriaromanus.InvasionMenuController"))
@@ -633,5 +632,21 @@ public class GloriaRomanusController {
   public String setName() {
     return player.getUsername();
   }
+
+  public List<String> getAvailableUnit(String p) {
+    List<Unit> u;
+    List<String> name = new ArrayList<String>();
+    for (Province pp: player.getFaction().getProvinces()) {
+      if(pp.getName().equals(p)) {
+        u = pp.getUnits();
+        for (Unit unit: u) {
+          name.add(unit.getName());
+        }
+      }
+    }
+    return name;
+  }
+
+
 
 }
