@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 
 public abstract class MenuController {
     private GloriaRomanusController parent;
-    private GloriaRomanusController child;
+    // private GloriaRomanusController child;
 
 
     public void setParent(GloriaRomanusController parent) {
@@ -15,13 +15,13 @@ public abstract class MenuController {
         this.parent = parent;
         
     } 
-    public void setchild(startGameController parent, GloriaRomanusController child) {
-        if (parent == null){
-            System.out.println("GOT NULL");
-        }
-        parent.setChild(child);
+    // public void setchild(startGameController parent, GloriaRomanusController child) {
+    //     if (parent == null){
+    //         System.out.println("GOT NULL");
+    //     }
+    //     parent.setChild(child);
         
-    } 
+    // } 
 
     public GloriaRomanusController getParent(){
         return parent;

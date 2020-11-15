@@ -131,16 +131,7 @@ public class GloriaRomanusController extends MenuController {
 
   }
 
-  /**
-   * setting vbox menus TODO: add more menus
-   */
-  // private void parent() throws IOException {
-  //   FXMLLoader loader = new FXMLLoader(getClass().getResource("startGame.fxml"));
-  //  System.out.println( loader.getController());
-  //   startGameController controller = (startGameController) loader.getController();
-
-  //   controller.setChild(this);
-  // }
+  
   
   private void checkLoad() throws IOException {
     String content = Files.readString(Paths.get("src/unsw/gloriaromanus/load.json"));
@@ -253,6 +244,7 @@ public class GloriaRomanusController extends MenuController {
     player.selectProvince(from);
     Unit x = null;
     for (Unit u : player.getFaction().getSelectedProvince().getUnits()) {
+      System.out.println("whats wrong "+ u.getName()+" "+unit);
       if (u.getName().equals(unit))
         x = u;
     }
