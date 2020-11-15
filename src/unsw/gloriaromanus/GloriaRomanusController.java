@@ -182,7 +182,6 @@ public class GloriaRomanusController extends MenuController {
       FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlName));
       VBox root = (VBox) loader.load();
       MenuController menuController = (MenuController) loader.getController();
-      System.out.println( (MenuController) loader.getController());
       menuController.setParent(this);
       controllerParentPairs.add(new Pair<MenuController, VBox>(menuController, root));
 
@@ -197,7 +196,6 @@ public class GloriaRomanusController extends MenuController {
    * TODO: Player selecting units in the province to attack
    */
   public void clickedInvadeButton(String human, String enemy, String unit) throws IOException {
-    System.out.println("this is the province " + human);
     player.selectProvince(human);
     player.trainUnit("soldier");
     Unit select = null;
@@ -244,7 +242,6 @@ public class GloriaRomanusController extends MenuController {
     player.selectProvince(from);
     Unit x = null;
     for (Unit u : player.getFaction().getSelectedProvince().getUnits()) {
-      System.out.println("whats wrong "+ u.getName()+" "+unit);
       if (u.getName().equals(unit))
         x = u;
     }
@@ -686,6 +683,7 @@ public class GloriaRomanusController extends MenuController {
     humanFaction = player.getFaction().getName();
     status.setName(player.getUsername());
     status.setYear(db.getGameYear());
+    System.out.println(db.getGameYear());
   }
 
   public String setName() {

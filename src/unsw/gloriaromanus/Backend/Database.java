@@ -238,6 +238,8 @@ public class Database {
     public void endTurn(Faction f) {
         Player p = getPlayerOfFaction(f);
         currentPlayer = nextPlayer(p).getUsername();
+        int size = players.size();
+        if (p.getUsername().equals(players.get(size-1).getUsername())) gameYear++;
         turnNumber++;
 
     }
