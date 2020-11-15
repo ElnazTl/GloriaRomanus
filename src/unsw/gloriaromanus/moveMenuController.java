@@ -64,7 +64,7 @@ public class moveMenuController extends MenuController {
 
     @FXML
     public void clickedMoveButton() throws IOException {
-        getParent().MoveUnit(to.getText(), from.getText(), "soldier");
+        getParent().MoveUnit(to.getText(), from.getText(), unitMoveChoice.getValue());
 
         getParent().clean();
         clean();
