@@ -70,7 +70,7 @@
             <font>
                <Font size="16.0" />
             </font></Button>
-        <Button fx:id="saveGameButton" onAction="#saveGame" text="Save Game">
+        <Button fx:id="saveGameButton" onAction="#saveGameButton" text="Save Game">
             <font>
                <Font size="16.0" />
             </font></Button>

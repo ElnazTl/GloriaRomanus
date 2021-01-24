@@ -238,6 +238,8 @@ public class Database {
     public void endTurn(Faction f) {
         Player p = getPlayerOfFaction(f);
         currentPlayer = nextPlayer(p).getUsername();
+        int size = players.size();
+        if (p.getUsername().equals(players.get(size-1).getUsername())) gameYear++;
         turnNumber++;
 
     }
@@ -410,6 +412,7 @@ public class Database {
         players = om.readValue(jf.createParser(loadIS), new TypeReference<List<Player>>(){});
         // System.out.println(players);
         loadDatabase();
+        assignData();
 
     }
 
@@ -421,8 +424,12 @@ public class Database {
         currentPlayer = dbConfig.getString("currentPlayer");
         loadConfigs();
     }
-
-
+    private void assignData() {
+        for (Player p: players) {
+            p.getFaction().setDatabase(this);
+        }
+    }
+ 
     private void loadConfigs() {
         for (Player p : players) {
             Faction f = p.getFaction();

@@ -51,7 +51,9 @@ public class Faction {
         observor = new ArrayList<FactionObserver>();
     }
 
-
+    public void setDatabase(Database d){
+        this.db= d;
+    }
     public String getName() {
         return name;
     }
@@ -67,6 +69,7 @@ public class Faction {
     }
     
     public void subscribe(FactionObserver o) {
+        if (observor == null) observor = new ArrayList<FactionObserver>();
         observor.add(o);
     }
 

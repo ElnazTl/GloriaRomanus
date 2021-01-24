@@ -20,7 +20,9 @@
                </font>
             </Button>
             <!-- onAction="#clickedNewGame" /> -->
-            <Button fx:id="loadGameButton" mnemonicParsing="false" prefHeight="51.0" prefWidth="200.0" text="Load Game">
+
+            <Button fx:id="loadGameButton" mnemonicParsing="false" prefHeight="51.0" prefWidth="200.0" text="Load Game" onAction="#clickedLoadGame">
+
                <font>
                   <Font size="26.0" />
                </font>
