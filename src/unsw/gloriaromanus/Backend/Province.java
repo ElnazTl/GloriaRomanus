@@ -2,7 +2,12 @@ package unsw.gloriaromanus.Backend;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import unsw.gloriaromanus.Backend.tax.*;
 
@@ -16,7 +21,11 @@ public class Province {
     String taxStrategy;
 
     @JsonIgnore
+    List<Observer> unitOvserver;
+    @JsonIgnore
     TaxRate taxRate;
+    @JsonIgnore
+    int ntroops;
 
     // JSON configs used to train troops
     @JsonIgnore
@@ -44,6 +53,7 @@ public class Province {
         this.defaultUnitsConfig = unitsConfig;
         this.abilityConfig = abilityConfig;
         setTaxStrategy(LowTax.TYPE);
+        unitOvserver = new ArrayList<Observer>();
     }
 
 
@@ -65,6 +75,23 @@ public class Province {
     //     changeTaxRate(LowTax.TYPE);
     // }
 
+    public void subscribe(Observer o) {
+        if (unitOvserver == null) unitOvserver= new ArrayList<Observer>();
+        unitOvserver.add(o);
+    }
+    public void notifysub() throws JsonParseException, JsonMappingException, IOException{
+        for (Observer o: unitOvserver) {
+            o.update(this);
+        }
+    }
+
+    public int getNTroops() {
+        int res = 0;
+        for (Unit u: units) {
+            res+= u.getNumTroops();
+        }
+        return res;
+    }
     public String getName() {
         return name;
     }
@@ -99,7 +126,7 @@ public class Province {
      * Called at the end of a turn,
      * updates the province and units
      */
-    public void endTurn() {
+    public void endTurn() throws JsonParseException, JsonMappingException, IOException {
         deselectAllUnits();
         for (Unit u : this.units) {
             u.endTurn();
@@ -116,6 +143,7 @@ public class Province {
         wealth += taxRate.getTaxWealth();
         // Apply tax modifier
         deselectAllUnits();
+        notifysub();
     }
 
     
@@ -394,6 +422,14 @@ public class Province {
         this.taxStrategy = taxStrategy;
         changeTaxRate(taxStrategy);
     }
-    
 
+    public List<Observer> getUnitOvserver() {
+        return unitOvserver;
+    }
+
+    public void setUnitOvserver(List<Observer> unitOvserver) {
+        this.unitOvserver = unitOvserver;
+    }
+    
+    
 }

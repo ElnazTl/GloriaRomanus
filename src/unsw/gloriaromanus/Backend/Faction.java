@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
+import java.io.IOException;
 public class Faction {
 
     @JsonIgnore
@@ -18,6 +21,7 @@ public class Faction {
     private Map<String, Integer> availableUnits;
     private int treasury;
     private Province selectedProvince;
+    private List <FactionObserver> observor;
 
 
     /**
@@ -44,9 +48,12 @@ public class Faction {
         this.availableUnits = new HashMap<String, Integer>();
         this.selectedProvince = null;
         loadFromConfig(allowedUnits, unitsConfig);
+        observor = new ArrayList<FactionObserver>();
     }
 
-
+    public void setDatabase(Database d){
+        this.db= d;
+    }
     public String getName() {
         return name;
     }
@@ -61,12 +68,22 @@ public class Faction {
         return availableUnits;
     }
     
+    public void subscribe(FactionObserver o) {
+        if (observor == null) observor = new ArrayList<FactionObserver>();
+        observor.add(o);
+    }
 
+    public void notifysub() throws JsonParseException, JsonMappingException, IOException {
+        for (FactionObserver o: observor) {
+            o.update(this);
+        }
+    }
     /**
+     *
      * Updates the faction after the turn,
      * then ends turn for the provinces it owns
      */
-    public void endTurn() {
+    public void endTurn()  throws JsonParseException, JsonMappingException, IOException {
         deselectProvince();
         for (Province p : provincesConqueredOnTurn) {
             provinces.add(p);
@@ -75,7 +92,7 @@ public class Faction {
             treasury += p.taxProvince();
             p.endTurn();
         }
-        
+        notifysub();
         db.endTurn(this);
     }
     
@@ -152,6 +169,7 @@ public class Faction {
      * @param name
      */
     public void selectProvince(String name) {
+        System.out.println("selecting province");
         Province p = findProvince(name); 
         if (p == null) return;
         if (selectedProvince == null) {
@@ -224,7 +242,7 @@ public class Faction {
      * @param unit
      * @return
      */
-    public boolean trainUnit(String unit) {
+    public boolean trainUnit(String unit)  {
         if (selectedProvince == null) {
             System.out.println("Player has not selected a province");
             return false;
