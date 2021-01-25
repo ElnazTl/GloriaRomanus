@@ -2,86 +2,86 @@
   "Rome": [
     "I",
     "IV",
-    "V",
+    "Sardinia et Corsica",
     "VII"
   ],
   "Gaul": [
-    "Narbonensis",
-    "Noricum",
-    "Numidia",
-    "Mauretania Caesariensis"
+    "Alpes Maritimae",
+    "Alpes Cottiae",
+    "XI",
+    "Alpes Graiae et Poeninae"
   ],
   "Carthage": [
-    "Pannonia Inferior",
-    "Pannonia Superior",
-    "Raetia",
-    "Mauretania Tingitana"
+    "Mauretania Tingitana",
+    "Mauretania Caesariensis",
+    "Baetica"    
   ],
   "Celtic Briton": [
-    "Sardinia et Corsica",
-    "Sicilia",
-    "Syria",
-    "Moesia Inferior"
+    "Britannia",
+    "Belgica",
+    "Lugdunensis"
   ],
   "Spain": [
     "Tarraconensis",
-    "Thracia",
-    "Lusitania",
-    "Moesia Superior"
+    "Narbonensis",
+    "Aquitania",
+    "Lusitania"
   ],
   "Numidia": [
-    "Lycia et Pamphylia",
-    "Macedonia",
-    "VIII"
-  ],
-  "Egpyt": [
-    "X",
-    "XI",
-    "Achaia"
-  ],
-  "Seleucid": [
-    "Aegyptus",
+    "Numidia",
     "Africa Proconsularis",
-    "Alpes Cottiae"
-  ],
-  "Pontus": [
-    "Alpes Graiae et Poeninae",
-    "Alpes Maritimae",
-    "Aquitania"
-  ],
-  "Armenia": [
-    "Arabia",
-    "Armenia Mesopotamia",
-    "Asia"
-  ],
-  "Parthian": [
-    "Baetica",
-    "Belgica",
-    "Bithynia et Pontus"
-  ],
-  "Germanic": [
-    "Britannia",
-    "Cilicia",
     "Creta et Cyrene"
   ],
-  "Greece": [
+  "Egpyt": [
+    "Aegyptus",
+    "Arabia",
+    "Iudaea"
+  ],
+  "Seleucid": [
     "Cyprus",
-    "Dacia",
-    "Dalmatia"
+    "Cilicia",
+    "Lycia et Pamphylia"
   ],
-  "Macedonia": [
-    "Galatia et Cappadocia",
-    "Germania Inferior",
-    "Germania Superior"
-  ],
-  "Trachia": [
+  "Pontus": [
+    "IX",
+    "V",
     "VI",
+    "VIII"
+  ],
+  "Armenia": [
+    "Syria",
+    "Armenia Mesopotamia",
+    "Galatia et Cappadocia"
+  ],
+  "Parthian": [
     "II",
+    "Sicilia",
     "III"
   ],
+  "Germanic": [
+    "Germania Inferior",
+    "Germania Superior",
+    "Raetia"
+  ],
+  "Greece": [
+    "Achaia",
+    "Dalmatia",
+    "Macedonia"
+  ],
+  "Macedonia": [
+    "Pannonia Inferior",
+    "Pannonia Superior",
+    "Noricum",
+    "X"
+  ],
+  "Thracia": [
+    "Thracia",
+    "Asia",
+    "Bithynia et Pontus"
+  ],
   "Dacia": [
-    "Lugdunensis",
-    "IX",
-    "Iudaea"
+    "Moesia Superior",   
+    "Moesia Inferior",
+    "Dacia"
   ]
 }

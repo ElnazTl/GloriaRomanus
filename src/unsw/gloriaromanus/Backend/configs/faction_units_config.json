@@ -1,66 +1,122 @@
 {
     "Rome": [
         "soldier",
-        "horseArcher"
+        "horseArcher",
+        "romanLegionary",
+        "hoplite",
+        "elephant"
     ],
     "Gaul": [
         "soldier",
-        "horseArcher"
+        "horseArcher",
+        "berserker",
+        "hoplite",
+        "elephant",
+        "druid"
     ],
     "Carthage": [
         "soldier",
-        "horseArcher"
+        "horseArcher",
+        "pikemen",
+        "javelinSkirmisher",
+        "elephant",
+        "druid"
     ],
     "Celtic Briton": [
         "soldier",
-        "horseArcher"
+        "horseArcher",
+        "berserker",
+        "pikemen",
+        "elephant",
+        "druid"
     ],
     "Spain": [
         "soldier",
-        "horseArcher"
+        "horseArcher",
+        "pikemen",
+        "javelinSkirmisher",
+        "elephant"
     ],
     "Numidia": [
         "soldier",
-        "horseArcher"
+        "horseArcher",
+        "pikemen",
+        "javelinSkirmisher",
+        "elephant",
+        "druid"
     ],
     "Egpyt": [
 		"soldier",
-		"horseArcher"
+		"horseArcher",
+        "pikemen",
+        "javelinSkirmisher",
+        "elephant"
     ],
     "Seleucid": [
 		"soldier",
-		"horseArcher"
+		"horseArcher",
+        "pikemen",
+        "javelinSkirmisher",
+        "elephant",
+        "druid"
     ],
     "Pontus": [
 		"soldier",
-		"horseArcher"
+		"horseArcher",
+        "pikemen",
+        "javelinSkirmisher",
+        "elephant"
     ],
     "Armenia": [
 		"soldier",
-		"horseArcher"
+		"horseArcher",
+        "pikemen",
+        "javelinSkirmisher",
+        "elephant"
     ],
     "Parthian": [
         "soldier",
-        "horseArcher"
+        "horseArcher",
+        "pikemen",
+        "javelinSkirmisher",
+        "elephant"
     ],
     "Germanic": [
         "soldier",
-        "horseArcher"
+        "horseArcher",
+        "berserker",
+        "pikemen",
+        "elephant",
+        "druid"
     ],
     "Greece": [
         "soldier",
-        "horseArcher"
+        "horseArcher",
+        "hoplite",
+        "javelinSkirmisher",
+        "elephant"
     ],
     "Macedonia": [
         "soldier",
-        "horseArcher"
+        "horseArcher",
+        "pikemen",
+        "javelinSkirmisher",
+        "elephant"
     ],
-    "Trachia": [
+    "Thracia": [
         "soldier",
-        "horseArcher"
+        "horseArcher",
+        "pikemen",
+        "javelinSkirmisher",
+        "elephant",
+        "druid"
     ],
     "Dacia": [
         "soldier",
-        "horseArcher"
+        "horseArcher",
+        "pikemen",
+        "javelinSkirmisher",
+        "elephant",
+        "druid"
     ]
 }
